@@ -2,36 +2,36 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ===== Palette (DARK) ===== -->
-    <SolidColorBrush x:Key="Surface"        Color="#FF0B0F16"/>
-    <SolidColorBrush x:Key="SurfaceAlt"     Color="#FF0A0F19"/>
-    <SolidColorBrush x:Key="OnSurface"      Color="#FFE5E7EB"/>
-    <SolidColorBrush x:Key="SubtleText"     Color="#FF9CA3AF"/>
-    <SolidColorBrush x:Key="Divider"        Color="#FF141B26"/>
+    <SolidColorBrush x:Key="Surface"        Color="#FF0B0E11"/>
+    <SolidColorBrush x:Key="SurfaceAlt"     Color="#FF181A20"/>
+    <SolidColorBrush x:Key="OnSurface"      Color="#FFEAECEF"/>
+    <SolidColorBrush x:Key="SubtleText"     Color="#FF9B9B9B"/>
+    <SolidColorBrush x:Key="Divider"        Color="#FF2E3239"/>
 
-    <SolidColorBrush x:Key="HeaderBg"       Color="#FF080C14"/>
-    <SolidColorBrush x:Key="HeaderFg"       Color="#FFE5E7EB"/>
-    <SolidColorBrush x:Key="HeaderBorder"   Color="#FF141B26"/>
+    <SolidColorBrush x:Key="HeaderBg"       Color="#FF0B0E11"/>
+    <SolidColorBrush x:Key="HeaderFg"       Color="#FFEAECEF"/>
+    <SolidColorBrush x:Key="HeaderBorder"   Color="#FF2E3239"/>
 
-    <SolidColorBrush x:Key="RowBg"          Color="#FF0A0F19"/>
-    <SolidColorBrush x:Key="RowAltBg"       Color="#FF070C15"/>
+    <SolidColorBrush x:Key="RowBg"          Color="#FF181A20"/>
+    <SolidColorBrush x:Key="RowAltBg"       Color="#FF0F1114"/>
 
     <SolidColorBrush x:Key="SelectionBg"    Color="#FF1D4FCB"/>
     <SolidColorBrush x:Key="SelectionFg"    Color="#FFFFFFFF"/>
 
     <!-- Toolbar tokens -->
-    <SolidColorBrush x:Key="TbBg"           Color="#FF070C15"/>
-    <SolidColorBrush x:Key="TbBorder"       Color="#FF141B26"/>
-    <SolidColorBrush x:Key="TbFg"           Color="#FFE5E7EB"/>
-    <SolidColorBrush x:Key="TbFgMuted"      Color="#FF9CA3AF"/>
-    <SolidColorBrush x:Key="TbHover"        Color="#FF0F1523"/>
-    <SolidColorBrush x:Key="TbPressed"      Color="#FF131C2D"/>
+    <SolidColorBrush x:Key="TbBg"           Color="#FF181A20"/>
+    <SolidColorBrush x:Key="TbBorder"       Color="#FF2E3239"/>
+    <SolidColorBrush x:Key="TbFg"           Color="#FFEAECEF"/>
+    <SolidColorBrush x:Key="TbFgMuted"      Color="#FF9B9B9B"/>
+    <SolidColorBrush x:Key="TbHover"        Color="#FF20252C"/>
+    <SolidColorBrush x:Key="TbPressed"      Color="#FF2B3139"/>
     <SolidColorBrush x:Key="TbChecked"      Color="#FF0E9C6A"/>
     <SolidColorBrush x:Key="TbCheckedFg"    Color="#FF05090D"/>
-    <SolidColorBrush x:Key="TbDisabledBg"   Color="#33080C12"/>
+    <SolidColorBrush x:Key="TbDisabledBg"   Color="#33181A20"/>
     <SolidColorBrush x:Key="TbDisabledFg"   Color="#66C5C7CB"/>
 
     <!-- Hover color for list rows -->
-    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF0F1523"/>
+    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF20252C"/>
 
     <!-- Top Movers tokens (dark) -->
     <SolidColorBrush x:Key="Up1Bg"          Color="#FF10251B"/>
@@ -42,10 +42,10 @@
     <SolidColorBrush x:Key="DownFg"         Color="#FFFFEDED"/>
 
     <!-- System colors for controls -->
-    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}"       Color="#FF0A0F19"/>
-    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}"   Color="#FFE5E7EB"/>
-    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"      Color="#FF0A0F19"/>
-    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}"  Color="#FFE5E7EB"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}"       Color="#FF181A20"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}"   Color="#FFEAECEF"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"      Color="#FF181A20"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}"  Color="#FFEAECEF"/>
 
     <!-- ===== ScrollViewer with visible scrollbars ===== -->
     <Style TargetType="{x:Type ScrollViewer}">
@@ -130,6 +130,50 @@
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1" CornerRadius="2">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource TbHover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource TbDisabledBg}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TbDisabledFg}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
+                <Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style TargetType="TextBox">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
