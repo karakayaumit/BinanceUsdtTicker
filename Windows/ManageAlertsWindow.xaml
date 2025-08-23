@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="BinanceUsdtTicker.ManageAlertsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:BinanceUsdtTicker"
+        Title="Alarmları Yönet"
+        Width="760" Height="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanMinimize">
+
+    <!-- Dönüştürücü -->
+    <Window.Resources>
+        <local:FlexibleDoubleConverter x:Key="FlexDouble"/>
+    </Window.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ALARM LİSTESİ -->
+        <DataGrid x:Name="Grid"
+                  Grid.Row="0"
+                  ItemsSource="{Binding WorkingAlerts}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  HeadersVisibility="Column"
+                  SelectionMode="Extended"
+                  ColumnWidth="*"
+                  MinColumnWidth="70"
+                  CanUserResizeColumns="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  PreviewKeyDown="Grid_PreviewKeyDown">
+
+            <DataGrid.Columns>
+                <!-- Sembol -->
+                <DataGridTextColumn Header="Sembol"
+                                    Binding="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}"
+                                    MinWidth="90" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Koşul (Türkçe) -->
+                <DataGridComboBoxColumn Header="Koşul"
+                                        SelectedValueBinding="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedValuePath="Value"
+                                        DisplayMemberPath="Text"
+                                        MinWidth="130" Width="1.2*">
+                    <DataGridComboBoxColumn.ElementStyle>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="ItemsSource"
+                                    Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=AlertTypeOptions}"/>
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </DataGridComboBoxColumn.ElementStyle>
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="ItemsSource"
+                                    Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=AlertTypeOptions}"/>
+                            <Setter Property="IsDropDownOpen" Value="True"/>
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
+
+                <!-- Değerler (dar metin) -->
+                <DataGridTemplateColumn Header="Değerler" MinWidth="120" Width="1*">
+                    <!-- Görüntüleme -->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock x:Name="SingleValue"
+                                           HorizontalAlignment="Center"
+                                           Text="{Binding A, StringFormat={}{0:0.########}}"/>
+                                <TextBlock x:Name="RangeValue"
+                                           HorizontalAlignment="Center"
+                                           Visibility="Collapsed">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0:0.########} - {1:0.########}">
+                                            <Binding Path="A"/>
+                                            <Binding Path="B"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Type}" Value="{x:Static local:AlertType.PriceBetween}">
+                                    <Setter TargetName="SingleValue" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="RangeValue"  Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                    <!-- Düzenleme (A / opsiyonel B) -->
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding A, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource FlexDouble}}"
+                                         PreviewTextInput="Decimal_PreviewTextInput"
+                                         HorizontalContentAlignment="Center"/>
+
+                                <TextBox x:Name="BEdit" Grid.Column="1"
+                                         Text="{Binding B, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource FlexDouble}}"
+                                         PreviewTextInput="Decimal_PreviewTextInput"
+                                         HorizontalContentAlignment="Center"
+                                         Visibility="Collapsed"/>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Type}" Value="{x:Static local:AlertType.PriceBetween}">
+                                    <Setter TargetName="BEdit" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Tek seferlik -->
+                <DataGridCheckBoxColumn Header="Tek seferlik"
+                                        Binding="{Binding OneShot, Mode=TwoWay}"
+                                        MinWidth="90" Width="0.8*"/>
+
+                <!-- Cooldown -->
+                <DataGridTextColumn Header="Cooldown (sn)"
+                                    Binding="{Binding CooldownSeconds, UpdateSourceTrigger=PropertyChanged}"
+                                    MinWidth="100" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    <DataGridTextColumn.EditingElementStyle>
+                        <Style TargetType="TextBox">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.EditingElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Aktif -->
+                <DataGridCheckBoxColumn Header="Aktif"
+                                        Binding="{Binding Enabled, Mode=TwoWay}"
+                                        MinWidth="70" Width="0.6*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- BUTONLAR -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Yeni" Width="100" Margin="0,0,8,0" Click="New_Click"/>
+            <Button Content="Sil" Width="100" Margin="0,0,8,0" Click="Delete_Click"/>
+            <Button Content="Kaydet" Width="110" Margin="0,0,8,0" Click="Save_Click"/>
+            <Button Content="Kapat" Width="110" Click="Close_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,173 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ===== Palette (LIGHT) ===== -->
+    <SolidColorBrush x:Key="Surface"        Color="#FFF9FAFB"/>
+    <SolidColorBrush x:Key="SurfaceAlt"     Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="OnSurface"      Color="#FF1F2937"/>
+    <SolidColorBrush x:Key="SubtleText"     Color="#FF6B7280"/>
+    <SolidColorBrush x:Key="Divider"        Color="#FFE5E7EB"/>
+
+    <SolidColorBrush x:Key="HeaderBg"       Color="#FFF3F4F6"/>
+    <SolidColorBrush x:Key="HeaderFg"       Color="#FF111827"/>
+    <SolidColorBrush x:Key="HeaderBorder"   Color="#FFE5E7EB"/>
+
+    <SolidColorBrush x:Key="RowBg"          Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="RowAltBg"       Color="#FFFAFAFA"/>
+
+    <SolidColorBrush x:Key="SelectionBg"    Color="#FF2563EB"/>
+    <SolidColorBrush x:Key="SelectionFg"    Color="#FFFFFFFF"/>
+
+    <!-- Toolbar tokens -->
+    <SolidColorBrush x:Key="TbBg"           Color="#FFF3F4F6"/>
+    <SolidColorBrush x:Key="TbBorder"       Color="#FFE5E7EB"/>
+    <SolidColorBrush x:Key="TbFg"           Color="#FF1F2937"/>
+    <SolidColorBrush x:Key="TbFgMuted"      Color="#FF6B7280"/>
+    <SolidColorBrush x:Key="TbHover"        Color="#FFEFF1F5"/>
+    <SolidColorBrush x:Key="TbPressed"      Color="#FFDFE3EA"/>
+    <SolidColorBrush x:Key="TbChecked"      Color="#FF10B981"/>
+    <SolidColorBrush x:Key="TbCheckedFg"    Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="TbDisabledBg"   Color="#15FFFFFF"/>
+    <SolidColorBrush x:Key="TbDisabledFg"   Color="#669CA3AF"/>
+
+    <!-- Top Movers tokens (light) -->
+    <SolidColorBrush x:Key="Up1Bg"          Color="#FFE6F4EA"/>
+    <SolidColorBrush x:Key="Up3Bg"          Color="#FFC7E7D3"/>
+    <SolidColorBrush x:Key="UpFg"           Color="#FF065F46"/>
+    <SolidColorBrush x:Key="Down1Bg"        Color="#FFFDEAEA"/>
+    <SolidColorBrush x:Key="Down3Bg"        Color="#FFF8DADA"/>
+    <SolidColorBrush x:Key="DownFg"         Color="#FF7F1D1D"/>
+
+    <!-- ===== ScrollViewer with visible scrollbars ===== -->
+    <Style TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- content -->
+                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                    Grid.Row="0" Grid.Column="0"
+                                    Content="{TemplateBinding Content}"
+                                    CanContentScroll="{TemplateBinding CanContentScroll}"/>
+
+                        <!-- vertical scrollbar -->
+                        <ScrollBar x:Name="PART_VerticalScrollBar"
+                       Grid.Row="0" Grid.Column="1"
+                       Orientation="Vertical"
+                       Background="{DynamicResource SurfaceAlt}"
+                       Foreground="{DynamicResource SubtleText}"
+                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+
+                        <!-- horizontal scrollbar -->
+                        <ScrollBar x:Name="PART_HorizontalScrollBar"
+                       Grid.Row="1" Grid.Column="0"
+                       Orientation="Horizontal"
+                       Background="{DynamicResource SurfaceAlt}"
+                       Foreground="{DynamicResource SubtleText}"
+                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+
+                        <!-- corner -->
+                        <Border Grid.Row="1" Grid.Column="1"
+                    Background="{DynamicResource SurfaceAlt}"
+                    BorderBrush="{DynamicResource Divider}"
+                    BorderThickness="1"
+                    Visibility="Collapsed"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===== Base ===== -->
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{DynamicResource Surface}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+    </Style>
+    <Style TargetType="DockPanel">
+        <Setter Property="LastChildFill" Value="True"/>
+    </Style>
+    <Style TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="Grid">
+        <Setter Property="Background" Value="{x:Null}"/>
+    </Style>
+    <Style TargetType="StackPanel">
+        <Setter Property="Background" Value="{x:Null}"/>
+    </Style>
+    <Style TargetType="Expander">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="GroupBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+    </Style>
+    <Style TargetType="ListView">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+    </Style>
+    <Style TargetType="StatusBar">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+    </Style>
+
+    <!-- ===== DataGrid ===== -->
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="Background"               Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground"               Value="{DynamicResource OnSurface}"/>
+        <Setter Property="RowBackground"            Value="{DynamicResource RowBg}"/>
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource RowAltBg}"/>
+        <Setter Property="GridLinesVisibility"      Value="All"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource Divider}"/>
+        <Setter Property="VerticalGridLinesBrush"   Value="{DynamicResource Divider}"/>
+        <Setter Property="BorderBrush"              Value="{DynamicResource Divider}"/>
+    </Style>
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="Background" Value="{DynamicResource RowBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
+                <Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
+        <Setter Property="Foreground"  Value="{DynamicResource HeaderFg}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
+        <Setter Property="FontWeight"  Value="SemiBold"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="{x:Type DataGridCell}">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background"  Value="{DynamicResource SelectionBg}"/>
+                <Setter Property="Foreground"  Value="{DynamicResource SelectionFg}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

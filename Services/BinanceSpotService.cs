@@ -1,100 +1,274 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Globalization;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
-namespace BinanceUsdtTicker;
-
-public class BinanceSpotService
+namespace BinanceUsdtTicker
 {
-    private static readonly HttpClient _http = new HttpClient
-    {
-        BaseAddress = new Uri("https://api.binance.com")
-    };
+    public enum WsState { Closed, Connecting, Connected, Retrying }
 
-    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+    /// <summary>
+    /// miniTicker + bookTicker (mid price) birleşik canlı akış. (DECIMAL tabanlı)
+    /// </summary>
+    public class BinanceSpotService
     {
-        PropertyNameCaseInsensitive = true
-    };
+        public event Action<List<TickerRow>>? OnTickersUpdated;
 
-    public async Task<HashSet<string>> GetActiveUsdtSymbolsAsync(CancellationToken ct = default)
-    {
-        // Spot exchangeInfo (TRADING durumundaki pariteler)
-        var url = "/api/v3/exchangeInfo?permissions=SPOT&symbolStatus=TRADING";
-        using var resp = await _http.GetAsync(url, ct);
-        resp.EnsureSuccessStatusCode();
-        var json = await resp.Content.ReadAsStringAsync(ct);
-        using var doc = JsonDocument.Parse(json);
+        // WS durum bildirimi: (durum, deneme sayısı)
+        public event Action<WsState, int>? OnWsStateChanged;
 
-        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var sym in doc.RootElement.GetProperty("symbols").EnumerateArray())
+        private ClientWebSocket? _ws;
+        private CancellationTokenSource? _cts;
+        private Task? _runner;
+
+        private readonly Dictionary<string, TickerRow> _state =
+            new(StringComparer.OrdinalIgnoreCase);
+
+        // Emit throttle
+        private long _emitIntervalTicks = TimeSpan.FromMilliseconds(300).Ticks;
+        private long _nextEmitTicks = 0;
+
+        public WsState State { get; private set; } = WsState.Closed;
+        public DateTime LastMessageUtc { get; private set; }
+        public int MessageGapMs => LastMessageUtc == default ? -1
+            : (int)Math.Max(0, (DateTime.UtcNow - LastMessageUtc).TotalMilliseconds);
+
+        private static bool IsUsdt(string s) =>
+            s.EndsWith("USDT", StringComparison.OrdinalIgnoreCase);
+
+        public async Task StartAsync()
         {
-            var quote = sym.GetProperty("quoteAsset").GetString();
-            var symbol = sym.GetProperty("symbol").GetString();
-            if (quote == "USDT" && symbol is not null)
-                set.Add(symbol);
+            await StopAsync();
+
+            _cts = new CancellationTokenSource();
+            _runner = Task.Run(() => ConnectLoopAsync(_cts.Token));
         }
-        return set;
-    }
 
-    public async IAsyncEnumerable<MiniTicker> StreamAllMiniTickersAsync([EnumeratorCancellation] CancellationToken ct)
-    {
-        var url = new Uri("wss://stream.binance.com:9443/stream?streams=!miniTicker@arr");
-        using var ws = new ClientWebSocket();
-        await ws.ConnectAsync(url, ct);
-
-        var buffer = new byte[1 << 16];
-
-        while (!ct.IsCancellationRequested && ws.State == WebSocketState.Open)
+        public async Task StopAsync()
         {
-            var result = await ws.ReceiveAsync(buffer, ct);
-            if (result.MessageType == WebSocketMessageType.Close)
+            try { _cts?.Cancel(); } catch { }
+
+            if (_ws != null)
             {
-                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "bye", ct);
-                yield break;
+                try { await _ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "stop", CancellationToken.None); } catch { }
+                _ws.Dispose();
+                _ws = null;
             }
 
-            var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-            using var doc = JsonDocument.Parse(message);
-            var data = doc.RootElement.GetProperty("data");
+            _cts?.Dispose(); _cts = null;
+            State = WsState.Closed;
+            OnWsStateChanged?.Invoke(State, 0);
+        }
 
-            if (data.ValueKind == JsonValueKind.Array)
+        private async Task ConnectLoopAsync(CancellationToken ct)
+        {
+            int attempt = 0;
+            var url = "wss://stream.binance.com:9443/stream?streams=!miniTicker@arr/!bookTicker@arr";
+
+            while (!ct.IsCancellationRequested)
             {
-                foreach (var item in data.EnumerateArray())
+                try
                 {
-                    var mt = new MiniTicker
+                    State = attempt == 0 ? WsState.Connecting : WsState.Retrying;
+                    OnWsStateChanged?.Invoke(State, attempt);
+
+                    using var ws = new ClientWebSocket();
+                    _ws = ws;
+
+                    await ws.ConnectAsync(new Uri(url), ct);
+                    State = WsState.Connected;
+                    attempt = 0;
+                    OnWsStateChanged?.Invoke(State, attempt);
+
+                    await ReceiveLoop(ws, ct);
+                }
+                catch
+                {
+                    // düş ve tekrar dene
+                }
+
+                if (ct.IsCancellationRequested) break;
+
+                attempt++;
+                State = WsState.Retrying;
+                OnWsStateChanged?.Invoke(State, attempt);
+
+                // exponential backoff (1,2,4,8,16,30 sn)
+                var sec = Math.Min(30, 1 << Math.Min(5, attempt));
+                try { await Task.Delay(TimeSpan.FromSeconds(sec), ct); } catch { }
+            }
+
+            State = WsState.Closed;
+            OnWsStateChanged?.Invoke(State, attempt);
+        }
+
+        private async Task ReceiveLoop(ClientWebSocket ws, CancellationToken ct)
+        {
+            var buf = new ArraySegment<byte>(new byte[1 << 20]); // 1 MB
+            var sb = new StringBuilder(1 << 20);
+
+            while (!ct.IsCancellationRequested && ws.State == WebSocketState.Open)
+            {
+                sb.Clear();
+                WebSocketReceiveResult? res;
+                do
+                {
+                    res = await ws.ReceiveAsync(buf, ct);
+                    if (res.MessageType == WebSocketMessageType.Close) return;
+                    sb.Append(Encoding.UTF8.GetString(buf.Array!, 0, res.Count));
+                } while (!res.EndOfMessage);
+
+                LastMessageUtc = DateTime.UtcNow;
+                var json = sb.ToString();
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(json);
+                    var root = doc.RootElement;
+
+                    if (root.TryGetProperty("stream", out var streamEl))
                     {
-                        EventType = item.GetProperty("e").GetString() ?? "24hrMiniTicker",
-                        EventTime = item.GetProperty("E").GetInt64(),
-                        Symbol = item.GetProperty("s").GetString() ?? string.Empty,
-                        Close = double.TryParse(item.GetProperty("c").GetString(), out var c) ? c : 0,
-                        Open  = double.TryParse(item.GetProperty("o").GetString(), out var o) ? o : 0,
-                        High  = double.TryParse(item.GetProperty("h").GetString(), out var h) ? h : 0,
-                        Low   = double.TryParse(item.GetProperty("l").GetString(), out var l) ? l : 0,
-                        Volume= double.TryParse(item.GetProperty("v").GetString(), out var v) ? v : 0,
-                        QuoteVolume = double.TryParse(item.GetProperty("q").GetString(), out var q) ? q : 0,
+                        var stream = streamEl.GetString() ?? "";
+                        var dataEl = root.GetProperty("data");
+
+                        if (stream.Contains("miniTicker"))
+                            HandleMiniTickerArray(dataEl);
+                        else if (stream.Contains("bookTicker"))
+                            HandleBookTickerArray(dataEl);
+                    }
+                    else if (root.ValueKind == JsonValueKind.Array)
+                    {
+                        if (root.GetArrayLength() > 0 && root[0].TryGetProperty("e", out _))
+                            HandleMiniTickerArray(root);
+                        else
+                            HandleBookTickerArray(root);
+                    }
+                }
+                catch
+                {
+                    // parse hatalarını sessiz geç
+                }
+
+                MaybeEmit();
+            }
+        }
+
+        // 24h miniTicker: c/o/h/l/v/P  (decimal okur)
+        private void HandleMiniTickerArray(JsonElement arr)
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (var el in arr.EnumerateArray())
+            {
+                var s = el.GetProperty("s").GetString() ?? "";
+                if (!IsUsdt(s)) continue;
+
+                decimal price = ReadDecimal(el, "c");
+                decimal open = ReadDecimal(el, "o");
+                decimal high = ReadDecimal(el, "h");
+                decimal low = ReadDecimal(el, "l");
+                decimal vol = ReadDecimal(el, "v");
+                decimal chgPctFromBinance = ReadDecimal(el, "P"); // 24s %
+
+                decimal changePct = open > 0m
+                    ? ((price - open) / open) * 100m
+                    : chgPctFromBinance;
+
+                if (!_state.TryGetValue(s, out var row))
+                {
+                    row = new TickerRow
+                    {
+                        Symbol = s,
+                        Price = price,
+                        Open = open,
+                        High = high,
+                        Low = low,
+                        Volume = vol,
+                        ChangePercent = changePct,
+                        LastUpdate = now
                     };
-                    yield return mt;
+                    _state[s] = row;
+                }
+                else
+                {
+                    row.Price = price;
+                    row.Open = open;
+                    row.High = high;
+                    row.Low = low;
+                    row.Volume = vol;
+                    row.ChangePercent = changePct;
+                    row.LastUpdate = now;
                 }
             }
         }
-    }
-}
 
-public record MiniTicker
-{
-    public string EventType { get; init; } = "";
-    public long EventTime { get; init; }
-    public string Symbol { get; init; } = "";
-    public double Close { get; init; }
-    public double Open { get; init; }
-    public double High { get; init; }
-    public double Low { get; init; }
-    public double Volume { get; init; }
-    public double QuoteVolume { get; init; }
+        // bookTicker: s,b,a  → mid = (b+a)/2 (decimal)
+        private void HandleBookTickerArray(JsonElement arr)
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (var el in arr.EnumerateArray())
+            {
+                var s = el.GetProperty("s").GetString() ?? "";
+                if (!IsUsdt(s)) continue;
+
+                decimal bid = ReadDecimal(el, "b");
+                decimal ask = ReadDecimal(el, "a");
+                if (bid <= 0m && ask <= 0m) continue;
+
+                decimal mid = (bid > 0m && ask > 0m) ? (bid + ask) / 2m
+                              : (ask > 0m ? ask : bid);
+
+                if (!_state.TryGetValue(s, out var row))
+                {
+                    row = new TickerRow
+                    {
+                        Symbol = s,
+                        Price = mid,
+                        LastUpdate = now
+                    };
+                    _state[s] = row;
+                }
+                else
+                {
+                    row.Price = mid;
+                    row.LastUpdate = now;
+                }
+            }
+        }
+
+        private static decimal ReadDecimal(JsonElement obj, string name)
+        {
+            if (obj.TryGetProperty(name, out var v))
+            {
+                if (v.ValueKind == JsonValueKind.Number)
+                {
+                    var raw = v.GetRawText();
+                    if (decimal.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out var d))
+                        return d;
+                }
+                if (v.ValueKind == JsonValueKind.String)
+                {
+                    var s = v.GetString();
+                    if (decimal.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out var ds))
+                        return ds;
+                }
+            }
+            return 0m;
+        }
+
+        private void MaybeEmit()
+        {
+            var nowTicks = DateTime.UtcNow.Ticks;
+            if (nowTicks < _nextEmitTicks) return;
+
+            _nextEmitTicks = nowTicks + _emitIntervalTicks;
+            OnTickersUpdated?.Invoke(_state.Values.ToList());
+        }
+    }
 }
