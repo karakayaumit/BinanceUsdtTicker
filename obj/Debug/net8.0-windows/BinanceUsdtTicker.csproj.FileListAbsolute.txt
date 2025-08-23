@@ -6,6 +6,7 @@ C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUs
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\MainWindow.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Dark.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Light.baml
+C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Styles.Base.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Styles.Toolbar.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\AddAlertWindow.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\ChartWindow.baml

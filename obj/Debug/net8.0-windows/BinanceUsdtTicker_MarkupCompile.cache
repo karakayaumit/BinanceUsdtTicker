@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WİNDOWS7_0_OR_GREATER
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\App.xaml
-7-1433721481
+81414971742
 
 12-1892114880
 198-537775612
-MainWindow.xaml;Themes\Dark.xaml;Themes\Light.xaml;Themes\Styles.Toolbar.xaml;Windows\AddAlertWindow.xaml;Windows\ChartWindow.xaml;Windows\ManageAlertsWindow.xaml;
+MainWindow.xaml;Themes\Dark.xaml;Themes\Light.xaml;Themes\Styles.Base.xaml;Themes\Styles.Toolbar.xaml;Windows\AddAlertWindow.xaml;Windows\ChartWindow.xaml;Windows\ManageAlertsWindow.xaml;
 
 False
 
