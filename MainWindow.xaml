@@ -603,13 +603,13 @@
                                                       Margin="0,0,0,4" HorizontalAlignment="Right"/>
 
                                         <TextBlock Grid.Row="1" Text="Yükselenler" FontWeight="Bold" Margin="0,0,0,4"/>
-					<ListBox Grid.Row="2" x:Name="TopGainersList"
+                                        <ListView Grid.Row="2" x:Name="TopGainersList"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              VirtualizingStackPanel.IsVirtualizing="True"
                              VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                                <ListBox.ItemContainerStyle>
-                                                        <Style TargetType="ListBoxItem">
+                                                <ListView.ItemContainerStyle>
+                                                        <Style TargetType="ListViewItem">
                                                                 <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
                                                                 <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
                                                                 <Style.Triggers>
@@ -625,30 +625,39 @@
                                                                         </DataTrigger>
                                                                 </Style.Triggers>
                                                         </Style>
-                                                </ListBox.ItemContainerStyle>
-						<ListBox.ItemTemplate>
-							<DataTemplate>
-								<DockPanel LastChildFill="True">
-                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
-                                               Width="70" TextAlignment="Right" DockPanel.Dock="Right"
-                                               FontFamily="Consolas"/>
-									<TextBlock>
-										<Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-										<Run Text="/USDT" Foreground="Gray"/>
-									</TextBlock>
-								</DockPanel>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
+                                                </ListView.ItemContainerStyle>
+                                                <ListView.View>
+                                                        <GridView>
+                                                                <GridViewColumn Header="Sembol" Width="80">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock>
+                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                        </TextBlock>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="%" Width="70">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
+                                               TextAlignment="Right" FontFamily="Consolas"/>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                        </GridView>
+                                                </ListView.View>
+                                        </ListView>
 
 					<TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,6,0,4"/>
-					<ListBox Grid.Row="4" x:Name="TopLosersList"
+                                        <ListView Grid.Row="4" x:Name="TopLosersList"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              VirtualizingStackPanel.IsVirtualizing="True"
                              VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                                <ListBox.ItemContainerStyle>
-                                                        <Style TargetType="ListBoxItem">
+                                                <ListView.ItemContainerStyle>
+                                                        <Style TargetType="ListViewItem">
                                                                 <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
                                                                 <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
                                                                 <Style.Triggers>
@@ -664,21 +673,30 @@
                                                                         </DataTrigger>
                                                                 </Style.Triggers>
                                                         </Style>
-                                                </ListBox.ItemContainerStyle>
-						<ListBox.ItemTemplate>
-							<DataTemplate>
-								<DockPanel LastChildFill="True">
-                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
-                                               Width="70" TextAlignment="Right" DockPanel.Dock="Right"
-                                               FontFamily="Consolas"/>
-									<TextBlock>
-										<Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-										<Run Text="/USDT" Foreground="Gray"/>
-									</TextBlock>
-								</DockPanel>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
+                                                </ListView.ItemContainerStyle>
+                                                <ListView.View>
+                                                        <GridView>
+                                                                <GridViewColumn Header="Sembol" Width="80">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock>
+                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                        </TextBlock>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="%" Width="70">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
+                                               TextAlignment="Right" FontFamily="Consolas"/>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                        </GridView>
+                                                </ListView.View>
+                                        </ListView>
 				</Grid>
 			</GroupBox>
 

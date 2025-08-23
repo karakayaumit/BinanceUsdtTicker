@@ -576,8 +576,8 @@ namespace BinanceUsdtTicker
 
         private void UpdateTopMovers(bool use24h)
         {
-            var gainersList = Q<ListBox>("TopGainersList");
-            var losersList = Q<ListBox>("TopLosersList");
+            var gainersList = Q<ListView>("TopGainersList");
+            var losersList = Q<ListView>("TopLosersList");
             if (gainersList == null || losersList == null) return;
 
             var rows = _rows.ToList();
