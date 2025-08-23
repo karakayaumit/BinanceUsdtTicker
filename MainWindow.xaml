@@ -78,101 +78,73 @@
 			</Setter>
 		</Style>
 
-		<!-- Genel button temeli -->
-		<Style x:Key="BaseButtonStyle" TargetType="{x:Type Control}">
-			<Setter Property="Background"  Value="{DynamicResource ButtonBg}"/>
-			<Setter Property="Foreground"  Value="{DynamicResource ButtonFg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource ButtonBorder}"/>
-			<Setter Property="Padding"     Value="6,2"/>
-		</Style>
-		<Style TargetType="{x:Type Button}"       BasedOn="{StaticResource BaseButtonStyle}"/>
-		<Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource BaseButtonStyle}"/>
+                <!-- Button styles moved to global dictionary -->
 
-		<!-- ToolBar TextBox -->
-		<Style x:Key="{x:Static ToolBar.TextBoxStyleKey}"
-               TargetType="TextBox"
-               BasedOn="{StaticResource {x:Type TextBox}}">
-			<Setter Property="Background"      Value="{DynamicResource SearchBoxBg}"/>
-			<Setter Property="Foreground"      Value="{DynamicResource SearchBoxFg}"/>
-			<Setter Property="BorderBrush"     Value="{DynamicResource SearchBoxBorder}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Padding"         Value="6,2"/>
-			<Setter Property="MinWidth"        Value="220"/>
-			<Style.Triggers>
-				<Trigger Property="IsKeyboardFocusWithin" Value="True">
-					<Setter Property="Background"  Value="{DynamicResource SearchBoxBg_Focus}"/>
-					<Setter Property="BorderBrush" Value="{DynamicResource SearchBoxBorder_Focus}"/>
-				</Trigger>
-				<Trigger Property="IsEnabled" Value="False">
-					<Setter Property="Opacity" Value="0.6"/>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
-		<Style TargetType="ToolBar">
-			<Setter Property="Background" Value="{DynamicResource ToolbarBg}"/>
-			<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-		</Style>
+                <!-- ToolBar TextBox -->
+                <Style x:Key="{x:Static ToolBar.TextBoxStyleKey}"
+                       TargetType="TextBox"
+                       BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="Background"      Value="{DynamicResource TbBg}"/>
+                        <Setter Property="Foreground"      Value="{DynamicResource TbFg}"/>
+                        <Setter Property="BorderBrush"     Value="{DynamicResource TbBorder}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Padding"         Value="6,2"/>
+                        <Setter Property="MinWidth"        Value="220"/>
+                        <Style.Triggers>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                        <Setter Property="Background"  Value="{DynamicResource TbHover}"/>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                        </Style.Triggers>
+                </Style>
+                <Style TargetType="ToolBar">
+                        <Setter Property="Background" Value="{DynamicResource TbBg}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TbFg}"/>
+                </Style>
 
-		<!-- Baz stil -->
-		<Style TargetType="RadioButton">
-			<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-		</Style>
-		<Style TargetType="Expander">
-			<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-			<Setter Property="Background" Value="{DynamicResource PanelBg}"/>
-		</Style>
-		<Style TargetType="StatusBar">
-			<Setter Property="Background" Value="{DynamicResource StatusBarBg}"/>
-			<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-		</Style>
-		<Style TargetType="TextBox">
-			<Setter Property="Background"   Value="{DynamicResource TextBoxBg}"/>
-			<Setter Property="Foreground"   Value="{DynamicResource WindowFg}"/>
-			<Setter Property="BorderBrush"  Value="{DynamicResource TextBoxBorder}"/>
-		</Style>
-		<Style TargetType="ListView">
-			<Setter Property="Background" Value="{DynamicResource PanelBg}"/>
-			<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-		</Style>
-		<Style TargetType="ListViewItem">
-			<Setter Property="Background"  Value="{DynamicResource PanelBg}"/>
-			<Setter Property="Foreground"  Value="{DynamicResource WindowFg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource GridLine}"/>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-			<Setter Property="Focusable" Value="False"/>
-			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
-				</Trigger>
-				<Trigger Property="IsSelected" Value="True">
-					<Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
-					<Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
+                <!-- ListView items -->
+                <Style TargetType="ListViewItem">
+                        <Setter Property="Background"  Value="{DynamicResource SurfaceAlt}"/>
+                        <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Focusable" Value="False"/>
+                        <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
+                                </Trigger>
+                        </Style.Triggers>
+                </Style>
 
 		<!-- DataGrid hücre -->
-		<Style TargetType="DataGridCell">
-			<Setter Property="BorderBrush" Value="{DynamicResource GridLine}"/>
-			<Style.Triggers>
-				<Trigger Property="IsSelected" Value="True">
-					<Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
-					<Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
+                <Style TargetType="DataGridCell">
+                        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+                        <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
+                                </Trigger>
+                        </Style.Triggers>
+                </Style>
 
-		<Style TargetType="DataGridRowHeader">
-			<Setter Property="Background"  Value="{DynamicResource PanelBg}"/>
-			<Setter Property="Foreground"  Value="{DynamicResource WindowFg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource GridLine}"/>
-		</Style>
+                <Style TargetType="DataGridRowHeader">
+                        <Setter Property="Background"  Value="{DynamicResource SurfaceAlt}"/>
+                        <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+                </Style>
 
 		<!-- Scrollbar -->
-		<Style x:Key="App.ScrollThumbStyle" TargetType="Thumb">
-			<Setter Property="Background"   Value="{DynamicResource ScrollThumbBg}"/>
-			<Setter Property="BorderBrush"  Value="{DynamicResource ScrollBarBorder}"/>
-			<Setter Property="BorderThickness" Value="1"/>
+                <Style x:Key="App.ScrollThumbStyle" TargetType="Thumb">
+                        <Setter Property="Background"   Value="{DynamicResource TbBg}"/>
+                        <Setter Property="BorderBrush"  Value="{DynamicResource Divider}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="Thumb">
@@ -184,16 +156,16 @@
 				</Setter.Value>
 			</Setter>
 			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="{DynamicResource ScrollThumbHoverBg}"/>
-				</Trigger>
-				<Trigger Property="IsDragging" Value="True">
-					<Setter Property="Background" Value="{DynamicResource ScrollThumbDragBg}"/>
-				</Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource TbHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsDragging" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
+                                </Trigger>
 			</Style.Triggers>
 		</Style>
-		<Style TargetType="ScrollBar">
-			<Setter Property="Background" Value="{DynamicResource ScrollBarBg}"/>
+                <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="ScrollBar">
@@ -236,49 +208,14 @@
 		</Style>
 
 		<!-- Toolbar grup kutusu -->
-		<Style x:Key="ToolbarGroup" TargetType="Border">
-			<Setter Property="CornerRadius" Value="6"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource ButtonBorder}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Background" Value="{DynamicResource PanelBg}"/>
-			<Setter Property="Padding" Value="6,4"/>
-			<Setter Property="Margin" Value="8,0,0,0"/>
-		</Style>
-
-		<!-- **** NÖTR TOGGLE STİLİ (checked olsa da mavi olmaz) **** -->
-		<Style x:Key="ToolbarToggleNeutral" TargetType="ToggleButton">
-			<Setter Property="Foreground"      Value="{DynamicResource ToolbarBtnFg}"/>
-			<Setter Property="Background"      Value="{DynamicResource ToolbarBtnBg}"/>
-			<Setter Property="BorderBrush"     Value="{DynamicResource ToolbarBtnBorder}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Padding"         Value="10,4"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="ToggleButton">
-						<Border CornerRadius="6"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-							<ContentPresenter Margin="{TemplateBinding Padding}"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="{DynamicResource ToolbarBtnBgHover}"/>
-							</Trigger>
-							<Trigger Property="IsPressed" Value="True">
-								<Setter Property="Background" Value="{DynamicResource ToolbarBtnBgPressed}"/>
-							</Trigger>
-							<!-- Bilerek IsChecked tetikleyicisi yok -->
-							<Trigger Property="IsEnabled" Value="False">
-								<Setter Property="Opacity" Value="0.6"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
+                <Style x:Key="ToolbarGroup" TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+                        <Setter Property="Padding" Value="6,4"/>
+                        <Setter Property="Margin" Value="8,0,0,0"/>
+                </Style>
 	</Window.Resources>
 
 	<DockPanel LastChildFill="True">
@@ -451,8 +388,8 @@
                       HeadersVisibility="Column"
                       Background="{DynamicResource SurfaceAlt}"
                       Foreground="{DynamicResource OnSurface}"
-                      HorizontalGridLinesBrush="{DynamicResource GridLine}"
-                      VerticalGridLinesBrush="{DynamicResource GridLine}"
+                      HorizontalGridLinesBrush="{DynamicResource Divider}"
+                      VerticalGridLinesBrush="{DynamicResource Divider}"
                       GridLinesVisibility="All"
                       AlternationCount="2"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0">
@@ -460,13 +397,13 @@
 				<!-- Satır stili -->
 				<DataGrid.RowStyle>
 					<Style TargetType="DataGridRow">
-						<Setter Property="Background" Value="{DynamicResource RowBg}"/>
-						<Setter Property="Foreground" Value="{DynamicResource RowFg}"/>
-						<Style.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
-								<Setter Property="Foreground" Value="{DynamicResource RowFg}"/>
-							</Trigger>
+                                                <Setter Property="Background" Value="{DynamicResource RowBg}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+                                                <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
+                                                                <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+                                                        </Trigger>
 
 							<!-- Renklendirme -->
 							<DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
@@ -678,22 +615,22 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              VirtualizingStackPanel.IsVirtualizing="True"
                              VirtualizingStackPanel.VirtualizationMode="Recycling">
-						<ListBox.ItemContainerStyle>
-							<Style TargetType="ListBoxItem">
-								<Setter Property="Background" Value="{DynamicResource PanelBg}"/>
-								<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
-										<Setter Property="Background" Value="DarkGreen"/>
-										<Setter Property="Foreground" Value="White"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
-										<Setter Property="Background" Value="LightGreen"/>
-										<Setter Property="Foreground" Value="Black"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</ListBox.ItemContainerStyle>
+                                                <ListBox.ItemContainerStyle>
+                                                        <Style TargetType="ListBoxItem">
+                                                                <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+                                                                <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+                                                                <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
+                                                                                <Setter Property="Background" Value="DarkGreen"/>
+                                                                                <Setter Property="Foreground" Value="White"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
+                                                                                <Setter Property="Background" Value="LightGreen"/>
+                                                                                <Setter Property="Foreground" Value="Black"/>
+                                                                        </DataTrigger>
+                                                                </Style.Triggers>
+                                                        </Style>
+                                                </ListBox.ItemContainerStyle>
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<DockPanel LastChildFill="True">
@@ -714,22 +651,22 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              VirtualizingStackPanel.IsVirtualizing="True"
                              VirtualizingStackPanel.VirtualizationMode="Recycling">
-						<ListBox.ItemContainerStyle>
-							<Style TargetType="ListBoxItem">
-								<Setter Property="Background" Value="{DynamicResource PanelBg}"/>
-								<Setter Property="Foreground" Value="{DynamicResource WindowFg}"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
-										<Setter Property="Background" Value="DarkRed"/>
-										<Setter Property="Foreground" Value="White"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
-										<Setter Property="Background" Value="LightCoral"/>
-										<Setter Property="Foreground" Value="Black"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</ListBox.ItemContainerStyle>
+                                                <ListBox.ItemContainerStyle>
+                                                        <Style TargetType="ListBoxItem">
+                                                                <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
+                                                                <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+                                                                <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
+                                                                                <Setter Property="Background" Value="DarkRed"/>
+                                                                                <Setter Property="Foreground" Value="White"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
+                                                                                <Setter Property="Background" Value="LightCoral"/>
+                                                                                <Setter Property="Foreground" Value="Black"/>
+                                                                        </DataTrigger>
+                                                                </Style.Triggers>
+                                                        </Style>
+                                                </ListBox.ItemContainerStyle>
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<DockPanel LastChildFill="True">
