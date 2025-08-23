@@ -41,6 +41,12 @@
     <SolidColorBrush x:Key="Down3Bg"        Color="#FFF8DADA"/>
     <SolidColorBrush x:Key="DownFg"         Color="#FF7F1D1D"/>
 
+    <!-- System colors for controls -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}"       Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}"   Color="#FF1F2937"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"      Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}"  Color="#FF1F2937"/>
+
     <!-- ===== ScrollViewer with visible scrollbars ===== -->
     <Style TargetType="{x:Type ScrollViewer}">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
