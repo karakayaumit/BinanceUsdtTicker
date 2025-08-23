@@ -2,43 +2,43 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ===== Palette (DARK) ===== -->
-    <SolidColorBrush x:Key="Surface"        Color="#FF111827"/>
-    <SolidColorBrush x:Key="SurfaceAlt"     Color="#FF0F172A"/>
+    <SolidColorBrush x:Key="Surface"        Color="#FF0B0F16"/>
+    <SolidColorBrush x:Key="SurfaceAlt"     Color="#FF0A0F19"/>
     <SolidColorBrush x:Key="OnSurface"      Color="#FFE5E7EB"/>
     <SolidColorBrush x:Key="SubtleText"     Color="#FF9CA3AF"/>
-    <SolidColorBrush x:Key="Divider"        Color="#FF1F2937"/>
+    <SolidColorBrush x:Key="Divider"        Color="#FF141B26"/>
 
-    <SolidColorBrush x:Key="HeaderBg"       Color="#FF0B1220"/>
+    <SolidColorBrush x:Key="HeaderBg"       Color="#FF080C14"/>
     <SolidColorBrush x:Key="HeaderFg"       Color="#FFE5E7EB"/>
-    <SolidColorBrush x:Key="HeaderBorder"   Color="#FF1F2937"/>
+    <SolidColorBrush x:Key="HeaderBorder"   Color="#FF141B26"/>
 
-    <SolidColorBrush x:Key="RowBg"          Color="#FF0F172A"/>
-    <SolidColorBrush x:Key="RowAltBg"       Color="#FF0C1424"/>
+    <SolidColorBrush x:Key="RowBg"          Color="#FF0A0F19"/>
+    <SolidColorBrush x:Key="RowAltBg"       Color="#FF070C15"/>
 
-    <SolidColorBrush x:Key="SelectionBg"    Color="#FF2563EB"/>
+    <SolidColorBrush x:Key="SelectionBg"    Color="#FF1D4FCB"/>
     <SolidColorBrush x:Key="SelectionFg"    Color="#FFFFFFFF"/>
 
     <!-- Toolbar tokens -->
-    <SolidColorBrush x:Key="TbBg"           Color="#FF0C1424"/>
-    <SolidColorBrush x:Key="TbBorder"       Color="#FF1F2937"/>
+    <SolidColorBrush x:Key="TbBg"           Color="#FF070C15"/>
+    <SolidColorBrush x:Key="TbBorder"       Color="#FF141B26"/>
     <SolidColorBrush x:Key="TbFg"           Color="#FFE5E7EB"/>
     <SolidColorBrush x:Key="TbFgMuted"      Color="#FF9CA3AF"/>
-    <SolidColorBrush x:Key="TbHover"        Color="#FF182033"/>
-    <SolidColorBrush x:Key="TbPressed"      Color="#FF1E2840"/>
-    <SolidColorBrush x:Key="TbChecked"      Color="#FF10B981"/>
-    <SolidColorBrush x:Key="TbCheckedFg"    Color="#FF081016"/>
-    <SolidColorBrush x:Key="TbDisabledBg"   Color="#33101724"/>
-    <SolidColorBrush x:Key="TbDisabledFg"   Color="#66E5E7EB"/>
+    <SolidColorBrush x:Key="TbHover"        Color="#FF0F1523"/>
+    <SolidColorBrush x:Key="TbPressed"      Color="#FF131C2D"/>
+    <SolidColorBrush x:Key="TbChecked"      Color="#FF0E9C6A"/>
+    <SolidColorBrush x:Key="TbCheckedFg"    Color="#FF05090D"/>
+    <SolidColorBrush x:Key="TbDisabledBg"   Color="#33080C12"/>
+    <SolidColorBrush x:Key="TbDisabledFg"   Color="#66C5C7CB"/>
 
     <!-- Hover color for list rows -->
-    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF182033"/>
+    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF0F1523"/>
 
     <!-- Top Movers tokens (dark) -->
-    <SolidColorBrush x:Key="Up1Bg"          Color="#FF1A3A2B"/>
-    <SolidColorBrush x:Key="Up3Bg"          Color="#FF17563A"/>
+    <SolidColorBrush x:Key="Up1Bg"          Color="#FF10251B"/>
+    <SolidColorBrush x:Key="Up3Bg"          Color="#FF0F3A28"/>
     <SolidColorBrush x:Key="UpFg"           Color="#FFE6FCEF"/>
-    <SolidColorBrush x:Key="Down1Bg"        Color="#FF3A1B1B"/>
-    <SolidColorBrush x:Key="Down3Bg"        Color="#FF5C2323"/>
+    <SolidColorBrush x:Key="Down1Bg"        Color="#FF251212"/>
+    <SolidColorBrush x:Key="Down3Bg"        Color="#FF421818"/>
     <SolidColorBrush x:Key="DownFg"         Color="#FFFFEDED"/>
 
     <!-- ===== ScrollViewer with visible scrollbars ===== -->
