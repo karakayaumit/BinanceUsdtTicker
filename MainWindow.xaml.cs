@@ -72,7 +72,14 @@ namespace BinanceUsdtTicker
 
             // alarm geçmişi bağla
             var alertList = FindName("AlertList") as ListView;
-            if (alertList != null) alertList.ItemsSource = _alertLog;
+            if (alertList != null)
+            {
+                alertList.ItemsSource = _alertLog;
+                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+                alertList.Height = screenHeight;
+                alertList.MinHeight = screenHeight;
+                alertList.MaxHeight = screenHeight;
+            }
 
             // servis
             _service.OnTickersUpdated += OnServiceTickersUpdated;
@@ -554,16 +561,6 @@ namespace BinanceUsdtTicker
         }
 
         // ---------- Top Movers ----------
-        private void Top24s_Checked(object sender, RoutedEventArgs e)
-        {
-            _topMoversUse24h = true;
-            UpdateTopMovers(true);
-        }
-        private void TopSnapshot_Checked(object sender, RoutedEventArgs e)
-        {
-            _topMoversUse24h = false;
-            UpdateTopMovers(false);
-        }
 
         private class TopMoverItem
         {
