@@ -30,6 +30,9 @@
     <SolidColorBrush x:Key="TbDisabledBg"   Color="#33101724"/>
     <SolidColorBrush x:Key="TbDisabledFg"   Color="#66E5E7EB"/>
 
+    <!-- Hover color for list rows -->
+    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF182033"/>
+
     <!-- Top Movers tokens (dark) -->
     <SolidColorBrush x:Key="Up1Bg"          Color="#FF1A3A2B"/>
     <SolidColorBrush x:Key="Up3Bg"          Color="#FF17563A"/>
