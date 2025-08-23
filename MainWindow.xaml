@@ -629,8 +629,9 @@
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<DockPanel LastChildFill="True">
-									<TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
-                                               Width="70" TextAlignment="Right" DockPanel.Dock="Right"/>
+                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
+                                               Width="70" TextAlignment="Right" DockPanel.Dock="Right"
+                                               FontFamily="Consolas"/>
 									<TextBlock>
 										<Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
 										<Run Text="/USDT" Foreground="Gray"/>
@@ -667,8 +668,9 @@
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<DockPanel LastChildFill="True">
-									<TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
-                                               Width="70" TextAlignment="Right" DockPanel.Dock="Right"/>
+                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
+                                               Width="70" TextAlignment="Right" DockPanel.Dock="Right"
+                                               FontFamily="Consolas"/>
 									<TextBlock>
 										<Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
 										<Run Text="/USDT" Foreground="Gray"/>
