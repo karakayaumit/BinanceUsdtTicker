@@ -75,7 +75,9 @@ namespace BinanceUsdtTicker
             if (alertList != null)
             {
                 alertList.ItemsSource = _alertLog;
+
                 var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+
                 alertList.Height = screenHeight;
                 alertList.MinHeight = screenHeight;
                 alertList.MaxHeight = screenHeight;
