@@ -4,7 +4,9 @@
         Title="Alarm Ekle"
         Width="420" Height="280"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="{DynamicResource Surface}"
+        Foreground="{DynamicResource OnSurface}">
 
     <Grid Margin="16">
         <!-- DOĞRU: Koleksiyon şeklinde tanımla -->

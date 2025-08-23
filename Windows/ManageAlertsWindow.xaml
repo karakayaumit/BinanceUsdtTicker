@@ -6,7 +6,9 @@
         Title="Alarmları Yönet"
         Width="760" Height="420"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize"
+        Background="{DynamicResource Surface}"
+        Foreground="{DynamicResource OnSurface}">
 
     <!-- Dönüştürücü -->
     <Window.Resources>
