@@ -6,8 +6,9 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<!-- Styles first (uses DynamicResource), then default theme -->
-				<ResourceDictionary Source="Themes/Styles.Toolbar.xaml"/>
-				<ResourceDictionary Source="Themes/Light.xaml"/>
+                                <ResourceDictionary Source="Themes/Styles.Toolbar.xaml"/>
+                                <ResourceDictionary Source="Themes/Styles.Base.xaml"/>
+                                <ResourceDictionary Source="Themes/Light.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

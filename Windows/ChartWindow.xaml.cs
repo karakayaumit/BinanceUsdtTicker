@@ -55,7 +55,7 @@ namespace BinanceUsdtTicker
 
             var poly = new Polyline
             {
-                Stroke = (Brush)FindResource("WindowFg"),
+                Stroke = (Brush)FindResource("OnSurface"),
                 StrokeThickness = 1.5
             };
 
@@ -72,7 +72,7 @@ namespace BinanceUsdtTicker
             {
                 Width = w,
                 Height = h,
-                Stroke = (Brush)FindResource("GridLine"),
+                Stroke = (Brush)FindResource("Divider"),
                 StrokeThickness = 1
             };
 
