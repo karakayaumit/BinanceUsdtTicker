@@ -291,17 +291,9 @@
 
 				<Separator/>
 
-				<ToggleButton x:Name="btnSnapshot"
-							  ToolBar.OverflowMode="Never"
-							  Style="{StaticResource ToolbarToggleButtonStyle}"
-							  Content="Top Movers: Snapshot"
-							  Checked="btnSnapshot_Checked"
-							  Unchecked="btnSnapshot_Unchecked"
-							  Margin="6,0"/>
-
-				<Button Content="Snapshot Al" ToolBar.OverflowMode="Never"
-						Style="{StaticResource ToolbarButtonStyle}"
-						Click="RefreshSymbols_Click" Margin="6,0"/>
+                                <Button Content="Snapshot Al" ToolBar.OverflowMode="Never"
+                                                Style="{StaticResource ToolbarButtonStyle}"
+                                                Click="RefreshSymbols_Click" Margin="6,0"/>
 
 				<Separator/>
 
@@ -595,13 +587,20 @@
                       Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                       VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
 				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="*"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="*"/>
-					</Grid.RowDefinitions>
+                                        <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <ToggleButton Grid.Row="0" x:Name="btnSnapshot"
+                                                      Style="{StaticResource ToolbarToggleButtonStyle}"
+                                                      Content="Top Movers: Snapshot"
+                                                      Checked="btnSnapshot_Checked"
+                                                      Unchecked="btnSnapshot_Unchecked"
+                                                      Margin="0,0,0,4" HorizontalAlignment="Right"/>
 
                                         <TextBlock Grid.Row="1" Text="Yükselenler" FontWeight="Bold" Margin="0,0,0,4"/>
 					<ListBox Grid.Row="2" x:Name="TopGainersList"
