@@ -75,7 +75,9 @@ namespace BinanceUsdtTicker
             if (alertList != null)
             {
                 alertList.ItemsSource = _alertLog;
-                var screenHeight = SystemParameters.PrimaryScreenHeight / 10;
+
+                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+
                 alertList.Height = screenHeight;
                 alertList.MinHeight = screenHeight;
                 alertList.MaxHeight = screenHeight;
@@ -561,16 +563,6 @@ namespace BinanceUsdtTicker
         }
 
         // ---------- Top Movers ----------
-        private void Top24s_Checked(object sender, RoutedEventArgs e)
-        {
-            _topMoversUse24h = true;
-            UpdateTopMovers(true);
-        }
-        private void TopSnapshot_Checked(object sender, RoutedEventArgs e)
-        {
-            _topMoversUse24h = false;
-            UpdateTopMovers(false);
-        }
 
         private class TopMoverItem
         {

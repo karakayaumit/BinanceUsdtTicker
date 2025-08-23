@@ -603,13 +603,7 @@
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 
-					<!-- %24s / Snapshot toggle -->
-					<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,6">
-						<RadioButton x:Name="Rb24h"  Content="%24s"    Checked="Top24s_Checked"     GroupName="TopMode"/>
-						<RadioButton x:Name="RbSnap" Content="Snapshot" Checked="TopSnapshot_Checked" GroupName="TopMode"/>
-					</StackPanel>
-
-					<TextBlock Grid.Row="1" Text="Yükselenler" FontWeight="Bold" Margin="0,0,0,4"/>
+                                        <TextBlock Grid.Row="1" Text="Yükselenler" FontWeight="Bold" Margin="0,0,0,4"/>
 					<ListBox Grid.Row="2" x:Name="TopGainersList"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
