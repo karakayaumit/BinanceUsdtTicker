@@ -98,8 +98,7 @@
               "ViewState": "AgIAADUAAAAAAAAAAADgv0IAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-22T21:35:25.622Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -114,6 +113,14 @@
               "WhenOpened": "2025-08-21T20:12:33.527Z",
               "IsPinned": true,
               "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Document",
@@ -138,8 +145,7 @@
               "RelativeToolTip": "Themes\\Styles.Toolbar.xaml",
               "ViewState": "AgIAAIgAAAAAAAAAAAAtwJ8AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-23T13:40:25.8Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T13:40:25.8Z"
             },
             {
               "$type": "Document",
@@ -151,8 +157,7 @@
               "RelativeToolTip": "App.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-23T12:47:18.574Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T12:47:18.574Z"
             },
             {
               "$type": "Document",
@@ -188,8 +193,7 @@
               "RelativeToolTip": "Services\\BinanceRestService.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAawAwAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-23T01:22:38.992Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T01:22:38.992Z"
             },
             {
               "$type": "Document",
@@ -213,8 +217,7 @@
               "RelativeToolTip": "Models\\TickerRow.cs",
               "ViewState": "AgIAAFEAAAAAAAAAAAAAAG0AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-21T20:22:50.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-21T20:22:50.74Z"
             },
             {
               "$type": "Document",
@@ -262,8 +265,7 @@
               "RelativeToolTip": "Services\\BinanceSpotService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T16:16:35.339Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T16:16:35.339Z"
             },
             {
               "$type": "Document",
@@ -287,8 +289,7 @@
               "RelativeToolTip": "Themes\\Dark.xaml",
               "ViewState": "AgIAAJMAAAAAAAAAAAAewKkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-22T19:17:28.861Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T19:17:28.861Z"
             },
             {
               "$type": "Document",
@@ -300,8 +301,7 @@
               "RelativeToolTip": "Themes\\Light.xaml",
               "ViewState": "AgIAAJcAAAAAAAAAAAAewK0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-22T19:11:51.801Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T19:11:51.801Z"
             },
             {
               "$type": "Document",
