@@ -34,12 +34,10 @@
     <SolidColorBrush x:Key="RowHoverBg"      Color="#FF20252C"/>
 
     <!-- Top Movers tokens (dark) -->
-    <SolidColorBrush x:Key="Up1Bg"          Color="#FF10251B"/>
-    <SolidColorBrush x:Key="Up3Bg"          Color="#FF0F3A28"/>
-    <SolidColorBrush x:Key="UpFg"           Color="#FFE6FCEF"/>
-    <SolidColorBrush x:Key="Down1Bg"        Color="#FF251212"/>
-    <SolidColorBrush x:Key="Down3Bg"        Color="#FF421818"/>
-    <SolidColorBrush x:Key="DownFg"         Color="#FFFFEDED"/>
+    <SolidColorBrush x:Key="Up1Bg"          Color="#FF90EE90"/>
+    <SolidColorBrush x:Key="Up3Bg"          Color="#FF006400"/>
+    <SolidColorBrush x:Key="Down1Bg"        Color="#FFF08080"/>
+    <SolidColorBrush x:Key="Down3Bg"        Color="#FF8B0000"/>
 
     <!-- System colors for controls -->
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}"       Color="#FF181A20"/>
