@@ -52,10 +52,10 @@
 		<Setter Property="FontSize"   Value="{StaticResource TbFontSize}"/>
 		<Setter Property="FontWeight" Value="{StaticResource TbFontWeight}"/>
 		<Setter Property="Foreground" Value="{DynamicResource TbFg}"/>
-		<Setter Property="Background" Value="{DynamicResource TbBg}"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
-		<Setter Property="Padding" Value="{StaticResource TbPad}"/>
-		<Setter Property="Template">
+                <Setter Property="Background" Value="{DynamicResource TbHover}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
+                <Setter Property="Padding" Value="{StaticResource TbPad}"/>
+                <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
 					<ContentControl Template="{StaticResource TbBaseTemplate}"
@@ -67,12 +67,12 @@
 						</ContentControl.Content>
 					</ContentControl>
 					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="True">
-							<Setter Property="Background" Value="{DynamicResource TbHover}"/>
-						</Trigger>
-						<Trigger Property="IsPressed" Value="True">
-							<Setter Property="Background" Value="{DynamicResource TbPressed}"/>
-						</Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
+                                                </Trigger>
 						<Trigger Property="IsEnabled" Value="False">
 							<Setter Property="Foreground" Value="{DynamicResource TbDisabledFg}"/>
 							<Setter Property="Background" Value="{DynamicResource TbDisabledBg}"/>
@@ -88,10 +88,10 @@
 		<Setter Property="FontSize"   Value="{StaticResource TbFontSize}"/>
 		<Setter Property="FontWeight" Value="{StaticResource TbFontWeight}"/>
 		<Setter Property="Foreground" Value="{DynamicResource TbFg}"/>
-		<Setter Property="Background" Value="{DynamicResource TbBg}"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
-		<Setter Property="Padding" Value="{StaticResource TbPad}"/>
-		<Setter Property="Template">
+                <Setter Property="Background" Value="{DynamicResource TbHover}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
+                <Setter Property="Padding" Value="{StaticResource TbPad}"/>
+                <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ToggleButton}">
 					<ContentControl Template="{StaticResource TbBaseTemplate}"
@@ -103,13 +103,13 @@
 						</ContentControl.Content>
 					</ContentControl>
 					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="True">
-							<Setter Property="Background" Value="{DynamicResource TbHover}"/>
-						</Trigger>
-						<Trigger Property="IsChecked" Value="True">
-							<Setter Property="Background" Value="{DynamicResource TbChecked}"/>
-							<Setter Property="Foreground" Value="{DynamicResource TbCheckedFg}"/>
-						</Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource TbChecked}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TbCheckedFg}"/>
+                                                </Trigger>
 						<Trigger Property="IsEnabled" Value="False">
 							<Setter Property="Foreground" Value="{DynamicResource TbDisabledFg}"/>
 							<Setter Property="Background" Value="{DynamicResource TbDisabledBg}"/>
@@ -125,10 +125,10 @@
 		<Setter Property="FontSize"   Value="{StaticResource TbFontSize}"/>
 		<Setter Property="FontWeight" Value="{StaticResource TbFontWeight}"/>
 		<Setter Property="Foreground" Value="{DynamicResource TbFg}"/>
-		<Setter Property="Background" Value="{DynamicResource TbBg}"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
-		<Setter Property="Padding" Value="{StaticResource TbPad}"/>
-		<Setter Property="Template">
+                <Setter Property="Background" Value="{DynamicResource TbHover}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource TbBorder}"/>
+                <Setter Property="Padding" Value="{StaticResource TbPad}"/>
+                <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type RadioButton}">
 					<ContentControl Template="{StaticResource TbBaseTemplate}"
@@ -140,13 +140,13 @@
 						</ContentControl.Content>
 					</ContentControl>
 					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="True">
-							<Setter Property="Background" Value="{DynamicResource TbHover}"/>
-						</Trigger>
-						<Trigger Property="IsChecked" Value="True">
-							<Setter Property="Background" Value="{DynamicResource TbChecked}"/>
-							<Setter Property="Foreground" Value="{DynamicResource TbCheckedFg}"/>
-						</Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource TbChecked}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TbCheckedFg}"/>
+                                                </Trigger>
 						<Trigger Property="IsEnabled" Value="False">
 							<Setter Property="Foreground" Value="{DynamicResource TbDisabledFg}"/>
 							<Setter Property="Background" Value="{DynamicResource TbDisabledBg}"/>
