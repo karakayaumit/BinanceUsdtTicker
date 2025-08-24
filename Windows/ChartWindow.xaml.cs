@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,11 +52,11 @@ namespace BinanceUsdtTicker
                 ChartWebView.CoreWebView2.NavigationCompleted += (_, __) =>
                 {
                     if (InfoText != null) InfoText.Visibility = Visibility.Collapsed;
+                    _isInitialized = true;
                 };
 
                 string html = BuildHtml(Symbol, interval);
                 ChartWebView.NavigateToString(html);
-                _isInitialized = true;
             }
             catch (Exception ex)
             {
@@ -101,13 +102,14 @@ namespace BinanceUsdtTicker
             string up = GetColor("Up1Bg");
             string down = GetColor("Down1Bg");
 
-            const string scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
+            var scriptPath = Path.Combine(AppContext.BaseDirectory, "Resources", "lightweight-charts.standalone.production.js");
+            string scriptContent = File.Exists(scriptPath) ? File.ReadAllText(scriptPath) : string.Empty;
 
             return $@"<!DOCTYPE html>
 <html>
 <head>
     <meta charset='UTF-8'/>
-    {scriptTag}
+    <script>{scriptContent}</script>
 </head>
 <body style='margin:0;background:{bg};color:{fg};'>
 <div id='chart' style='width:100%;height:100%;'></div>
