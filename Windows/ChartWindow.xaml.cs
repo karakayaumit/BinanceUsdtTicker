@@ -14,6 +14,7 @@ namespace BinanceUsdtTicker
         {
             InitializeComponent();
             Loaded += ChartWindow_Loaded;
+            Symbol = string.Empty;
         }
 
         public ChartWindow(string symbol) : this()
