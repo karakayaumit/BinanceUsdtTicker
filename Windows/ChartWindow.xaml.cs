@@ -1,12 +1,12 @@
 using System;
-using System.IO;
 using System.Globalization;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Threading;
-using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 
 namespace BinanceUsdtTicker
@@ -18,17 +18,13 @@ namespace BinanceUsdtTicker
         private bool _isInitialized;
 
         private readonly BinanceSpotService? _service;
-        private readonly DispatcherTimer _candleTimer = new() { Interval = TimeSpan.FromMilliseconds(500) };
-        private volatile Candle? _pendingCandle;
 
-        // Parametresiz ctor (XAML designer/InitializeComponent için)
         public ChartWindow()
         {
             InitializeComponent();
             Loaded += ChartWindow_Loaded;
         }
 
-        // MainWindow'dan çağrılan ctor
         public ChartWindow(string symbol) : this()
         {
             if (!string.IsNullOrWhiteSpace(symbol))
@@ -41,14 +37,6 @@ namespace BinanceUsdtTicker
         public ChartWindow(string symbol, BinanceSpotService service) : this(symbol)
         {
             _service = service;
-            _service.OnCandle += Service_OnCandle;
-            _candleTimer.Tick += (_, __) => PushLatestCandle();
-            _candleTimer.Start();
-            Closed += (_, __) =>
-            {
-                _service.OnCandle -= Service_OnCandle;
-                _candleTimer.Stop();
-            };
         }
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -64,14 +52,26 @@ namespace BinanceUsdtTicker
                 string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
 
                 await ChartWebView.EnsureCoreWebView2Async();
-                ChartWebView.CoreWebView2.WebMessageReceived -= CoreWebView2_WebMessageReceived;
-                ChartWebView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+                ChartWebView.CoreWebView2.NavigationCompleted += async (_, __) =>
+                {
+                    try
+                    {
+                        await LoadCandlesAsync(interval);
+                        if (InfoText != null) InfoText.Visibility = Visibility.Collapsed;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (InfoText != null)
+                        {
+                            InfoText.Text = "Hata: " + ex.Message;
+                            InfoText.Visibility = Visibility.Visible;
+                        }
+                    }
+                };
 
-                string html = BuildHtml(Symbol, interval);
+                string html = BuildHtml();
                 ChartWebView.NavigateToString(html);
                 _isInitialized = true;
-
-                InfoText.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
@@ -80,38 +80,25 @@ namespace BinanceUsdtTicker
             }
         }
 
-
         private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!_isInitialized || ChartWebView?.CoreWebView2 == null)
+            if (!_isInitialized)
                 return;
 
             string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
-            await ChartWebView.CoreWebView2.ExecuteScriptAsync($"updateChart('{Symbol}', '{interval}')");
+            await LoadCandlesAsync(interval);
         }
 
         private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            if (!_isInitialized || ChartWebView?.CoreWebView2 == null)
+            if (!_isInitialized)
                 return;
 
             string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
-            await ChartWebView.CoreWebView2.ExecuteScriptAsync($"updateChart('{Symbol}', '{interval}')");
-
+            await LoadCandlesAsync(interval);
         }
 
-        private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                if (InfoText == null) return;
-                InfoText.Text = "Hata: " + e.TryGetWebMessageAsString();
-                InfoText.Visibility = Visibility.Visible;
-            });
-
-        }
-
-        private static string BuildHtml(string symbol, string interval)
+        private static string BuildHtml()
         {
             string GetColor(string key)
             {
@@ -130,8 +117,6 @@ namespace BinanceUsdtTicker
             string up = GetColor("Up1Bg");
             string down = GetColor("Down1Bg");
 
-            // Grafiğin yüklenememesi sorununu incelemek için
-            // yerel JavaScript dosyası yerine doğrudan CDN'den çekelim.
             const string scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
 
             return $@"<!DOCTYPE html>
@@ -173,26 +158,10 @@ namespace BinanceUsdtTicker
         priceFormat: {{ type: 'custom', minMove: 0.00000001, formatter: fmt }}
     }});
 
-
-    async function updateChart(symbol, interval) {{
-        const url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=200';
-        try {{
-            const res = await fetch(url);
-            const data = await res.json();
-            const candles = data.map(d => ({{
-                time: Math.floor(d[0] / 1000),
-                open: parseFloat(d[1]),
-                high: parseFloat(d[2]),
-                low: parseFloat(d[3]),
-                close: parseFloat(d[4])
-            }}));
-            series.setData(candles);
-        }} catch (e) {{
-            window.chrome.webview.postMessage(e.message);
-        }}
-    }}
-
-    updateChart('{symbol}', '{interval}');
+    window.setCandles = function(candles) {{
+        series.setData(candles);
+        chart.timeScale().fitContent();
+    }};
 
     window.addEventListener('resize', () => {{
         chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
@@ -202,22 +171,34 @@ namespace BinanceUsdtTicker
 </html>";
         }
 
-        private void Service_OnCandle(string sym, Candle candle)
+        private static async Task<System.Collections.Generic.List<Candle>> FetchCandlesAsync(string symbol, string interval)
         {
-            if (!string.Equals(sym, Symbol, StringComparison.OrdinalIgnoreCase)) return;
-            _pendingCandle = candle;
+            using var http = new HttpClient();
+            string url = $"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200";
+            var json = await http.GetStringAsync(url);
+            using var doc = JsonDocument.Parse(json);
+            var list = new System.Collections.Generic.List<Candle>();
+            foreach (var el in doc.RootElement.EnumerateArray())
+            {
+                list.Add(new Candle
+                {
+                    Time = el[0].GetInt64() / 1000,
+                    Open = decimal.Parse(el[1].GetString() ?? "0", CultureInfo.InvariantCulture),
+                    High = decimal.Parse(el[2].GetString() ?? "0", CultureInfo.InvariantCulture),
+                    Low = decimal.Parse(el[3].GetString() ?? "0", CultureInfo.InvariantCulture),
+                    Close = decimal.Parse(el[4].GetString() ?? "0", CultureInfo.InvariantCulture)
+                });
+            }
+            return list;
         }
 
-        private void PushLatestCandle()
+        private async Task LoadCandlesAsync(string interval)
         {
-            if (_pendingCandle == null || ChartWebView?.CoreWebView2 == null) return;
-
-            var c = _pendingCandle;
-            _pendingCandle = null;
-
-            string js = $"series.update({{ time: {c.Time}, open: {c.Open.ToString(CultureInfo.InvariantCulture)}, high: {c.High.ToString(CultureInfo.InvariantCulture)}, low: {c.Low.ToString(CultureInfo.InvariantCulture)}, close: {c.Close.ToString(CultureInfo.InvariantCulture)} }});";
-
-            _ = ChartWebView.CoreWebView2.ExecuteScriptAsync(js);
+            if (ChartWebView?.CoreWebView2 == null) return;
+            var candles = await FetchCandlesAsync(Symbol, interval);
+            var jsCandles = candles.Select(c => new { time = c.Time, open = c.Open, high = c.High, low = c.Low, close = c.Close });
+            string json = JsonSerializer.Serialize(jsCandles);
+            await ChartWebView.CoreWebView2.ExecuteScriptAsync($"setCandles({json})");
         }
     }
 }
