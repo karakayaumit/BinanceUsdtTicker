@@ -162,12 +162,12 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style TargetType="ComboBox">
+    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
     </Style>
-    <Style TargetType="ComboBoxItem">
+    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
         <Style.Triggers>
@@ -177,7 +177,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style TargetType="TextBox">
+    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>

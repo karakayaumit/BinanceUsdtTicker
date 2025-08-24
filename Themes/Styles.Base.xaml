@@ -13,13 +13,13 @@
     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource BaseButtonStyle}"/>
 
     <!-- Basic input controls -->
-    <Style TargetType="{x:Type ComboBox}">
+    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
         <Setter Property="Background"  Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
     </Style>
 
-    <Style TargetType="{x:Type ComboBoxItem}">
+    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
         <Style.Triggers>
@@ -30,11 +30,11 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type CheckBox}">
+    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
     </Style>
 
-    <Style TargetType="{x:Type TextBlock}">
+    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
     </Style>
 
