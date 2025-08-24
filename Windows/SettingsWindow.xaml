@@ -70,6 +70,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Button Grid.Row="0" Grid.Column="0" Content="Tema Rengi..." Click="ThemeColor_Click" Margin="0,0,10,5"/>
@@ -93,7 +94,10 @@
                 <Button Grid.Row="6" Grid.Column="0" Content="Tablo Çizgileri..." Click="DividerColor_Click" Margin="0,0,10,5"/>
                 <Border Grid.Row="6" Grid.Column="1" Height="20" BorderBrush="{DynamicResource Divider}" BorderThickness="1" Background="{Binding DividerColor}" Margin="0,0,0,5"/>
 
-                <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <Button Grid.Row="7" Grid.Column="0" Content="Ekrandaki Kontrollerin Rengi..." Click="ControlColor_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="7" Grid.Column="1" Height="20" BorderBrush="{DynamicResource Divider}" BorderThickness="1" Background="{Binding ControlColor}" Margin="0,0,0,5"/>
+
+                <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
                     <Button Content="Varsayılan Ayarlara Dön" Click="ResetDefaults_Click" Margin="0,0,10,0"/>
                     <Button Content="Kaydet" Click="Save_Click" Width="80"/>
                 </StackPanel>

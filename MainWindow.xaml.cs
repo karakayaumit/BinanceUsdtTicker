@@ -95,6 +95,13 @@ namespace BinanceUsdtTicker
             set { if (_dividerColor != value) { _dividerColor = value; OnPropertyChanged(); } }
         }
 
+        private string _controlColor = string.Empty;
+        public string ControlColor
+        {
+            get => _controlColor;
+            set { if (_controlColor != value) { _controlColor = value; OnPropertyChanged(); } }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -194,14 +201,14 @@ namespace BinanceUsdtTicker
         private void ApplyCustomColors()
         {
             TryApplyBrush("Surface", _ui.ThemeColor);
-            TryApplyBrush("SurfaceAlt", _ui.ThemeColor);
+            TryApplyBrush("SurfaceAlt", _ui.ControlColor);
             TryApplyBrush("RowBg", _ui.ThemeColor);
             TryApplyBrush("RowAltBg", _ui.ThemeColor);
             // toolbar and button surfaces
-            TryApplyBrush("TbBg", _ui.ThemeColor);
-            TryApplyBrush("TbHover", _ui.ThemeColor);
-            TryApplyBrush("TbPressed", _ui.ThemeColor);
-            TryApplyBrush("TbBorder", _ui.ThemeColor);
+            TryApplyBrush("TbBg", _ui.ControlColor);
+            TryApplyBrush("TbHover", _ui.ControlColor);
+            TryApplyBrush("TbPressed", _ui.ControlColor);
+            TryApplyBrush("TbBorder", _ui.ControlColor);
             TryApplyBrush("HeaderBg", _ui.ThemeColor);
             TryApplyBrush("HeaderBorder", _ui.ThemeColor);
             TryApplyBrush("OnSurface", _ui.TextColor);

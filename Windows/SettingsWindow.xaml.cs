@@ -23,7 +23,8 @@ namespace BinanceUsdtTicker
                 Up3Color = settings.Up3Color,
                 Down1Color = settings.Down1Color,
                 Down3Color = settings.Down3Color,
-                DividerColor = settings.DividerColor
+                DividerColor = settings.DividerColor,
+                ControlColor = settings.ControlColor
             };
             DataContext = _work;
         }
@@ -70,6 +71,12 @@ namespace BinanceUsdtTicker
         if (c != null) _work.DividerColor = c;
     }
 
+        private void ControlColor_Click(object sender, RoutedEventArgs e)
+        {
+            var c = PickColor(_work.ControlColor);
+            if (c != null) _work.ControlColor = c;
+        }
+
         private void ResetDefaults_Click(object sender, RoutedEventArgs e)
         {
             var def = MainWindow.LoadDefaultUiSettings();
@@ -80,6 +87,7 @@ namespace BinanceUsdtTicker
             _work.Down1Color = def.Down1Color;
             _work.Down3Color = def.Down3Color;
             _work.DividerColor = def.DividerColor;
+            _work.ControlColor = def.ControlColor;
         }
 
         private static string? PickColor(string current)
@@ -108,6 +116,7 @@ namespace BinanceUsdtTicker
             _settings.Down1Color = _work.Down1Color;
             _settings.Down3Color = _work.Down3Color;
             _settings.DividerColor = _work.DividerColor;
+            _settings.ControlColor = _work.ControlColor;
             DialogResult = true;
         }
     }
