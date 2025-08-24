@@ -27,6 +27,12 @@ namespace BinanceUsdtTicker
         public string Theme { get; set; } = "Light";
         public string FilterMode { get; set; } = "All";
         public List<ColumnState> Columns { get; set; } = new();
+        public string ThemeColor { get; set; } = string.Empty;
+        public string TextColor { get; set; } = string.Empty;
+        public string Up1Color { get; set; } = string.Empty;
+        public string Up3Color { get; set; } = string.Empty;
+        public string Down1Color { get; set; } = string.Empty;
+        public string Down3Color { get; set; } = string.Empty;
     }
     public class ColumnState
     {
@@ -88,6 +94,7 @@ namespace BinanceUsdtTicker
 
             LoadUiSettingsSafe();
             ApplyTheme(_themeFromString(_ui.Theme));
+            ApplyCustomColors();
             ApplyFilterFromString(_ui.FilterMode);
 
             Loaded += async (_, __) =>
@@ -117,6 +124,52 @@ namespace BinanceUsdtTicker
 
         private ThemeKind _themeFromString(string s) =>
             string.Equals(s, "Dark", StringComparison.OrdinalIgnoreCase) ? ThemeKind.Dark : ThemeKind.Light;
+
+        private void ApplyCustomColors()
+        {
+            TryApplyBrush("Surface", _ui.ThemeColor);
+            TryApplyBrush("RowBg", _ui.ThemeColor);
+            TryApplyBrush("OnSurface", _ui.TextColor);
+            TryApplyBrush("Up1Bg", _ui.Up1Color);
+            TryApplyBrush("Up3Bg", _ui.Up3Color);
+            TryApplyBrush("Down1Bg", _ui.Down1Color);
+            TryApplyBrush("Down3Bg", _ui.Down3Color);
+
+            TryApplyBrush("Up1Fg", IdealText(_ui.Up1Color));
+            TryApplyBrush("Up3Fg", IdealText(_ui.Up3Color));
+            TryApplyBrush("Down1Fg", IdealText(_ui.Down1Color));
+            TryApplyBrush("Down3Fg", IdealText(_ui.Down3Color));
+        }
+
+        private static void TryApplyBrush(string key, string color)
+        {
+            if (string.IsNullOrWhiteSpace(color)) return;
+            try
+            {
+                var c = (Color)ColorConverter.ConvertFromString(color);
+                var b = new SolidColorBrush(c);
+                b.Freeze();
+                if (Application.Current != null)
+                {
+                    Application.Current.Resources[key] = b;
+                    if (Application.Current.MainWindow != null)
+                        Application.Current.MainWindow.Resources[key] = b;
+                }
+            }
+            catch { }
+        }
+
+        private static string IdealText(string bg)
+        {
+            if (string.IsNullOrWhiteSpace(bg)) return string.Empty;
+            try
+            {
+                var c = (Color)ColorConverter.ConvertFromString(bg);
+                var lum = (0.299 * c.R + 0.587 * c.G + 0.114 * c.B) / 255.0;
+                return lum > 0.5 ? "#FF000000" : "#FFFFFFFF";
+            }
+            catch { return string.Empty; }
+        }
 
         // ApplyTheme: remove ONLY Light.xaml/Dark.xaml; keep Styles.Toolbar.xaml
         private void ApplyTheme(ThemeKind kind)
@@ -151,10 +204,22 @@ namespace BinanceUsdtTicker
                 themeToggle.IsChecked = (kind == ThemeKind.Dark);
                 themeToggle.Content = (kind == ThemeKind.Dark) ? "Açık Tema" : "Koyu Tema";
             }
+
+            ApplyCustomColors();
         }
 
         private void ThemeToggle_Checked(object sender, RoutedEventArgs e) => ApplyTheme(ThemeKind.Dark);
         private void ThemeToggle_Unchecked(object sender, RoutedEventArgs e) => ApplyTheme(ThemeKind.Light);
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new SettingsWindow(_ui) { Owner = this };
+            if (win.ShowDialog() == true)
+            {
+                ApplyCustomColors();
+                SaveUiSettingsFromUi();
+            }
+        }
 
         // ---------- servis ----------
         private async Task InitializeAsync()

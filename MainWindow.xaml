@@ -314,21 +314,26 @@
 
 				<Separator/>
 
-				<Button Content="Alarm Ekle" ToolBar.OverflowMode="Never"
-						Style="{StaticResource ToolbarButtonStyle}"
-						Click="AddAlert_Click" Margin="6,0"/>
-				<Button Content="Alarmları Yönet" ToolBar.OverflowMode="Never"
-						Style="{StaticResource ToolbarButtonStyle}"
-						Click="ManageAlerts_Click" Margin="6,0"/>
+                                <Button Content="Alarm Ekle" ToolBar.OverflowMode="Never"
+                                                Style="{StaticResource ToolbarButtonStyle}"
+                                                Click="AddAlert_Click" Margin="6,0"/>
+                                <Button Content="Alarmları Yönet" ToolBar.OverflowMode="Never"
+                                                Style="{StaticResource ToolbarButtonStyle}"
+                                                Click="ManageAlerts_Click" Margin="6,0"/>
 
-				<Separator/>
+                                <Separator/>
 
-				<TextBox x:Name="SearchBox" Width="220"
-						 ToolTip="Sembol ara..."
-						 ToolBar.OverflowMode="Never"
-						 TextChanged="SearchBox_TextChanged"/>
-			</ToolBar>
-		</ToolBarTray>
+                                <TextBox x:Name="SearchBox" Width="220"
+                                                 ToolTip="Sembol ara..."
+                                                 ToolBar.OverflowMode="Never"
+                                                 TextChanged="SearchBox_TextChanged"/>
+
+                                <Separator DockPanel.Dock="Right"/>
+                                <Button x:Name="SettingsButton" Content="⚙" ToolBar.OverflowMode="Never"
+                                        DockPanel.Dock="Right" Style="{StaticResource ToolbarButtonStyle}"
+                                        FontSize="16" Width="32" Click="SettingsButton_Click"/>
+                        </ToolBar>
+                </ToolBarTray>
 
 
 		<!-- STATUS BAR -->
@@ -337,33 +342,33 @@
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 					<TextBlock x:Name="SnapshotInfoText" Text="Snapshot alınmadı"/>
 					<Rectangle Width="12" Fill="Transparent"/>
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-						<Border Width="14" Height="14" CornerRadius="3" Background="LightGreen"
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Width="14" Height="14" CornerRadius="3" Background="{DynamicResource Up1Bg}"
                                 BorderBrush="#66000000" BorderThickness="1" Margin="0,0,6,0"/>
-						<TextBlock Text="%1 – %3: açık yeşil" VerticalAlignment="Center"/>
-					</StackPanel>
-					<Rectangle Width="12" Fill="Transparent"/>
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-						<Border Width="14" Height="14" CornerRadius="3" Background="DarkGreen"
+                                                <TextBlock Text="%1 – %3" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <Rectangle Width="12" Fill="Transparent"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Width="14" Height="14" CornerRadius="3" Background="{DynamicResource Up3Bg}"
                                 BorderBrush="#66000000" BorderThickness="1" Margin="0,0,6,0"/>
-						<TextBlock Text="≥%3: koyu yeşil" Foreground="White" VerticalAlignment="Center"
+                                                <TextBlock Text="≥%3" Foreground="{DynamicResource Up3Fg}" VerticalAlignment="Center"
                                    Background="#22000000" Padding="0,0,2,0"/>
-					</StackPanel>
-					<Rectangle Width="12" Fill="Transparent"/>
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-						<Border Width="14" Height="14" CornerRadius="3" Background="LightCoral"
+                                        </StackPanel>
+                                        <Rectangle Width="12" Fill="Transparent"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Width="14" Height="14" CornerRadius="3" Background="{DynamicResource Down1Bg}"
                                 BorderBrush="#66000000" BorderThickness="1" Margin="0,0,6,0"/>
-						<TextBlock Text="-%1 – -%3: açık kırmızı" VerticalAlignment="Center"/>
-					</StackPanel>
-					<Rectangle Width="12" Fill="Transparent"/>
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-						<Border Width="14" Height="14" CornerRadius="3" Background="DarkRed"
+                                                <TextBlock Text="-%1 – -%3" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <Rectangle Width="12" Fill="Transparent"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Width="14" Height="14" CornerRadius="3" Background="{DynamicResource Down3Bg}"
                                 BorderBrush="#66000000" BorderThickness="1" Margin="0,0,6,0"/>
-						<TextBlock Text="≤-%3: koyu kırmızı" Foreground="White" VerticalAlignment="Center"
+                                                <TextBlock Text="≤-%3" Foreground="{DynamicResource Down3Fg}" VerticalAlignment="Center"
                                    Background="#22000000" Padding="0,0,2,0"/>
-					</StackPanel>
-				</StackPanel>
-			</StatusBarItem>
+                                        </StackPanel>
+                                </StackPanel>
+                        </StatusBarItem>
 
 			<StatusBarItem HorizontalAlignment="Right">
 				<TextBlock x:Name="LastUpdateText"/>
