@@ -5,7 +5,7 @@
     <script src="lightweight-charts.standalone.production.js"></script>
 </head>
 <body style="margin:0">
-<div id="tvchart" style="width:100%;height:100vh;"></div>
+<div id="tvchart" style="width:100%;height:100vh;position:relative;"></div>
 <script>
 const params = new URLSearchParams(location.search);
 const symbol = (params.get('symbol') || 'BTCUSDT').toUpperCase();
@@ -15,16 +15,46 @@ const BINANCE_WS = 'wss://stream.binance.com:9443/ws';
 
 const chart = LightweightCharts.createChart(document.getElementById('tvchart'), {
   width: window.innerWidth,
-  height: window.innerHeight
+  height: window.innerHeight,
+  layout: {
+    backgroundColor: '#ffffff',
+    textColor: '#000'
+  },
+  rightPriceScale: {
+    visible: true
+  },
+  timeScale: {
+    timeVisible: true,
+    secondsVisible: false
+  }
 });
 const series = chart.addCandlestickSeries();
+
+// Axis labels
+const xLabel = document.createElement('div');
+xLabel.innerText = 'Zaman';
+xLabel.style.position = 'absolute';
+xLabel.style.bottom = '4px';
+xLabel.style.left = '50%';
+xLabel.style.transform = 'translateX(-50%)';
+xLabel.style.color = '#000';
+document.getElementById('tvchart').appendChild(xLabel);
+
+const yLabel = document.createElement('div');
+yLabel.innerText = 'Fiyat';
+yLabel.style.position = 'absolute';
+yLabel.style.top = '50%';
+yLabel.style.right = '4px';
+yLabel.style.transform = 'translateY(-50%) rotate(-90deg)';
+yLabel.style.color = '#000';
+document.getElementById('tvchart').appendChild(yLabel);
 
 async function load() {
   const url = `${BINANCE_REST}?symbol=${symbol}&interval=${interval}&limit=500`;
   const res = await fetch(url);
   const json = await res.json();
   const bars = json.map(k => ({
-    time: k[0] / 1000,
+    time: Math.floor(k[0] / 1000),
     open: +k[1],
     high: +k[2],
     low: +k[3],
