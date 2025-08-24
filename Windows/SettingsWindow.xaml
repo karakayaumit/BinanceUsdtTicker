@@ -13,12 +13,38 @@
             <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
             <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+            <!-- Custom template so the tab strip also picks up the theme colors -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <DockPanel>
+                            <!-- Left tab strip -->
+                            <Border DockPanel.Dock="Left"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="0,0,1,0">
+                                <TabPanel IsItemsHost="True"
+                                          Background="{TemplateBinding Background}"/>
+                            </Border>
+                            <!-- Content area -->
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  ContentSource="SelectedContent"/>
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style TargetType="TabItem">
             <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
             <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinWidth" Value="100"/>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
