@@ -26,10 +26,12 @@
 			</Setter>
                 </Style>
 
-                <!-- Şeffaf grafik butonu -->
+                <!-- Grafik butonu: arka plan temaya göre uyarlanır -->
                 <Style x:Key="ChartButtonStyle" TargetType="Button">
                         <Setter Property="OverridesDefaultStyle" Value="True"/>
-                        <Setter Property="Background" Value="Transparent"/>
+                        <!-- Hücre arka planını miras al -->
+                        <Setter Property="Background"
+                                Value="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Path=Background}"/>
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="Focusable" Value="False"/>
@@ -37,7 +39,17 @@
                         <Setter Property="Template">
                                 <Setter.Value>
                                         <ControlTemplate TargetType="Button">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RowHoverBg}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RowHoverBg}"/>
+                                                        </Trigger>
+                                                </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                 </Setter.Value>
                         </Setter>
@@ -511,7 +523,7 @@
                                                         <DataTemplate>
                                                                 <Button Style="{StaticResource ChartButtonStyle}"
                                             Click="ChartButton_Click" Cursor="Hand">
-                                                                        <TextBlock Text="📈" FontSize="16" Foreground="#AAAAAA"/>
+                                                                        <TextBlock Text="📈" FontSize="16" Foreground="{DynamicResource SubtleText}"/>
                                                                 </Button>
                                                         </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
