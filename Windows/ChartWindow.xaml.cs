@@ -28,19 +28,19 @@ namespace BinanceUsdtTicker
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
         {
-            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
+            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "1m";
             await LoadChartAsync(interval);
         }
 
         private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
+            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "1m";
             await LoadChartAsync(interval);
         }
 
         private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
+            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "1m";
             await LoadChartAsync(interval);
         }
 
