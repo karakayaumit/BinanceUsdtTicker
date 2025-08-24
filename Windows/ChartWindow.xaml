@@ -1,6 +1,7 @@
-﻿<Window x:Class="BinanceUsdtTicker.ChartWindow"
+<Window x:Class="BinanceUsdtTicker.ChartWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lvc="http://schemas.livecharts.com/2.0/wpf"
         Title="Grafik" Height="420" Width="680">
 
     <Grid Margin="10">
@@ -37,9 +38,10 @@
                 <TextBlock x:Name="InfoText" Text="Yükleniyor..."
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                            Opacity="0.7"/>
-                <!-- Mumlar bu Canvas üzerinde çizilecek -->
-                <Canvas x:Name="ChartArea"/>
+                <!-- LiveCharts grafik kontrolü -->
+                <lvc:CartesianChart Series="{Binding Series}"/>
             </Grid>
         </Border>
     </Grid>
 </Window>
+
