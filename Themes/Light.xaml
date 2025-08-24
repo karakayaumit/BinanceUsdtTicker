@@ -127,10 +127,14 @@
     <Style TargetType="ListBox">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
     <Style TargetType="ListView">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
     <Style TargetType="StatusBar">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
@@ -153,6 +157,7 @@
         <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource Divider}"/>
         <Setter Property="VerticalGridLinesBrush"   Value="{DynamicResource Divider}"/>
         <Setter Property="BorderBrush"              Value="{DynamicResource Divider}"/>
+        <Setter Property="BorderThickness"         Value="1"/>
     </Style>
     <Style TargetType="{x:Type DataGridRow}">
         <Setter Property="Background" Value="{DynamicResource RowBg}"/>
