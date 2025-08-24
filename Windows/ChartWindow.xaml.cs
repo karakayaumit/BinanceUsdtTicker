@@ -130,24 +130,9 @@ namespace BinanceUsdtTicker
             string up = GetColor("Up1Bg");
             string down = GetColor("Down1Bg");
 
-            string scriptTag;
-            string scriptPath = Path.Combine(AppContext.BaseDirectory, "Resources", "lightweight-charts.standalone.production.js");
-
-            // Çalışma zamanında bazı dağıtımlarda dosya "Resources" klasörü altına
-            // kopyalanmayabiliyor. Bu durumda doğrudan çıktı klasöründe arayalım.
-            if (!File.Exists(scriptPath))
-                scriptPath = Path.Combine(AppContext.BaseDirectory, "lightweight-charts.standalone.production.js");
-
-            if (File.Exists(scriptPath))
-            {
-                var localUri = new Uri(scriptPath);
-                scriptTag = $"<script src='{localUri.AbsoluteUri}'></script>";
-            }
-            else
-            {
-                // Son çare olarak CDN'den yükle
-                scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
-            }
+            // Grafiğin yüklenememesi sorununu incelemek için
+            // yerel JavaScript dosyası yerine doğrudan CDN'den çekelim.
+            const string scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
 
             return $@"<!DOCTYPE html>
 <html>
