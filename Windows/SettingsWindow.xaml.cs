@@ -64,10 +64,22 @@ namespace BinanceUsdtTicker
             if (c != null) _work.Down3Color = c;
         }
 
-        private void DividerColor_Click(object sender, RoutedEventArgs e)
+    private void DividerColor_Click(object sender, RoutedEventArgs e)
+    {
+        var c = PickColor(_work.DividerColor);
+        if (c != null) _work.DividerColor = c;
+    }
+
+        private void ResetDefaults_Click(object sender, RoutedEventArgs e)
         {
-            var c = PickColor(_work.DividerColor);
-            if (c != null) _work.DividerColor = c;
+            var def = MainWindow.LoadDefaultUiSettings();
+            _work.ThemeColor = def.ThemeColor;
+            _work.TextColor = def.TextColor;
+            _work.Up1Color = def.Up1Color;
+            _work.Up3Color = def.Up3Color;
+            _work.Down1Color = def.Down1Color;
+            _work.Down3Color = def.Down3Color;
+            _work.DividerColor = def.DividerColor;
         }
 
         private static string? PickColor(string current)
