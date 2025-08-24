@@ -1,45 +1,50 @@
 <Window x:Class="BinanceUsdtTicker.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Ayarlar" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        Title="Ayarlar"
+        Width="500" Height="400" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <TabControl TabStripPlacement="Left" Margin="10">
+        <TabItem Header="Tema" IsSelected="True">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Grid.Column="0" Content="Tema Rengi..." Click="ThemeColor_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="0" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding ThemeColor}" Margin="0,0,0,5"/>
+                <Button Grid.Row="0" Grid.Column="0" Content="Tema Rengi..." Click="ThemeColor_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="0" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding ThemeColor}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="1" Grid.Column="0" Content="Yazı Rengi..." Click="TextColor_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="1" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding TextColor}" Margin="0,0,0,5"/>
+                <Button Grid.Row="1" Grid.Column="0" Content="Yazı Rengi..." Click="TextColor_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="1" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding TextColor}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="2" Grid.Column="0" Content="Yükseliş %1-%3..." Click="Up1Color_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="2" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Up1Color}" Margin="0,0,0,5"/>
+                <Button Grid.Row="2" Grid.Column="0" Content="Yükseliş %1-%3..." Click="Up1Color_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="2" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Up1Color}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="3" Grid.Column="0" Content="Yükseliş ≥%3..." Click="Up3Color_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="3" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Up3Color}" Margin="0,0,0,5"/>
+                <Button Grid.Row="3" Grid.Column="0" Content="Yükseliş ≥%3..." Click="Up3Color_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="3" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Up3Color}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="4" Grid.Column="0" Content="Düşüş -%1 - -%3..." Click="Down1Color_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="4" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Down1Color}" Margin="0,0,0,5"/>
+                <Button Grid.Row="4" Grid.Column="0" Content="Düşüş -%1 - -%3..." Click="Down1Color_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="4" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Down1Color}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="5" Grid.Column="0" Content="Düşüş ≤-%3..." Click="Down3Color_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="5" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Down3Color}" Margin="0,0,0,5"/>
+                <Button Grid.Row="5" Grid.Column="0" Content="Düşüş ≤-%3..." Click="Down3Color_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="5" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding Down3Color}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="6" Grid.Column="0" Content="Tablo Çizgileri..." Click="DividerColor_Click" Margin="0,0,5,5"/>
-        <Border Grid.Row="6" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding DividerColor}" Margin="0,0,0,5"/>
+                <Button Grid.Row="6" Grid.Column="0" Content="Tablo Çizgileri..." Click="DividerColor_Click" Margin="0,0,10,5"/>
+                <Border Grid.Row="6" Grid.Column="1" Width="20" Height="20" BorderBrush="Black" BorderThickness="1" Background="{Binding DividerColor}" Margin="0,0,0,5"/>
 
-        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Kaydet" Click="Save_Click" Width="80" HorizontalAlignment="Right" Margin="0,10,0,0"/>
-    </Grid>
+                <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Kaydet" Click="Save_Click" Width="80" HorizontalAlignment="Right" Margin="0,10,0,0"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>
