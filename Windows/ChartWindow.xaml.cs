@@ -139,6 +139,76 @@ namespace BinanceUsdtTicker
                 Canvas.SetTop(rect, bodyTop);
                 ChartArea.Children.Add(rect);
             }
+
+            // === Eksenler ve etiketler ===
+            // Y ekseni (fiyat)
+            var axisBrush = lineBrush;
+            var yAxis = new Line
+            {
+                X1 = 0,
+                X2 = 0,
+                Y1 = 0,
+                Y2 = h,
+                Stroke = axisBrush,
+                StrokeThickness = 1
+            };
+            ChartArea.Children.Add(yAxis);
+
+            // X ekseni (zaman)
+            var xAxis = new Line
+            {
+                X1 = 0,
+                X2 = w,
+                Y1 = h,
+                Y2 = h,
+                Stroke = axisBrush,
+                StrokeThickness = 1
+            };
+            ChartArea.Children.Add(xAxis);
+
+            // Y ekseni etiketleri (min, orta, max)
+            void DrawPriceLabel(decimal price, double y)
+            {
+                var tb = new TextBlock
+                {
+                    Text = price.ToString("0.####"),
+                    Foreground = axisBrush,
+                    FontSize = 11
+                };
+                tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                Canvas.SetLeft(tb, 2);
+                Canvas.SetTop(tb, y - tb.DesiredSize.Height / 2);
+                ChartArea.Children.Add(tb);
+            }
+
+            DrawPriceLabel(max, 0);
+            DrawPriceLabel((max + min) / 2m, h / 2);
+            DrawPriceLabel(min, h);
+
+            // X ekseni etiketleri (ilk, orta, son mum zamanı)
+            void DrawTimeLabel(DateTime time, double x)
+            {
+                var tb = new TextBlock
+                {
+                    Text = time.ToLocalTime().ToString("HH:mm"),
+                    Foreground = axisBrush,
+                    FontSize = 11
+                };
+                tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                double left = x - tb.DesiredSize.Width / 2;
+                if (left < 2) left = 2;
+                if (left + tb.DesiredSize.Width > w) left = w - tb.DesiredSize.Width - 2;
+                Canvas.SetLeft(tb, left);
+                Canvas.SetTop(tb, h - tb.DesiredSize.Height);
+                ChartArea.Children.Add(tb);
+            }
+
+            if (candles.Count > 0)
+            {
+                DrawTimeLabel(candles.First().OpenTimeUtc, 0);
+                DrawTimeLabel(candles[candles.Count / 2].OpenTimeUtc, w / 2);
+                DrawTimeLabel(candles.Last().OpenTimeUtc, w);
+            }
         }
     }
 }
