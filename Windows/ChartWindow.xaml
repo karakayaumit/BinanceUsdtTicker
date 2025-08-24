@@ -37,12 +37,12 @@
                 BorderBrush="{DynamicResource Divider}" BorderThickness="1" Padding="8"
                 Background="{DynamicResource SurfaceAlt}">
             <Grid>
+                <!-- TradingView Lightweight Charts için WebView2 -->
+                <wv2:WebView2 x:Name="ChartWebView"/>
                 <!-- Veri veya hata mesajları için -->
                 <TextBlock x:Name="InfoText" Text="Yükleniyor..."
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Opacity="0.7"/>
-                <!-- TradingView Lightweight Charts için WebView2 -->
-                <wv2:WebView2 x:Name="ChartWebView"/>
+                           Opacity="0.7" Panel.ZIndex="1"/>
             </Grid>
         </Border>
     </Grid>
