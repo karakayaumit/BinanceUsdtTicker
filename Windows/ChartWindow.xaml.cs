@@ -1,8 +1,4 @@
 using System;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,24 +48,12 @@ namespace BinanceUsdtTicker
                 string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
 
                 await ChartWebView.EnsureCoreWebView2Async();
-                ChartWebView.CoreWebView2.NavigationCompleted += async (_, __) =>
+                ChartWebView.CoreWebView2.NavigationCompleted += (_, __) =>
                 {
-                    try
-                    {
-                        await LoadCandlesAsync(interval);
-                        if (InfoText != null) InfoText.Visibility = Visibility.Collapsed;
-                    }
-                    catch (Exception ex)
-                    {
-                        if (InfoText != null)
-                        {
-                            InfoText.Text = "Hata: " + ex.Message;
-                            InfoText.Visibility = Visibility.Visible;
-                        }
-                    }
+                    if (InfoText != null) InfoText.Visibility = Visibility.Collapsed;
                 };
 
-                string html = BuildHtml();
+                string html = BuildHtml(Symbol, interval);
                 ChartWebView.NavigateToString(html);
                 _isInitialized = true;
             }
@@ -98,7 +82,7 @@ namespace BinanceUsdtTicker
             await LoadCandlesAsync(interval);
         }
 
-        private static string BuildHtml()
+        private static string BuildHtml(string symbol, string interval)
         {
             string GetColor(string key)
             {
@@ -163,6 +147,15 @@ namespace BinanceUsdtTicker
         chart.timeScale().fitContent();
     }};
 
+    async function loadCandles(symbol, interval) {{
+        const url = "https://api.binance.com/api/v3/klines?symbol=" + symbol + "&interval=" + interval + "&limit=200";
+        const data = await fetch(url).then(r => r.json());
+        const candles = data.map(c => ({ time: c[0] / 1000, open: parseFloat(c[1]), high: parseFloat(c[2]), low: parseFloat(c[3]), close: parseFloat(c[4]) }));
+        setCandles(candles);
+    }}
+    window.loadCandles = loadCandles;
+    loadCandles('{symbol}','{interval}');
+
     window.addEventListener('resize', () => {{
         chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
     }});
@@ -171,34 +164,11 @@ namespace BinanceUsdtTicker
 </html>";
         }
 
-        private static async Task<System.Collections.Generic.List<Candle>> FetchCandlesAsync(string symbol, string interval)
-        {
-            using var http = new HttpClient();
-            string url = $"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200";
-            var json = await http.GetStringAsync(url);
-            using var doc = JsonDocument.Parse(json);
-            var list = new System.Collections.Generic.List<Candle>();
-            foreach (var el in doc.RootElement.EnumerateArray())
-            {
-                list.Add(new Candle
-                {
-                    Time = el[0].GetInt64() / 1000,
-                    Open = decimal.Parse(el[1].GetString() ?? "0", CultureInfo.InvariantCulture),
-                    High = decimal.Parse(el[2].GetString() ?? "0", CultureInfo.InvariantCulture),
-                    Low = decimal.Parse(el[3].GetString() ?? "0", CultureInfo.InvariantCulture),
-                    Close = decimal.Parse(el[4].GetString() ?? "0", CultureInfo.InvariantCulture)
-                });
-            }
-            return list;
-        }
-
         private async Task LoadCandlesAsync(string interval)
         {
             if (ChartWebView?.CoreWebView2 == null) return;
-            var candles = await FetchCandlesAsync(Symbol, interval);
-            var jsCandles = candles.Select(c => new { time = c.Time, open = c.Open, high = c.High, low = c.Low, close = c.Close });
-            string json = JsonSerializer.Serialize(jsCandles);
-            await ChartWebView.CoreWebView2.ExecuteScriptAsync($"setCandles({json})");
+            string js = $"loadCandles('{Symbol}','{interval}')";
+            await ChartWebView.CoreWebView2.ExecuteScriptAsync(js);
         }
     }
 }
