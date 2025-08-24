@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 
 namespace BinanceUsdtTicker
@@ -56,6 +57,9 @@ namespace BinanceUsdtTicker
                 string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
 
                 await ChartWebView.EnsureCoreWebView2Async();
+                ChartWebView.CoreWebView2.WebMessageReceived -= CoreWebView2_WebMessageReceived;
+                ChartWebView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+
                 string html = BuildHtml(Symbol, interval);
                 ChartWebView.NavigateToString(html);
 
@@ -66,6 +70,16 @@ namespace BinanceUsdtTicker
                 InfoText.Text = "Hata: " + ex.Message;
                 InfoText.Visibility = Visibility.Visible;
             }
+        }
+
+        private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (InfoText == null) return;
+                InfoText.Text = "Hata: " + e.TryGetWebMessageAsString();
+                InfoText.Visibility = Visibility.Visible;
+            });
         }
 
         private static string BuildHtml(string symbol, string interval)
@@ -109,7 +123,8 @@ namespace BinanceUsdtTicker
         .then(data => {{
             const candles = data.map(d => ({{ time: Math.floor(d[0]/1000), open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]) }}));
             series.setData(candles);
-        }});
+        }})
+        .catch(e => window.chrome.webview.postMessage(e.message));
     window.addEventListener('resize', () => {{
         chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
     }});
