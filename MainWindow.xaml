@@ -250,7 +250,7 @@
         <DockPanel LastChildFill="True">
 
                 <Border DockPanel.Dock="Top" Background="{DynamicResource TbBg}" BorderBrush="{DynamicResource TbBorder}" BorderThickness="0,0,0,1">
-                        <ToolBarTray Panel.ZIndex="10" IsLocked="True" HorizontalAlignment="Stretch">
+                        <ToolBarTray Panel.ZIndex="10" IsLocked="True" HorizontalAlignment="Stretch" Background="{DynamicResource TbBg}">
                                 <ToolBar Band="0" BandIndex="0" ToolBarTray.IsLocked="True" HorizontalAlignment="Stretch">
                                 <ToolBar.Resources>
                                         <!-- Neutralize any app-wide ScrollViewer ControlTemplate that may cause circular template issues in ToolBar/TextBox -->
