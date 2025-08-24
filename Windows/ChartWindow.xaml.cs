@@ -17,6 +17,7 @@ namespace BinanceUsdtTicker
         public string Symbol { get; private set; } = "";
 
         private readonly BinanceSpotService? _service;
+        private readonly List<Candle> _candles = new();
 
         public ChartWindow()
         {
@@ -36,6 +37,8 @@ namespace BinanceUsdtTicker
         public ChartWindow(string symbol, BinanceSpotService service) : this(symbol)
         {
             _service = service;
+            _service.OnCandle += Service_OnCandle;
+            Closed += ChartWindow_Closed;
         }
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -70,17 +73,20 @@ namespace BinanceUsdtTicker
                 using var http = new HttpClient();
                 using var stream = await http.GetStreamAsync(url);
                 using var doc = await JsonDocument.ParseAsync(stream);
-                var items = new List<Kline>();
+                var items = new List<Candle>();
                 foreach (var el in doc.RootElement.EnumerateArray())
                 {
-                    double open = double.Parse(el[1].GetString() ?? "0", CultureInfo.InvariantCulture);
-                    double high = double.Parse(el[2].GetString() ?? "0", CultureInfo.InvariantCulture);
-                    double low = double.Parse(el[3].GetString() ?? "0", CultureInfo.InvariantCulture);
-                    double close = double.Parse(el[4].GetString() ?? "0", CultureInfo.InvariantCulture);
-                    items.Add(new Kline(open, high, low, close));
+                    long time = el[0].GetInt64() / 1000;
+                    decimal open = decimal.Parse(el[1].GetString() ?? "0", CultureInfo.InvariantCulture);
+                    decimal high = decimal.Parse(el[2].GetString() ?? "0", CultureInfo.InvariantCulture);
+                    decimal low = decimal.Parse(el[3].GetString() ?? "0", CultureInfo.InvariantCulture);
+                    decimal close = decimal.Parse(el[4].GetString() ?? "0", CultureInfo.InvariantCulture);
+                    items.Add(new Candle { Time = time, Open = open, High = high, Low = low, Close = close });
                 }
 
-                DrawCandles(items);
+                _candles.Clear();
+                _candles.AddRange(items);
+                DrawCandles(_candles);
 
                 if (InfoText != null)
                     InfoText.Visibility = Visibility.Collapsed;
@@ -94,7 +100,7 @@ namespace BinanceUsdtTicker
                 }
             }
         }
-        private void DrawCandles(IReadOnlyList<Kline> items)
+        private void DrawCandles(IReadOnlyList<Candle> items)
         {
             if (ChartCanvas == null) return;
             ChartCanvas.Children.Clear();
@@ -105,18 +111,22 @@ namespace BinanceUsdtTicker
             if (width <= 0 || height <= 0) return;
 
             double candleWidth = width / items.Count;
-            double min = items.Min(k => k.Low);
-            double max = items.Max(k => k.High);
+            double min = (double)items.Min(k => k.Low);
+            double max = (double)items.Max(k => k.High);
             double scale = (height - 20) / (max - min);
 
             for (int i = 0; i < items.Count; i++)
             {
                 var k = items[i];
+                double open = (double)k.Open;
+                double close = (double)k.Close;
+                double high = (double)k.High;
+                double low = (double)k.Low;
                 double x = i * candleWidth + candleWidth / 2;
-                double yOpen = height - (k.Open - min) * scale;
-                double yClose = height - (k.Close - min) * scale;
-                double yHigh = height - (k.High - min) * scale;
-                double yLow = height - (k.Low - min) * scale;
+                double yOpen = height - (open - min) * scale;
+                double yClose = height - (close - min) * scale;
+                double yHigh = height - (high - min) * scale;
+                double yLow = height - (low - min) * scale;
 
                 var line = new Line
                 {
@@ -133,7 +143,7 @@ namespace BinanceUsdtTicker
                 {
                     Width = Math.Max(1, candleWidth * 0.7),
                     Height = Math.Abs(yClose - yOpen),
-                    Fill = k.Close >= k.Open ? Brushes.Green : Brushes.Red,
+                    Fill = close >= open ? Brushes.Green : Brushes.Red,
                     Stroke = Brushes.Black,
                     StrokeThickness = 1
                 };
@@ -143,6 +153,32 @@ namespace BinanceUsdtTicker
             }
         }
 
-        private readonly record struct Kline(double Open, double High, double Low, double Close);
+        private void Service_OnCandle(string symbol, Candle candle)
+        {
+            if (!string.Equals(symbol, Symbol, StringComparison.OrdinalIgnoreCase)) return;
+
+            if ((IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() != "1m")
+                return;
+
+            Dispatcher.Invoke(() =>
+            {
+                if (_candles.Count > 0 && _candles[^1].Time == candle.Time)
+                    _candles[^1] = candle;
+                else
+                {
+                    _candles.Add(candle);
+                    if (_candles.Count > 200)
+                        _candles.RemoveAt(0);
+                }
+
+                DrawCandles(_candles);
+            });
+        }
+
+        private void ChartWindow_Closed(object? sender, EventArgs e)
+        {
+            if (_service != null)
+                _service.OnCandle -= Service_OnCandle;
+        }
     }
 }
