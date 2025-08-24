@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 using BinanceUsdtTicker;
+using Microsoft.Web.WebView2.Wpf;
 using System;
 using System.Diagnostics;
 using System.Windows;
