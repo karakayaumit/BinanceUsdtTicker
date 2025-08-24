@@ -5,11 +5,14 @@ C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Li
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Styles.Base.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Styles.Toolbar.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\AddAlertWindow.baml
+C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\ChartWindow.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\App.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\MainWindow.g.cs
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\AddAlertWindow.g.cs
+C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\ChartWindow.g.cs
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Windows\ManageAlertsWindow.g.cs
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\BinanceUsdtTicker_Content.g.cs
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\BinanceUsdtTicker_MarkupCompile.cache
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\BinanceUsdtTicker_MarkupCompile.lref
