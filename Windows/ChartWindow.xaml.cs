@@ -132,6 +132,12 @@ namespace BinanceUsdtTicker
 
             string scriptTag;
             string scriptPath = Path.Combine(AppContext.BaseDirectory, "Resources", "lightweight-charts.standalone.production.js");
+
+            // Çalışma zamanında bazı dağıtımlarda dosya "Resources" klasörü altına
+            // kopyalanmayabiliyor. Bu durumda doğrudan çıktı klasöründe arayalım.
+            if (!File.Exists(scriptPath))
+                scriptPath = Path.Combine(AppContext.BaseDirectory, "lightweight-charts.standalone.production.js");
+
             if (File.Exists(scriptPath))
             {
                 string chartJs = File.ReadAllText(scriptPath);
@@ -139,6 +145,7 @@ namespace BinanceUsdtTicker
             }
             else
             {
+                // Son çare olarak CDN'den yükle
                 scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
             }
 
