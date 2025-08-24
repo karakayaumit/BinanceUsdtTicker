@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -83,11 +84,23 @@ namespace BinanceUsdtTicker
             string bg = GetColor("SurfaceAlt");
             string fg = GetColor("OnSurface");
 
+            string scriptTag;
+            string scriptPath = Path.Combine(AppContext.BaseDirectory, "Resources", "lightweight-charts.standalone.production.js");
+            if (File.Exists(scriptPath))
+            {
+                string chartJs = File.ReadAllText(scriptPath);
+                scriptTag = $"<script>{chartJs}</script>";
+            }
+            else
+            {
+                scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
+            }
+
             return $@"<!DOCTYPE html>
 <html>
 <head>
     <meta charset='UTF-8'/>
-    <script src='https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js'></script>
+    {scriptTag}
 </head>
 <body style='margin:0;background:{bg};color:{fg};'>
 <div id='chart' style='width:100%;height:100%;'></div>
