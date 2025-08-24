@@ -557,8 +557,8 @@
 						</DataGridTextColumn.ElementStyle>
 					</DataGridTextColumn>
 
-					<!-- Başlangıca % -->
-					<DataGridTextColumn x:Name="ColChSnap" Header="Başlangıca Göre %"
+                                        <!-- Anlık Değişim -->
+                                        <DataGridTextColumn x:Name="ColChSnap" Header="Anlık Değişim"
                                         Width="0.9*" MinWidth="80"
                                         Binding="{Binding ChangeSinceStartPercent, StringFormat=N2}">
 						<DataGridTextColumn.ElementStyle>

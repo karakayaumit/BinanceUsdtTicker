@@ -519,8 +519,8 @@ namespace BinanceUsdtTicker
             AlertType.PriceAtOrAbove => "Fiyat ≥",
             AlertType.PriceAtOrBelow => "Fiyat ≤",
             AlertType.PriceBetween => "Fiyat [min,max]",
-            AlertType.ChangeSinceStartAtOrAbove => "Başlangıca göre % ≥",
-            AlertType.ChangeSinceStartAtOrBelow => "Başlangıca göre % ≤",
+            AlertType.ChangeSinceStartAtOrAbove => "Anlık Değişim ≥",
+            AlertType.ChangeSinceStartAtOrBelow => "Anlık Değişim ≤",
             _ => t.ToString()
         };
 

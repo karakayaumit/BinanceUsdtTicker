@@ -38,8 +38,8 @@
             <ComboBoxItem Content="Fiyat ≥" Tag="PriceAtOrAbove" />
             <ComboBoxItem Content="Fiyat ≤" Tag="PriceAtOrBelow" />
             <ComboBoxItem Content="Fiyat [min,max]" Tag="PriceBetween" />
-            <ComboBoxItem Content="Başlangıca göre % ≥" Tag="ChangeSinceStartAtOrAbove" />
-            <ComboBoxItem Content="Başlangıca göre % ≤" Tag="ChangeSinceStartAtOrBelow" />
+            <ComboBoxItem Content="Anlık Değişim ≥" Tag="ChangeSinceStartAtOrAbove" />
+            <ComboBoxItem Content="Anlık Değişim ≤" Tag="ChangeSinceStartAtOrBelow" />
         </ComboBox>
 
         <!-- Değer(ler) -->
