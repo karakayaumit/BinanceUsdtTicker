@@ -19,6 +19,8 @@ namespace BinanceUsdtTicker
     {
         public event Action<List<TickerRow>>? OnTickersUpdated;
 
+        public event Action<string, Candle>? OnCandle;
+
         // WS durum bildirimi: (durum, deneme sayısı)
         public event Action<WsState, int>? OnWsStateChanged;
 
@@ -32,6 +34,13 @@ namespace BinanceUsdtTicker
         // Emit throttle
         private long _emitIntervalTicks = TimeSpan.FromMilliseconds(300).Ticks;
         private long _nextEmitTicks = 0;
+
+        private readonly CandleAggregator _candleAgg = new(TimeSpan.FromMinutes(1));
+
+        public BinanceSpotService()
+        {
+            _candleAgg.OnCandle += (s, c) => OnCandle?.Invoke(s, c);
+        }
 
         public WsState State { get; private set; } = WsState.Closed;
         public DateTime LastMessageUtc { get; private set; }
@@ -204,6 +213,8 @@ namespace BinanceUsdtTicker
                     row.ChangePercent = changePct;
                     row.LastUpdate = now;
                 }
+
+                _candleAgg.AddTick(s, price, now);
             }
         }
 
@@ -239,6 +250,8 @@ namespace BinanceUsdtTicker
                     row.Price = mid;
                     row.LastUpdate = now;
                 }
+
+                _candleAgg.AddTick(s, mid, now);
             }
         }
 
