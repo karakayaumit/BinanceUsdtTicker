@@ -179,13 +179,13 @@ namespace BinanceUsdtTicker
         const url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=200';
         const res = await fetch(url);
         const data = await res.json();
-        const candles = data.map(d => ({
+        const candles = data.map(d => ({{
             time: Math.floor(d[0] / 1000),
             open: parseFloat(d[1]),
             high: parseFloat(d[2]),
             low: parseFloat(d[3]),
             close: parseFloat(d[4])
-        }));
+        }}));
         series.setData(candles);
     }}
 
