@@ -12,10 +12,4 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1823.32" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Resources/lightweight-charts.standalone.production.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

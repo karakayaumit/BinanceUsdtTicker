@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -118,17 +117,16 @@ namespace BinanceUsdtTicker
             string up = GetColor("Up1Bg");
             string down = GetColor("Down1Bg");
 
-            string scriptPath = Path.Combine(AppContext.BaseDirectory, "Resources", "lightweight-charts.standalone.production.js");
-            string library = File.ReadAllText(scriptPath).Replace("</script>", "<\\/script>");
+            const string scriptTag = "<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>";
 
             return $@"<!DOCTYPE html>
 <html>
 <head>
     <meta charset='UTF-8'/>
+    {scriptTag}
 </head>
 <body style='margin:0;background:{bg};color:{fg};'>
 <div id='chart' style='width:100%;height:100%;'></div>
-<script>{library}</script>
 <script>
     const fmt = p => p.toLocaleString(undefined, {{ maximumFractionDigits: 8 }});
     const chart = LightweightCharts.createChart(
