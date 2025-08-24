@@ -48,12 +48,13 @@ namespace BinanceUsdtTicker
                 string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
 
                 await ChartWebView.EnsureCoreWebView2Async();
-                ChartWebView.CoreWebView2.NavigationCompleted += (_, __) =>
+                ChartWebView.CoreWebView2.NavigationCompleted += async (_, __) =>
                 {
                     if (InfoText != null) InfoText.Visibility = Visibility.Collapsed;
+                    await LoadCandlesAsync(interval);
                 };
 
-                string html = BuildHtml(Symbol, interval);
+                string html = BuildHtml(Symbol);
                 ChartWebView.NavigateToString(html);
                 _isInitialized = true;
             }
@@ -82,7 +83,7 @@ namespace BinanceUsdtTicker
             await LoadCandlesAsync(interval);
         }
 
-        private static string BuildHtml(string symbol, string interval)
+        private static string BuildHtml(string symbol)
         {
             string GetColor(string key)
             {
@@ -154,7 +155,6 @@ namespace BinanceUsdtTicker
         setCandles(candles);
     }}
     window.loadCandles = loadCandles;
-    loadCandles('{symbol}','{interval}');
 
     window.addEventListener('resize', () => {{
         chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
