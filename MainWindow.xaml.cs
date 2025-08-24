@@ -126,6 +126,7 @@ namespace BinanceUsdtTicker
         private static readonly string AlertsFile = Path.Combine(AppDir, "alerts.json");
         private static readonly string FavoritesFile = Path.Combine(AppDir, "favorites.json");
         private static readonly string UiSettingsFile = Path.Combine(AppDir, "ui_settings.json");
+        private static readonly string UiDefaultsFile = Path.Combine(AppDir, "ui_defaults.json");
 
         private UiSettings _ui = new();
         private ThemeKind _theme = ThemeKind.Light;
@@ -912,6 +913,36 @@ namespace BinanceUsdtTicker
             {
                 _ui = new UiSettings();
             }
+
+            SaveDefaultUiSettings(_ui);
+        }
+
+        private static void SaveDefaultUiSettings(UiSettings settings)
+        {
+            try
+            {
+                Directory.CreateDirectory(AppDir);
+                if (!File.Exists(UiDefaultsFile))
+                {
+                    var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(UiDefaultsFile, json);
+                }
+            }
+            catch { }
+        }
+
+        internal static UiSettings LoadDefaultUiSettings()
+        {
+            try
+            {
+                if (File.Exists(UiDefaultsFile))
+                {
+                    var json = File.ReadAllText(UiDefaultsFile);
+                    return JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
+                }
+            }
+            catch { }
+            return new UiSettings();
         }
 
         private void ApplyColumnLayoutFromSettings()
