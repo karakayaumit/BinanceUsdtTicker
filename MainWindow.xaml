@@ -24,10 +24,27 @@
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
-		</Style>
+                </Style>
 
-		<!-- DataGrid başlığı -->
-		<Style TargetType="DataGridColumnHeader">
+                <!-- Şeffaf grafik butonu -->
+                <Style x:Key="ChartButtonStyle" TargetType="Button">
+                        <Setter Property="OverridesDefaultStyle" Value="True"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Template">
+                                <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </ControlTemplate>
+                                </Setter.Value>
+                        </Setter>
+                </Style>
+
+                <!-- DataGrid başlığı -->
+                <Style TargetType="DataGridColumnHeader">
 			<Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
 			<Setter Property="Foreground"  Value="{DynamicResource HeaderFg}"/>
 			<Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
@@ -479,10 +496,24 @@
 								</DataTemplate.Triggers>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
-					</DataGridTemplateColumn>
+                                        </DataGridTemplateColumn>
 
-					<!-- 1) Sembol -->
-					<DataGridTemplateColumn x:Name="ColSymbol"
+                                        <!-- 1) Grafik -->
+                                        <DataGridTemplateColumn x:Name="ColChart"
+                                            Header="Grafik" Width="32"
+                                            IsReadOnly="True" CanUserSort="False">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                                <Button Style="{StaticResource ChartButtonStyle}"
+                                            Click="ChartButton_Click" Cursor="Hand">
+                                                                        <TextBlock Text="📈" FontSize="16" Foreground="#AAAAAA"/>
+                                                                </Button>
+                                                        </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- 2) Sembol -->
+                                        <DataGridTemplateColumn x:Name="ColSymbol"
                                             Header="Sembol"
                                             Width="1.2*" MinWidth="100">
 						<DataGridTemplateColumn.CellTemplate>

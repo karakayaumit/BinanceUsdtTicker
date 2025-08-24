@@ -410,6 +410,16 @@ namespace BinanceUsdtTicker
             CollectionViewSource.GetDefaultView(_rows).Refresh();
         }
 
+        private void ChartButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe && fe.DataContext is TickerRow row)
+            {
+                var win = new ChartWindow(row.Symbol);
+                win.Owner = this;
+                win.Show();
+            }
+        }
+
         // ---------- alarmlar (UI tarafı sizde mevcut) ----------
         private void AddAlert_Click(object sender, RoutedEventArgs e)
         {
@@ -636,10 +646,12 @@ namespace BinanceUsdtTicker
             if (Grid?.Columns == null) return;
 
             DataGridColumn? star = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "★");
+            DataGridColumn? chart = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Grafik");
             DataGridColumn? symbol = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Sembol");
 
             int idx = 0;
             if (star != null) star.DisplayIndex = idx++;
+            if (chart != null) chart.DisplayIndex = idx++;
             if (symbol != null) symbol.DisplayIndex = idx++;
         }
 
