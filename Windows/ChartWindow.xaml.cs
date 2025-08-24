@@ -184,27 +184,23 @@ namespace BinanceUsdtTicker
 
     async function updateChart(symbol, interval) {{
         const url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=200';
-        const res = await fetch(url);
-        const data = await res.json();
-        const candles = data.map(d => ({{
-            time: Math.floor(d[0] / 1000),
-            open: parseFloat(d[1]),
-            high: parseFloat(d[2]),
-            low: parseFloat(d[3]),
-            close: parseFloat(d[4])
-        }}));
-        series.setData(candles);
+        try {{
+            const res = await fetch(url);
+            const data = await res.json();
+            const candles = data.map(d => ({{
+                time: Math.floor(d[0] / 1000),
+                open: parseFloat(d[1]),
+                high: parseFloat(d[2]),
+                low: parseFloat(d[3]),
+                close: parseFloat(d[4])
+            }}));
+            series.setData(candles);
+        }} catch (e) {{
+            window.chrome.webview.postMessage(e.message);
+        }}
     }}
 
     updateChart('{symbol}', '{interval}');
-
-    fetch('https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200')
-        .then(r => r.json())
-        .then(data => {{
-            const candles = data.map(d => ({{ time: Math.floor(d[0]/1000), open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]) }}));
-            series.setData(candles);
-        }})
-        .catch(e => window.chrome.webview.postMessage(e.message));
 
     window.addEventListener('resize', () => {{
         chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
