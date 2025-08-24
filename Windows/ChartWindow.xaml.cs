@@ -28,7 +28,7 @@ namespace BinanceUsdtTicker
         public ChartWindow(string symbol) : this()
         {
             if (!string.IsNullOrWhiteSpace(symbol))
-                Symbol = symbol.ToUpperInvariant();
+                Symbol = symbol.Trim().ToUpperInvariant();
 
             Title = string.IsNullOrEmpty(Symbol) ? "Grafik" : $"Grafik - {Symbol}";
             if (SymbolText != null) SymbolText.Text = Symbol;
@@ -69,9 +69,33 @@ namespace BinanceUsdtTicker
                     InfoText.Visibility = Visibility.Visible;
                 }
 
-                var url = $"https://api.binance.com/api/v3/klines?symbol={Symbol}&interval={interval}&limit=200";
+                if (string.IsNullOrWhiteSpace(Symbol))
+                {
+                    if (InfoText != null)
+                    {
+                        InfoText.Text = "Geçersiz sembol.";
+                        InfoText.Visibility = Visibility.Visible;
+                    }
+                    return;
+                }
+
+                var encodedSymbol = Uri.EscapeDataString(Symbol);
+                var encodedInterval = Uri.EscapeDataString(interval);
+                var url = $"https://api.binance.com/api/v3/klines?symbol={encodedSymbol}&interval={encodedInterval}&limit=200";
                 using var http = new HttpClient();
-                using var stream = await http.GetStreamAsync(url);
+                using var response = await http.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string msg = await response.Content.ReadAsStringAsync();
+                    if (InfoText != null)
+                    {
+                        InfoText.Text = $"Hata: {(int)response.StatusCode} {msg}";
+                        InfoText.Visibility = Visibility.Visible;
+                    }
+                    return;
+                }
+
+                using var stream = await response.Content.ReadAsStreamAsync();
                 using var doc = await JsonDocument.ParseAsync(stream);
                 var items = new List<Candle>();
                 foreach (var el in doc.RootElement.EnumerateArray())
