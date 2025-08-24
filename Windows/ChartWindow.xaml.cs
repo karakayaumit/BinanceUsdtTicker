@@ -82,6 +82,10 @@ namespace BinanceUsdtTicker
 
             string bg = GetColor("SurfaceAlt");
             string fg = GetColor("OnSurface");
+            string grid = GetColor("Divider");
+            string subtle = GetColor("SubtleText");
+            string up = GetColor("Up1Bg");
+            string down = GetColor("Down1Bg");
 
             return $@"<!DOCTYPE html>
 <html>
@@ -99,9 +103,26 @@ namespace BinanceUsdtTicker
             width: window.innerWidth,
             height: window.innerHeight,
             layout: {{ background: {{ color: '{bg}' }}, textColor: '{fg}' }},
+            grid: {{
+                vertLines: {{ color: '{grid}' }},
+                horzLines: {{ color: '{grid}' }}
+            }},
+            crosshair: {{
+                mode: LightweightCharts.CrosshairMode.Normal,
+                vertLine: {{ color: '{subtle}', width: 1, style: 0 }},
+                horzLine: {{ color: '{subtle}', width: 1, style: 0 }}
+            }},
+            rightPriceScale: {{ borderColor: '{grid}' }},
+            timeScale: {{ borderColor: '{grid}' }},
             localization: {{ priceFormatter: fmt }}
         }});
     const series = chart.addCandlestickSeries({{
+        upColor: '{up}',
+        downColor: '{down}',
+        borderUpColor: '{up}',
+        borderDownColor: '{down}',
+        wickUpColor: '{up}',
+        wickDownColor: '{down}',
         priceFormat: {{ type: 'custom', minMove: 0.00000001, formatter: fmt }}
     }});
     fetch('https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200')
