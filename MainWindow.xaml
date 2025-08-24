@@ -275,24 +275,16 @@
 					</Style>
 				</ToolBar.Resources>
 
-				<ToggleButton x:Name="ViewToggle"
-							  ToolBar.OverflowMode="Never"
-							  Style="{StaticResource ToolbarToggleButtonStyle}"
-							  IsChecked="True"
-							  Content="Detay"
-							  Checked="ViewToggle_Checked"
-							  Unchecked="ViewToggle_Unchecked"
-							  Margin="0,0,8,0"/>
-				<ToggleButton x:Name="ThemeToggle"
-							  ToolBar.OverflowMode="Never"
-							  Style="{StaticResource ToolbarToggleButtonStyle}"
-							  IsChecked="True"
-							  Content="Açık Tema"
-							  Checked="ThemeToggle_Checked"
-							  Unchecked="ThemeToggle_Unchecked"
-							  Margin="0,0,12,0"/>
+                                <ToggleButton x:Name="ViewToggle"
+                                                          ToolBar.OverflowMode="Never"
+                                                          Style="{StaticResource ToolbarToggleButtonStyle}"
+                                                          IsChecked="True"
+                                                          Content="Detay"
+                                                          Checked="ViewToggle_Checked"
+                                                          Unchecked="ViewToggle_Unchecked"
+                                                          Margin="0,0,12,0"/>
 
-				<Separator/>
+                                <Separator/>
 
 				<RadioButton x:Name="RbAll" ToolBar.OverflowMode="Never"
 							 Style="{StaticResource ToolbarRadioStyle}"

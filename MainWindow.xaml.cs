@@ -274,18 +274,8 @@ namespace BinanceUsdtTicker
             if (Application.Current != null)
                 SwapThemes(Application.Current.Resources.MergedDictionaries, uri);
 
-            var themeToggle = Q<ToggleButton>("ThemeToggle");
-            if (themeToggle != null)
-            {
-                themeToggle.IsChecked = (kind == ThemeKind.Dark);
-                themeToggle.Content = (kind == ThemeKind.Dark) ? "Açık Tema" : "Koyu Tema";
-            }
-
             ApplyCustomColors();
         }
-
-        private void ThemeToggle_Checked(object sender, RoutedEventArgs e) => ApplyTheme(ThemeKind.Dark);
-        private void ThemeToggle_Unchecked(object sender, RoutedEventArgs e) => ApplyTheme(ThemeKind.Light);
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -905,9 +895,20 @@ namespace BinanceUsdtTicker
         {
             try
             {
-                if (!File.Exists(UiSettingsFile)) { _ui = new UiSettings(); return; }
-                var json = File.ReadAllText(UiSettingsFile);
-                _ui = JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
+                if (File.Exists(UiSettingsFile))
+                {
+                    var json = File.ReadAllText(UiSettingsFile);
+                    _ui = JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
+                }
+                else if (File.Exists(UiDefaultsFile))
+                {
+                    var json = File.ReadAllText(UiDefaultsFile);
+                    _ui = JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
+                }
+                else
+                {
+                    _ui = new UiSettings();
+                }
             }
             catch
             {
