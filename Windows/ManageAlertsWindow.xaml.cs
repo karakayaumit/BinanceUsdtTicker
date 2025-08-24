@@ -74,7 +74,7 @@ namespace BinanceUsdtTicker
         }
 
         // NumPad Del ile satır silinmesini önle (TextBox içindeyse izin ver)
-        private void Grid_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void Grid_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
             {
