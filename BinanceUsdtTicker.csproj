@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1823.32" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0" />
+    <PackageReference Include="System.Windows.Forms.DataVisualization" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

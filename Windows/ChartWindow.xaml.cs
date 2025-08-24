@@ -2,12 +2,11 @@ using System;
 using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace BinanceUsdtTicker
 {
@@ -16,13 +15,24 @@ namespace BinanceUsdtTicker
         public string Symbol { get; private set; } = "";
 
         private readonly BinanceSpotService? _service;
-        private readonly ObservableCollection<FinancialPoint> _candles = new();
+        private readonly Chart _chart = new();
+        private readonly Series _series;
 
         public ChartWindow()
         {
             InitializeComponent();
             Loaded += ChartWindow_Loaded;
-            if (CandleSeries != null) CandleSeries.Values = _candles;
+
+            _chart.ChartAreas.Add(new ChartArea("Main"));
+            _series = new Series("Price")
+            {
+                ChartType = SeriesChartType.Candlestick,
+                XValueType = ChartValueType.DateTime,
+                YValuesPerPoint = 4
+            };
+            _chart.Series.Add(_series);
+            _chart.Dock = DockStyle.Fill;
+            if (ChartHost != null) ChartHost.Child = _chart;
         }
 
         public ChartWindow(string symbol) : this()
@@ -71,7 +81,7 @@ namespace BinanceUsdtTicker
                 using var http = new HttpClient();
                 using var stream = await http.GetStreamAsync(url);
                 using var doc = await JsonDocument.ParseAsync(stream);
-                _candles.Clear();
+                _series.Points.Clear();
                 foreach (var el in doc.RootElement.EnumerateArray())
                 {
                     long time = el[0].GetInt64();
@@ -79,7 +89,7 @@ namespace BinanceUsdtTicker
                     double high = double.Parse(el[2].GetString() ?? "0", CultureInfo.InvariantCulture);
                     double low = double.Parse(el[3].GetString() ?? "0", CultureInfo.InvariantCulture);
                     double close = double.Parse(el[4].GetString() ?? "0", CultureInfo.InvariantCulture);
-                    _candles.Add(new FinancialPoint(DateTimeOffset.FromUnixTimeMilliseconds(time).DateTime, open, high, low, close));
+                    _series.Points.AddXY(DateTimeOffset.FromUnixTimeMilliseconds(time).DateTime, high, low, open, close);
                 }
 
                 if (InfoText != null)
