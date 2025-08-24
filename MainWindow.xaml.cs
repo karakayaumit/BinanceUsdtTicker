@@ -550,7 +550,7 @@ namespace BinanceUsdtTicker
         {
             if (sender is FrameworkElement fe && fe.DataContext is TickerRow row)
             {
-                var win = new ChartWindow(row.Symbol, _service);
+                var win = new ChartWindow(row.Symbol);
                 win.Owner = this;
                 win.Show();
             }
