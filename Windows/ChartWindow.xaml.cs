@@ -139,7 +139,6 @@ namespace BinanceUsdtTicker
 <head>
     <meta charset='UTF-8'/>
     {scriptTag}
-    <script src='ms-appx-web:///Resources/lightweight-charts.standalone.production.js'></script>
 </head>
 <body style='margin:0;background:{bg};color:{fg};'>
 <div id='chart' style='width:100%;height:100%;'></div>
