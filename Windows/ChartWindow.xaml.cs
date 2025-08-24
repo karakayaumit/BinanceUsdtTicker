@@ -12,6 +12,9 @@ namespace BinanceUsdtTicker
     public partial class ChartWindow : Window
     {
         public string Symbol { get; private set; } = "";
+
+        private bool _isInitialized;
+
         private readonly BinanceSpotService? _service;
 
         // Parametresiz ctor (XAML designer/InitializeComponent için)
@@ -40,22 +43,7 @@ namespace BinanceUsdtTicker
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
         {
-            await LoadChartAsync();
-        }
-
-        private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            await LoadChartAsync();
-        }
-
-        private async void Refresh_Click(object sender, RoutedEventArgs e)
-        {
-            await LoadChartAsync();
-        }
-
-        private async Task LoadChartAsync()
-        {
-            if (InfoText == null || ChartWebView == null)
+            if (_isInitialized || InfoText == null || ChartWebView == null)
                 return;
 
             try
@@ -71,6 +59,7 @@ namespace BinanceUsdtTicker
 
                 string html = BuildHtml(Symbol, interval);
                 ChartWebView.NavigateToString(html);
+                _isInitialized = true;
 
                 InfoText.Visibility = Visibility.Collapsed;
             }
@@ -81,6 +70,24 @@ namespace BinanceUsdtTicker
             }
         }
 
+
+        private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInitialized || ChartWebView?.CoreWebView2 == null)
+                return;
+
+            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
+            await ChartWebView.CoreWebView2.ExecuteScriptAsync($"updateChart('{Symbol}', '{interval}')");
+        }
+
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_isInitialized || ChartWebView?.CoreWebView2 == null)
+                return;
+
+            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
+            await ChartWebView.CoreWebView2.ExecuteScriptAsync($"updateChart('{Symbol}', '{interval}')");
+
         private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             Dispatcher.Invoke(() =>
@@ -89,6 +96,7 @@ namespace BinanceUsdtTicker
                 InfoText.Text = "Hata: " + e.TryGetWebMessageAsString();
                 InfoText.Visibility = Visibility.Visible;
             });
+
         }
 
         private static string BuildHtml(string symbol, string interval)
@@ -148,6 +156,24 @@ namespace BinanceUsdtTicker
         wickDownColor: '{down}',
         priceFormat: {{ type: 'custom', minMove: 0.00000001, formatter: fmt }}
     }});
+
+
+    async function updateChart(symbol, interval) {{
+        const url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=200';
+        const res = await fetch(url);
+        const data = await res.json();
+        const candles = data.map(d => ({
+            time: Math.floor(d[0] / 1000),
+            open: parseFloat(d[1]),
+            high: parseFloat(d[2]),
+            low: parseFloat(d[3]),
+            close: parseFloat(d[4])
+        }));
+        series.setData(candles);
+    }}
+
+    updateChart('{symbol}', '{interval}');
+
     fetch('https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200')
         .then(r => r.json())
         .then(data => {{
@@ -155,6 +181,7 @@ namespace BinanceUsdtTicker
             series.setData(candles);
         }})
         .catch(e => window.chrome.webview.postMessage(e.message));
+
     window.addEventListener('resize', () => {{
         chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
     }});
