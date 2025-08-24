@@ -88,6 +88,13 @@ namespace BinanceUsdtTicker
             set { if (_down3Color != value) { _down3Color = value; OnPropertyChanged(); } }
         }
 
+        private string _dividerColor = string.Empty;
+        public string DividerColor
+        {
+            get => _dividerColor;
+            set { if (_dividerColor != value) { _dividerColor = value; OnPropertyChanged(); } }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -201,6 +208,7 @@ namespace BinanceUsdtTicker
             TryApplyBrush("Up3Bg", _ui.Up3Color);
             TryApplyBrush("Down1Bg", _ui.Down1Color);
             TryApplyBrush("Down3Bg", _ui.Down3Color);
+            TryApplyBrush("Divider", _ui.DividerColor);
 
             TryApplyBrush("Up1Fg", IdealText(_ui.Up1Color));
             TryApplyBrush("Up3Fg", IdealText(_ui.Up3Color));
