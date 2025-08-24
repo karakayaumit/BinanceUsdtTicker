@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using WinFormsChart = System.Windows.Forms.DataVisualization.Charting.Chart;
-using WinFormsSeries = System.Windows.Forms.DataVisualization.Charting.Series;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace BinanceUsdtTicker
 {
@@ -16,19 +15,19 @@ namespace BinanceUsdtTicker
         public string Symbol { get; private set; } = "";
 
         private readonly BinanceSpotService? _service;
-        private readonly WinFormsChart _chart = new();
-        private readonly WinFormsSeries _series;
+        private readonly Chart _chart = new();
+        private readonly Series _series;
 
         public ChartWindow()
         {
             InitializeComponent();
             Loaded += ChartWindow_Loaded;
 
-            _chart.ChartAreas.Add(new System.Windows.Forms.DataVisualization.Charting.ChartArea("Main"));
-            _series = new WinFormsSeries("Price")
+            _chart.ChartAreas.Add(new ChartArea("Main"));
+            _series = new Series("Price")
             {
-                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick,
-                XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime,
+                ChartType = SeriesChartType.Candlestick,
+                XValueType = ChartValueType.DateTime,
                 YValuesPerPoint = 4
             };
             _chart.Series.Add(_series);
