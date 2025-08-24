@@ -1,3 +1,4 @@
+C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\BinanceUsdtTicker.csproj.AssemblyReference.cache
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\MainWindow.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Dark.baml
 C:\Users\Karak\Source\Repos\BinanceUsdtTicker\obj\Debug\net8.0-windows\Themes\Light.baml

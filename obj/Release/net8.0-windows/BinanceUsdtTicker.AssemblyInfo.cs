@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BinanceUsdtTicker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eea41c77bba0a473febb1913d2c1ce0878706e3b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2bd75c8fe634b79604436bce2f521cb3cccff697")]
 [assembly: System.Reflection.AssemblyProductAttribute("BinanceUsdtTicker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BinanceUsdtTicker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

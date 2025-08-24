@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\BinanceUsdtTicker.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BinanceUsdtTicker.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ChartWindow.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Windows\\ChartWindow.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ChartWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Windows\\ChartWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\MainWindow.xaml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
@@ -46,10 +54,6 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\BinanceRestService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ChartWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Windows\\ChartWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\AddAlertWindow.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Windows\\AddAlertWindow.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
@@ -85,11 +89,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
@@ -98,12 +102,11 @@
               "ViewState": "AgIAAD4AAAAAAAAAAADwv0wAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-22T21:35:25.622Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
@@ -112,33 +115,40 @@
               "ViewState": "AgIAAKUAAAAAAAAAAAAtwLwAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-08-21T20:12:33.527Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
               "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BinanceUsdtTicker.csproj",
+              "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\BinanceUsdtTicker.csproj",
+              "RelativeDocumentMoniker": "BinanceUsdtTicker.csproj",
+              "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\BinanceUsdtTicker.csproj",
+              "RelativeToolTip": "BinanceUsdtTicker.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-24T12:13:30.576Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "StyleHelper.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\AppData\\Local\\Temp\\.vsdbgsrc\\096d11878b53281293ae08dd92e17978aca47e71d4ac28883bfc83be2e14bf5a\\StyleHelper.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\096d11878b53281293ae08dd92e17978aca47e71d4ac28883bfc83be2e14bf5a\\StyleHelper.cs",
-              "ToolTip": "C:\\Users\\Karak\\AppData\\Local\\Temp\\.vsdbgsrc\\096d11878b53281293ae08dd92e17978aca47e71d4ac28883bfc83be2e14bf5a\\StyleHelper.cs[Salt Okunur]",
-              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\096d11878b53281293ae08dd92e17978aca47e71d4ac28883bfc83be2e14bf5a\\StyleHelper.cs[Salt Okunur]",
+              "ToolTip": "C:\\Users\\Karak\\AppData\\Local\\Temp\\.vsdbgsrc\\096d11878b53281293ae08dd92e17978aca47e71d4ac28883bfc83be2e14bf5a\\StyleHelper.cs",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\096d11878b53281293ae08dd92e17978aca47e71d4ac28883bfc83be2e14bf5a\\StyleHelper.cs",
               "ViewState": "AgIAAK0DAAAAAAAAAAAswMgDAAADAAAAAQAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-23T14:31:16.029Z",
-              "EditorCaption": "[Salt Okunur]"
+              "WhenOpened": "2025-08-23T14:31:16.029Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "Styles.Toolbar.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Themes\\Styles.Toolbar.xaml",
               "RelativeDocumentMoniker": "Themes\\Styles.Toolbar.xaml",
@@ -146,12 +156,11 @@
               "RelativeToolTip": "Themes\\Styles.Toolbar.xaml",
               "ViewState": "AgIAAIgAAAAAAAAAAAAtwJ8AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-23T13:40:25.8Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T13:40:25.8Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "App.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\App.xaml",
               "RelativeDocumentMoniker": "App.xaml",
@@ -159,25 +168,23 @@
               "RelativeToolTip": "App.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-23T12:47:18.574Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T12:47:18.574Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 2,
               "Title": "ChartWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ChartWindow.xaml.cs",
               "RelativeDocumentMoniker": "Windows\\ChartWindow.xaml.cs",
               "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ChartWindow.xaml.cs",
               "RelativeToolTip": "Windows\\ChartWindow.xaml.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAswFgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAADYAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-23T09:59:32.666Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T09:59:32.666Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ChartWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ChartWindow.xaml",
               "RelativeDocumentMoniker": "Windows\\ChartWindow.xaml",
@@ -185,12 +192,11 @@
               "RelativeToolTip": "Windows\\ChartWindow.xaml",
               "ViewState": "AgIAABQAAAAAAAAAAAAwwCsAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-23T01:23:05.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T01:23:05.018Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "BinanceRestService.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Services\\BinanceRestService.cs",
               "RelativeDocumentMoniker": "Services\\BinanceRestService.cs",
@@ -198,12 +204,11 @@
               "RelativeToolTip": "Services\\BinanceRestService.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAawAwAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-23T01:22:38.992Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T01:22:38.992Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "ManageAlertsWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ManageAlertsWindow.xaml.cs",
               "RelativeDocumentMoniker": "Windows\\ManageAlertsWindow.xaml.cs",
@@ -211,25 +216,23 @@
               "RelativeToolTip": "Windows\\ManageAlertsWindow.xaml.cs",
               "ViewState": "AgIAAGEAAAAAAAAAAAAwwIoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T16:23:26.594Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T16:23:26.594Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "TickerRow.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Models\\TickerRow.cs",
               "RelativeDocumentMoniker": "Models\\TickerRow.cs",
               "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Models\\TickerRow.cs",
               "RelativeToolTip": "Models\\TickerRow.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAG0AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAE4AAAAAAAAAAIBJwG0AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-21T20:22:50.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-21T20:22:50.74Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "FlexibleDoubleConverter.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Converters\\FlexibleDoubleConverter.cs",
               "RelativeDocumentMoniker": "Converters\\FlexibleDoubleConverter.cs",
@@ -237,12 +240,11 @@
               "RelativeToolTip": "Converters\\FlexibleDoubleConverter.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAcwDcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T17:31:46.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T17:31:46.481Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "AlertHit.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Models\\AlertHit.cs",
               "RelativeDocumentMoniker": "Models\\AlertHit.cs",
@@ -250,12 +252,11 @@
               "RelativeToolTip": "Models\\AlertHit.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T17:56:24.877Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T17:56:24.877Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "ManageAlertsWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\ManageAlertsWindow.xaml",
               "RelativeDocumentMoniker": "Windows\\ManageAlertsWindow.xaml",
@@ -263,12 +264,11 @@
               "RelativeToolTip": "Windows\\ManageAlertsWindow.xaml",
               "ViewState": "AgIAAIAAAAAAAAAAAAAswKkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-22T16:22:06.492Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T16:22:06.492Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "BinanceSpotService.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Services\\BinanceSpotService.cs",
               "RelativeDocumentMoniker": "Services\\BinanceSpotService.cs",
@@ -276,12 +276,11 @@
               "RelativeToolTip": "Services\\BinanceSpotService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T16:16:35.339Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T16:16:35.339Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "AddAlertWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\AddAlertWindow.xaml.cs",
               "RelativeDocumentMoniker": "Windows\\AddAlertWindow.xaml.cs",
@@ -289,12 +288,11 @@
               "RelativeToolTip": "Windows\\AddAlertWindow.xaml.cs",
               "ViewState": "AgIAAFUAAAAAAAAAAAAswIIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T16:01:25.281Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T16:01:25.281Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Dark.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Themes\\Dark.xaml",
               "RelativeDocumentMoniker": "Themes\\Dark.xaml",
@@ -302,12 +300,11 @@
               "RelativeToolTip": "Themes\\Dark.xaml",
               "ViewState": "AgIAAJMAAAAAAAAAAAAewKkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-22T19:17:28.861Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T19:17:28.861Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Light.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Themes\\Light.xaml",
               "RelativeDocumentMoniker": "Themes\\Light.xaml",
@@ -315,12 +312,11 @@
               "RelativeToolTip": "Themes\\Light.xaml",
               "ViewState": "AgIAAJcAAAAAAAAAAAAewK0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-22T19:11:51.801Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T19:11:51.801Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "PriceAlert.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Models\\PriceAlert.cs",
               "RelativeDocumentMoniker": "Models\\PriceAlert.cs",
@@ -328,12 +324,11 @@
               "RelativeToolTip": "Models\\PriceAlert.cs",
               "ViewState": "AgIAACgAAAAAAAAAAAAswFUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T22:56:08.634Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T22:56:08.634Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "AddAlertWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Windows\\AddAlertWindow.xaml",
               "RelativeDocumentMoniker": "Windows\\AddAlertWindow.xaml",
@@ -341,8 +336,11 @@
               "RelativeToolTip": "Windows\\AddAlertWindow.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-22T16:00:36.612Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-22T16:00:36.612Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         }
