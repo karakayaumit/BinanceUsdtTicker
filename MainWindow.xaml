@@ -398,22 +398,22 @@
                                                         </Trigger>
 
 							<!-- Renklendirme -->
-							<DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
-								<Setter Property="Background" Value="DarkGreen"/>
-								<Setter Property="Foreground" Value="White"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
-								<Setter Property="Background" Value="LightGreen"/>
-								<Setter Property="Foreground" Value="Black"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
-								<Setter Property="Background" Value="DarkRed"/>
-								<Setter Property="Foreground" Value="White"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
-								<Setter Property="Background" Value="LightCoral"/>
-								<Setter Property="Foreground" Value="Black"/>
-							</DataTrigger>
+                                                       <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
+                                                               <Setter Property="Background" Value="{DynamicResource Up3Bg}"/>
+                                                               <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
+                                                       </DataTrigger>
+                                                       <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
+                                                               <Setter Property="Background" Value="{DynamicResource Up1Bg}"/>
+                                                               <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
+                                                       </DataTrigger>
+                                                       <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
+                                                               <Setter Property="Background" Value="{DynamicResource Down3Bg}"/>
+                                                               <Setter Property="Foreground" Value="{DynamicResource Down3Fg}"/>
+                                                       </DataTrigger>
+                                                       <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
+                                                               <Setter Property="Background" Value="{DynamicResource Down1Bg}"/>
+                                                               <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
+                                                       </DataTrigger>
 
 							<!-- Alternating: renklendirme yoksa -->
 							<MultiDataTrigger>
@@ -434,10 +434,30 @@
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>
-				</DataGrid.RowStyle>
+                                </DataGrid.RowStyle>
 
-				<!-- Kolonlar -->
-				<DataGrid.Columns>
+                                <!-- Hücre stili -->
+                                <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                                <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Down3Fg}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
+                                                        </DataTrigger>
+                                                </Style.Triggers>
+                                        </Style>
+                                </DataGrid.CellStyle>
+
+                                <!-- Kolonlar -->
+                                <DataGrid.Columns>
 
 					<!-- 0) ⭐ Favori -->
 					<DataGridTemplateColumn x:Name="ColStar"
