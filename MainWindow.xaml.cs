@@ -189,6 +189,13 @@ namespace BinanceUsdtTicker
             TryApplyBrush("SurfaceAlt", _ui.ThemeColor);
             TryApplyBrush("RowBg", _ui.ThemeColor);
             TryApplyBrush("RowAltBg", _ui.ThemeColor);
+            // toolbar and button surfaces
+            TryApplyBrush("TbBg", _ui.ThemeColor);
+            TryApplyBrush("TbHover", _ui.ThemeColor);
+            TryApplyBrush("TbPressed", _ui.ThemeColor);
+            TryApplyBrush("TbBorder", _ui.ThemeColor);
+            TryApplyBrush("HeaderBg", _ui.ThemeColor);
+            TryApplyBrush("HeaderBorder", _ui.ThemeColor);
             TryApplyBrush("OnSurface", _ui.TextColor);
             TryApplyBrush("Up1Bg", _ui.Up1Color);
             TryApplyBrush("Up3Bg", _ui.Up3Color);
