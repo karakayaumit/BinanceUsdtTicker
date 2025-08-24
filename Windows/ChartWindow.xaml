@@ -21,8 +21,8 @@
             <ComboBox x:Name="IntervalBox" Width="90"
                       SelectionChanged="IntervalBox_SelectionChanged"
                       Margin="6,0,0,0">
-                <ComboBoxItem Content="1m"  Tag="1m"/>
-                <ComboBoxItem Content="5m"  Tag="5m"  IsSelected="True"/>
+                <ComboBoxItem Content="1m"  Tag="1m"  IsSelected="True"/>
+                <ComboBoxItem Content="5m"  Tag="5m"/>
                 <ComboBoxItem Content="15m" Tag="15m"/>
                 <ComboBoxItem Content="1h"  Tag="1h"/>
                 <ComboBoxItem Content="4h"  Tag="4h"/>

@@ -9,7 +9,7 @@
 <script>
 const params = new URLSearchParams(location.search);
 const symbol = (params.get('symbol') || 'BTCUSDT').toUpperCase();
-const interval = (params.get('interval') || '5m').toLowerCase();
+const interval = (params.get('interval') || '1m').toLowerCase();
 
 const intervalMap = {
     '1m': '1',
@@ -24,7 +24,7 @@ new TradingView.widget({
     autosize: true,
     container_id: 'tv_chart_container',
     symbol: 'BINANCE:' + symbol,
-    interval: intervalMap[interval] || '5',
+    interval: intervalMap[interval] || '1',
     timezone: 'Etc/UTC',
     theme: 'light',
     style: '1',
