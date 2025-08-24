@@ -1,11 +1,8 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.Defaults;
+using Microsoft.Web.WebView2.Wpf;
 
 namespace BinanceUsdtTicker
 {
@@ -13,20 +10,11 @@ namespace BinanceUsdtTicker
     {
         public string Symbol { get; private set; } = "";
 
-        public ObservableCollection<ISeries> Series { get; } = new();
-        private readonly ObservableCollection<FinancialPoint> _values = new();
-
         // Parametresiz ctor (XAML designer/InitializeComponent için)
         public ChartWindow()
         {
             InitializeComponent();
-            DataContext = this;
             Loaded += ChartWindow_Loaded;
-
-            Series.Add(new CandlesticksSeries<FinancialPoint>
-            {
-                Values = _values
-            });
         }
 
         // MainWindow'dan çağrılan ctor
@@ -41,22 +29,23 @@ namespace BinanceUsdtTicker
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
         {
-            await LoadAndDrawAsync();
+            await LoadChartAsync();
         }
 
         private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await LoadAndDrawAsync();
+            await LoadChartAsync();
         }
 
         private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            await LoadAndDrawAsync();
+            await LoadChartAsync();
         }
 
-        private async Task LoadAndDrawAsync()
+        private async Task LoadChartAsync()
         {
-            if (InfoText == null) return;
+            if (InfoText == null || ChartWebView == null)
+                return;
 
             try
             {
@@ -64,30 +53,12 @@ namespace BinanceUsdtTicker
                 InfoText.Visibility = Visibility.Visible;
 
                 string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
-                var candles = await BinanceRestService.GetKlinesAsync(Symbol, interval, 120);
 
-                _values.Clear();
-                foreach (var c in candles)
-                {
-                    _values.Add(new FinancialPoint
-                    {
-                        Date = c.OpenTimeUtc,
-                        Open = (double)c.Open,
-                        High = (double)c.High,
-                        Low = (double)c.Low,
-                        Close = (double)c.Close
-                    });
-                }
+                await ChartWebView.EnsureCoreWebView2Async();
+                string html = BuildHtml(Symbol, interval);
+                ChartWebView.NavigateToString(html);
 
-                if (_values.Count == 0)
-                {
-                    InfoText.Text = "Veri bulunamadı";
-                    InfoText.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    InfoText.Visibility = Visibility.Collapsed;
-                }
+                InfoText.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
@@ -95,6 +66,32 @@ namespace BinanceUsdtTicker
                 InfoText.Visibility = Visibility.Visible;
             }
         }
+
+        private static string BuildHtml(string symbol, string interval)
+        {
+            return $@"<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=\"UTF-8\"/>
+    <script src=\"https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js\"></script>
+</head>
+<body style=\"margin:0\">
+<div id=\"chart\" style=\"width:100%;height:100%;\"></div>
+<script>
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {{ width: window.innerWidth, height: window.innerHeight }});
+    const series = chart.addCandlestickSeries();
+    fetch('https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200')
+        .then(r => r.json())
+        .then(data => {{
+            const candles = data.map(d => ({ time: Math.floor(d[0]/1000), open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]) }));
+            series.setData(candles);
+        }});
+    window.addEventListener('resize', () => {{
+        chart.applyOptions({{ width: window.innerWidth, height: window.innerHeight }});
+    }});
+</script>
+</body>
+</html>";
+        }
     }
 }
-
