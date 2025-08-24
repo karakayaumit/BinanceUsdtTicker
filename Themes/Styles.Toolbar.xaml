@@ -30,11 +30,17 @@
 			<!-- Focus ring -->
 			<Border x:Name="focus" Style="{StaticResource TbFocusDecorator}" Opacity="0"/>
 			<!-- Surface -->
-			<Border x:Name="bd"
-					CornerRadius="{StaticResource TbRadius}"
-					Background="{TemplateBinding Background}"
-					BorderBrush="{TemplateBinding BorderBrush}"
-					BorderThickness="1"/>
+                        <Border x:Name="bd"
+                                        CornerRadius="{StaticResource TbRadius}"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="1">
+                                <Border.Effect>
+                                        <DropShadowEffect BlurRadius="5"
+                                                          ShadowDepth="2"
+                                                          Opacity="0.2"/>
+                                </Border.Effect>
+                        </Border>
 			<ContentPresenter Margin="{TemplateBinding Padding}"
 							  HorizontalAlignment="Center" VerticalAlignment="Center"
 							  RecognizesAccessKey="True"/>
