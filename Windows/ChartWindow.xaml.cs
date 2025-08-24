@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,62 +30,116 @@ namespace BinanceUsdtTicker
             if (SymbolText != null) SymbolText.Text = Symbol;
         }
 
-        private void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
+        private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
         {
-            // Basit placeholder çizimi (örnek dalga)
-            DrawPlaceholder();
+            await LoadAndDrawAsync();
         }
 
-        private void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Şimdilik sadece tekrar placeholder çiz
-            DrawPlaceholder();
+            await LoadAndDrawAsync();
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            // Şimdilik sadece tekrar placeholder çiz
-            DrawPlaceholder();
+            await LoadAndDrawAsync();
         }
 
-        private void DrawPlaceholder()
+        private async Task LoadAndDrawAsync()
         {
-            if (ChartArea == null) return;
+            if (ChartArea == null || InfoText == null) return;
+
+            try
+            {
+                InfoText.Text = "Yükleniyor...";
+                InfoText.Visibility = Visibility.Visible;
+
+                string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
+                var candles = await BinanceRestService.GetKlinesAsync(Symbol, interval, 120);
+
+                if (candles.Count == 0)
+                {
+                    InfoText.Text = "Veri bulunamadı";
+                    return;
+                }
+
+                InfoText.Visibility = Visibility.Collapsed;
+                DrawCandles(candles);
+            }
+            catch (Exception ex)
+            {
+                InfoText.Text = "Hata: " + ex.Message;
+                InfoText.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void DrawCandles(IReadOnlyList<Candle> candles)
+        {
             ChartArea.Children.Clear();
 
-            double w = Math.Max(ActualWidth - 60, 300);
-            double h = Math.Max(ActualHeight - 140, 200);
+            double w = Math.Max(ChartArea.ActualWidth, 100);
+            double h = Math.Max(ChartArea.ActualHeight, 100);
 
-            var poly = new Polyline
-            {
-                Stroke = (Brush)FindResource("OnSurface"),
-                StrokeThickness = 1.5
-            };
+            decimal max = candles.Max(c => c.High);
+            decimal min = candles.Min(c => c.Low);
+            decimal diff = max - min;
+            if (diff == 0) diff = 1;
 
-            int n = 60;
-            for (int i = 0; i < n; i++)
-            {
-                double x = i * (w / (n - 1));
-                double y = h / 2.0 + Math.Sin(i * 0.3) * (h * 0.3);
-                poly.Points.Add(new Point(x, y));
-            }
+            double step = w / candles.Count;
+            double bodyWidth = step * 0.6;
+
+            var upBrush = (Brush)FindResource("Up1Bg");
+            var downBrush = (Brush)FindResource("Down1Bg");
+            var lineBrush = (Brush)FindResource("OnSurface");
+            var borderBrush = (Brush)FindResource("Divider");
 
             // Çerçeve
-            var rect = new Rectangle
+            var frame = new Rectangle
             {
                 Width = w,
                 Height = h,
-                Stroke = (Brush)FindResource("Divider"),
+                Stroke = borderBrush,
                 StrokeThickness = 1
             };
+            Canvas.SetLeft(frame, 0);
+            Canvas.SetTop(frame, 0);
+            ChartArea.Children.Add(frame);
 
-            Canvas.SetLeft(rect, 0);
-            Canvas.SetTop(rect, 0);
-            Canvas.SetLeft(poly, 0);
-            Canvas.SetTop(poly, 0);
+            for (int i = 0; i < candles.Count; i++)
+            {
+                var c = candles[i];
+                double xCenter = i * step + step / 2;
+                double yHigh = (double)(max - c.High) / (double)diff * h;
+                double yLow = (double)(max - c.Low) / (double)diff * h;
+                double yOpen = (double)(max - c.Open) / (double)diff * h;
+                double yClose = (double)(max - c.Close) / (double)diff * h;
 
-            ChartArea.Children.Add(rect);
-            ChartArea.Children.Add(poly);
+                var line = new Line
+                {
+                    X1 = xCenter,
+                    X2 = xCenter,
+                    Y1 = yHigh,
+                    Y2 = yLow,
+                    Stroke = lineBrush,
+                    StrokeThickness = 1
+                };
+                ChartArea.Children.Add(line);
+
+                double bodyTop = Math.Min(yOpen, yClose);
+                double bodyHeight = Math.Max(Math.Abs(yClose - yOpen), 1);
+                var rect = new Rectangle
+                {
+                    Width = bodyWidth,
+                    Height = bodyHeight,
+                    Fill = c.Close >= c.Open ? upBrush : downBrush,
+                    Stroke = lineBrush,
+                    StrokeThickness = 1
+                };
+                Canvas.SetLeft(rect, xCenter - bodyWidth / 2);
+                Canvas.SetTop(rect, bodyTop);
+                ChartArea.Children.Add(rect);
+            }
         }
     }
 }
+
