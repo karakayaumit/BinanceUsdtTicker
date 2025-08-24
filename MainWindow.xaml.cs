@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -22,17 +23,74 @@ namespace BinanceUsdtTicker
     public enum ThemeKind { Light, Dark }
     public enum QuickFilter { None, Pos3Plus, Neg3Minus }
 
-    public class UiSettings
+    public class UiSettings : INotifyPropertyChanged
     {
-        public string Theme { get; set; } = "Light";
-        public string FilterMode { get; set; } = "All";
-        public List<ColumnState> Columns { get; set; } = new();
-        public string ThemeColor { get; set; } = string.Empty;
-        public string TextColor { get; set; } = string.Empty;
-        public string Up1Color { get; set; } = string.Empty;
-        public string Up3Color { get; set; } = string.Empty;
-        public string Down1Color { get; set; } = string.Empty;
-        public string Down3Color { get; set; } = string.Empty;
+        private string _theme = "Light";
+        public string Theme
+        {
+            get => _theme;
+            set { if (_theme != value) { _theme = value; OnPropertyChanged(); } }
+        }
+
+        private string _filterMode = "All";
+        public string FilterMode
+        {
+            get => _filterMode;
+            set { if (_filterMode != value) { _filterMode = value; OnPropertyChanged(); } }
+        }
+
+        private List<ColumnState> _columns = new();
+        public List<ColumnState> Columns
+        {
+            get => _columns;
+            set { if (_columns != value) { _columns = value; OnPropertyChanged(); } }
+        }
+
+        private string _themeColor = string.Empty;
+        public string ThemeColor
+        {
+            get => _themeColor;
+            set { if (_themeColor != value) { _themeColor = value; OnPropertyChanged(); } }
+        }
+
+        private string _textColor = string.Empty;
+        public string TextColor
+        {
+            get => _textColor;
+            set { if (_textColor != value) { _textColor = value; OnPropertyChanged(); } }
+        }
+
+        private string _up1Color = string.Empty;
+        public string Up1Color
+        {
+            get => _up1Color;
+            set { if (_up1Color != value) { _up1Color = value; OnPropertyChanged(); } }
+        }
+
+        private string _up3Color = string.Empty;
+        public string Up3Color
+        {
+            get => _up3Color;
+            set { if (_up3Color != value) { _up3Color = value; OnPropertyChanged(); } }
+        }
+
+        private string _down1Color = string.Empty;
+        public string Down1Color
+        {
+            get => _down1Color;
+            set { if (_down1Color != value) { _down1Color = value; OnPropertyChanged(); } }
+        }
+
+        private string _down3Color = string.Empty;
+        public string Down3Color
+        {
+            get => _down3Color;
+            set { if (_down3Color != value) { _down3Color = value; OnPropertyChanged(); } }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string? name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
     public class ColumnState
     {
