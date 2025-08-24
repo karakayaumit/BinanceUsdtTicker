@@ -273,7 +273,17 @@
 							</Setter.Value>
 						</Setter>
 					</Style>
-				</ToolBar.Resources>
+                                </ToolBar.Resources>
+
+                                <TextBox x:Name="SearchBox" Width="220"
+                                         ToolTip="Sembol ara..."
+                                         ToolBar.OverflowMode="Never"
+                                         BorderThickness="2"
+                                         BorderBrush="{DynamicResource TbChecked}"
+                                         Margin="0,0,12,0"
+                                         TextChanged="SearchBox_TextChanged"/>
+
+                                <Separator/>
 
                                 <ToggleButton x:Name="ViewToggle"
                                                           ToolBar.OverflowMode="Never"
@@ -325,14 +335,7 @@
                                 <Button Content="Alarmları Yönet" ToolBar.OverflowMode="Never"
                                                 Style="{StaticResource ToolbarButtonStyle}"
                                                 Click="ManageAlerts_Click" Margin="6,0"/>
-
                                 <Separator/>
-
-                                <TextBox x:Name="SearchBox" Width="220"
-                                                 ToolTip="Sembol ara..."
-                                                 ToolBar.OverflowMode="Never"
-                                                 TextChanged="SearchBox_TextChanged"/>
-
                                 <Separator DockPanel.Dock="Right"/>
                                 <Button x:Name="SettingsButton" ToolBar.OverflowMode="Never"
                                         DockPanel.Dock="Right" Style="{StaticResource ToolbarButtonStyle}"
