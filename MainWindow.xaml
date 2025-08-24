@@ -250,8 +250,8 @@
         <DockPanel LastChildFill="True">
 
                 <Border DockPanel.Dock="Top" Background="{DynamicResource TbBg}" BorderBrush="{DynamicResource TbBorder}" BorderThickness="0,0,0,1">
-                        <ToolBarTray Panel.ZIndex="10" IsLocked="True">
-                                <ToolBar Band="0" BandIndex="0" ToolBarTray.IsLocked="True">
+                        <ToolBarTray Panel.ZIndex="10" IsLocked="True" HorizontalAlignment="Stretch">
+                                <ToolBar Band="0" BandIndex="0" ToolBarTray.IsLocked="True" HorizontalAlignment="Stretch">
                                 <ToolBar.Resources>
                                         <!-- Neutralize any app-wide ScrollViewer ControlTemplate that may cause circular template issues in ToolBar/TextBox -->
                                         <Style TargetType="{x:Type ScrollViewer}" BasedOn="{x:Null}" />
@@ -342,9 +342,14 @@
                                                  TextChanged="SearchBox_TextChanged"/>
 
                                 <Separator DockPanel.Dock="Right"/>
-                                <Button x:Name="SettingsButton" Content="⚙" ToolBar.OverflowMode="Never"
+                                <Button x:Name="SettingsButton" ToolBar.OverflowMode="Never"
                                         DockPanel.Dock="Right" Style="{StaticResource ToolbarButtonStyle}"
-                                        FontSize="16" Width="32" Click="SettingsButton_Click"/>
+                                        FontSize="16" Width="90" Click="SettingsButton_Click">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Text="⚙" Margin="0,0,4,0"/>
+                                                <TextBlock Text="Ayarlar" FontWeight="Bold"/>
+                                        </StackPanel>
+                                </Button>
                                 </ToolBar>
                         </ToolBarTray>
                 </Border>
