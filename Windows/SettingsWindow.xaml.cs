@@ -24,6 +24,7 @@ namespace BinanceUsdtTicker
                 Down1Color = settings.Down1Color,
                 Down3Color = settings.Down3Color
             };
+            DataContext = _work;
         }
 
         private void ThemeColor_Click(object sender, RoutedEventArgs e)
