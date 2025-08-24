@@ -90,6 +90,8 @@ namespace BinanceUsdtTicker
             string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "5m";
             await ChartWebView.CoreWebView2.ExecuteScriptAsync($"updateChart('{Symbol}', '{interval}')");
 
+        }
+
         private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             Dispatcher.Invoke(() =>
