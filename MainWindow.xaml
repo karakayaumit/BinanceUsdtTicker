@@ -614,12 +614,12 @@
                                                                        <!-- 3%+ moves: dark green with white text -->
                                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Up3Bg}"/>
-                                                                               <Setter Property="Foreground" Value="White"/>
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- 1-3% moves: light green with black text -->
                                                                        <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Up1Bg}"/>
-                                                                               <Setter Property="Foreground" Value="Black"/>
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- Hover: highlight row -->
                                                                        <Trigger Property="IsMouseOver" Value="True">
@@ -665,12 +665,12 @@
                                                                        <!-- -3% or worse: dark red with white text -->
                                                                        <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Down3Bg}"/>
-                                                                               <Setter Property="Foreground" Value="White"/>
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Down3Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- -1% to -3%: light red with black text -->
                                                                        <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Down1Bg}"/>
-                                                                               <Setter Property="Foreground" Value="Black"/>
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- Hover: highlight row -->
                                                                        <Trigger Property="IsMouseOver" Value="True">
