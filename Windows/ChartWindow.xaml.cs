@@ -72,18 +72,18 @@ namespace BinanceUsdtTicker
             return $@"<!DOCTYPE html>
 <html>
 <head>
-    <meta charset=\"UTF-8\"/>
-    <script src=\"https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js\"></script>
+    <meta charset='UTF-8'/>
+    <script src='https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js'></script>
 </head>
-<body style=\"margin:0\">
-<div id=\"chart\" style=\"width:100%;height:100%;\"></div>
+<body style='margin:0'>
+<div id='chart' style='width:100%;height:100%;'></div>
 <script>
     const chart = LightweightCharts.createChart(document.getElementById('chart'), {{ width: window.innerWidth, height: window.innerHeight }});
     const series = chart.addCandlestickSeries();
     fetch('https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200')
         .then(r => r.json())
         .then(data => {{
-            const candles = data.map(d => ({ time: Math.floor(d[0]/1000), open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]) }));
+            const candles = data.map(d => ({{ time: Math.floor(d[0]/1000), open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]) }}));
             series.setData(candles);
         }});
     window.addEventListener('resize', () => {{
