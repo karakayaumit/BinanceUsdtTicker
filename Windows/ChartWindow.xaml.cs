@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 
@@ -18,6 +18,8 @@ namespace BinanceUsdtTicker
         private bool _isInitialized;
 
         private readonly BinanceSpotService? _service;
+        private readonly DispatcherTimer _candleTimer = new() { Interval = TimeSpan.FromMilliseconds(500) };
+        private volatile Candle? _pendingCandle;
 
         // Parametresiz ctor (XAML designer/InitializeComponent için)
         public ChartWindow()
@@ -40,7 +42,13 @@ namespace BinanceUsdtTicker
         {
             _service = service;
             _service.OnCandle += Service_OnCandle;
-            Closed += (_, __) => _service.OnCandle -= Service_OnCandle;
+            _candleTimer.Tick += (_, __) => PushLatestCandle();
+            _candleTimer.Start();
+            Closed += (_, __) =>
+            {
+                _service.OnCandle -= Service_OnCandle;
+                _candleTimer.Stop();
+            };
         }
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -209,11 +217,19 @@ namespace BinanceUsdtTicker
         private void Service_OnCandle(string sym, Candle candle)
         {
             if (!string.Equals(sym, Symbol, StringComparison.OrdinalIgnoreCase)) return;
-            if (ChartWebView?.CoreWebView2 == null) return;
+            _pendingCandle = candle;
+        }
 
-            string js = $"series.update({{ time: {candle.Time}, open: {candle.Open.ToString(CultureInfo.InvariantCulture)}, high: {candle.High.ToString(CultureInfo.InvariantCulture)}, low: {candle.Low.ToString(CultureInfo.InvariantCulture)}, close: {candle.Close.ToString(CultureInfo.InvariantCulture)} }});";
+        private void PushLatestCandle()
+        {
+            if (_pendingCandle == null || ChartWebView?.CoreWebView2 == null) return;
 
-            _ = Dispatcher.InvokeAsync(() => ChartWebView.CoreWebView2.ExecuteScriptAsync(js));
+            var c = _pendingCandle;
+            _pendingCandle = null;
+
+            string js = $"series.update({{ time: {c.Time}, open: {c.Open.ToString(CultureInfo.InvariantCulture)}, high: {c.High.ToString(CultureInfo.InvariantCulture)}, low: {c.Low.ToString(CultureInfo.InvariantCulture)}, close: {c.Close.ToString(CultureInfo.InvariantCulture)} }});";
+
+            _ = ChartWebView.CoreWebView2.ExecuteScriptAsync(js);
         }
     }
 }
