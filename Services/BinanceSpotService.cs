@@ -27,6 +27,7 @@ namespace BinanceUsdtTicker
         private ClientWebSocket? _ws;
         private CancellationTokenSource? _cts;
         private Task? _runner;
+        private Task? _monitor;
 
         private readonly Dictionary<string, TickerRow> _state =
             new(StringComparer.OrdinalIgnoreCase);
@@ -52,24 +53,29 @@ namespace BinanceUsdtTicker
 
         public async Task StartAsync()
         {
+            Logger.Log("StartAsync");
             await StopAsync();
 
             _cts = new CancellationTokenSource();
             _runner = Task.Run(() => ConnectLoopAsync(_cts.Token));
+            _monitor = Task.Run(() => MonitorLoopAsync(_cts.Token));
         }
 
         public async Task StopAsync()
         {
+            Logger.Log("StopAsync");
             try { _cts?.Cancel(); } catch { }
 
             if (_ws != null)
             {
-                try { await _ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "stop", CancellationToken.None); } catch { }
+                try { await _ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "stop", CancellationToken.None); }
+                catch (Exception ex) { Logger.Log($"CloseAsync error: {ex.Message}"); }
                 _ws.Dispose();
                 _ws = null;
             }
 
             _cts?.Dispose(); _cts = null;
+            _monitor = null;
             State = WsState.Closed;
             OnWsStateChanged?.Invoke(State, 0);
         }
@@ -84,6 +90,7 @@ namespace BinanceUsdtTicker
                 try
                 {
                     State = attempt == 0 ? WsState.Connecting : WsState.Retrying;
+                    Logger.Log($"WS state {State} attempt {attempt}");
                     OnWsStateChanged?.Invoke(State, attempt);
 
                     using var ws = new ClientWebSocket();
@@ -92,19 +99,21 @@ namespace BinanceUsdtTicker
                     await ws.ConnectAsync(new Uri(url), ct);
                     State = WsState.Connected;
                     attempt = 0;
+                    Logger.Log("WS connected");
                     OnWsStateChanged?.Invoke(State, attempt);
 
                     await ReceiveLoop(ws, ct);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // düş ve tekrar dene
+                    Logger.Log($"ConnectLoop error: {ex.Message}");
                 }
 
                 if (ct.IsCancellationRequested) break;
 
                 attempt++;
                 State = WsState.Retrying;
+                Logger.Log($"Retrying attempt {attempt}");
                 OnWsStateChanged?.Invoke(State, attempt);
 
                 // exponential backoff (1,2,4,8,16,30 sn)
@@ -113,6 +122,7 @@ namespace BinanceUsdtTicker
             }
 
             State = WsState.Closed;
+            Logger.Log("WS closed");
             OnWsStateChanged?.Invoke(State, attempt);
         }
 
@@ -158,9 +168,9 @@ namespace BinanceUsdtTicker
                             HandleBookTickerArray(root);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // parse hatalarını sessiz geç
+                    Logger.Log($"Parse error: {ex.Message}");
                 }
 
                 MaybeEmit();
@@ -273,6 +283,23 @@ namespace BinanceUsdtTicker
                 }
             }
             return 0m;
+        }
+
+        private async Task MonitorLoopAsync(CancellationToken ct)
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                var gap = MessageGapMs;
+                if (State != WsState.Connected)
+                {
+                    Logger.Log($"Monitor: state {State} gap {gap}");
+                }
+                else if (gap > 5000)
+                {
+                    Logger.Log($"Monitor: no data for {gap} ms");
+                }
+                try { await Task.Delay(5000, ct); } catch { }
+            }
         }
 
         private void MaybeEmit()
