@@ -38,6 +38,10 @@
     <SolidColorBrush x:Key="Up3Bg"          Color="#FF006400"/>
     <SolidColorBrush x:Key="Down1Bg"        Color="#FFF08080"/>
     <SolidColorBrush x:Key="Down3Bg"        Color="#FF8B0000"/>
+    <SolidColorBrush x:Key="Up1Fg"          Color="#FF000000"/>
+    <SolidColorBrush x:Key="Up3Fg"          Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Down1Fg"        Color="#FF000000"/>
+    <SolidColorBrush x:Key="Down3Fg"        Color="#FFFFFFFF"/>
 
     <!-- System colors for controls -->
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}"       Color="#FFFFFFFF"/>
