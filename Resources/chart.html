@@ -20,6 +20,10 @@ const chart = LightweightCharts.createChart(document.getElementById('tvchart'), 
     backgroundColor: '#ffffff',
     textColor: '#000'
   },
+  grid: {
+    vertLines: { color: '#e1e1e1' },
+    horzLines: { color: '#e1e1e1' }
+  },
   rightPriceScale: {
     visible: true
   },
@@ -29,25 +33,7 @@ const chart = LightweightCharts.createChart(document.getElementById('tvchart'), 
   }
 });
 const series = chart.addCandlestickSeries();
-
-// Axis labels
-const xLabel = document.createElement('div');
-xLabel.innerText = 'Zaman';
-xLabel.style.position = 'absolute';
-xLabel.style.bottom = '4px';
-xLabel.style.left = '50%';
-xLabel.style.transform = 'translateX(-50%)';
-xLabel.style.color = '#000';
-document.getElementById('tvchart').appendChild(xLabel);
-
-const yLabel = document.createElement('div');
-yLabel.innerText = 'Fiyat';
-yLabel.style.position = 'absolute';
-yLabel.style.top = '50%';
-yLabel.style.right = '4px';
-yLabel.style.transform = 'translateY(-50%) rotate(-90deg)';
-yLabel.style.color = '#000';
-document.getElementById('tvchart').appendChild(yLabel);
+let priceLine;
 
 async function load() {
   const url = `${BINANCE_REST}?symbol=${symbol}&interval=${interval}&limit=500`;
@@ -61,6 +47,13 @@ async function load() {
     close: +k[4]
   }));
   series.setData(bars);
+  priceLine = series.createPriceLine({
+    price: bars[bars.length - 1].close,
+    color: '#2962FF',
+    lineWidth: 1,
+    lineStyle: LightweightCharts.LineStyle.Dashed,
+    axisLabelVisible: true
+  });
 }
 load();
 
@@ -74,6 +67,18 @@ ws.onmessage = ev => {
     low: +k.l,
     close: +k.c
   });
+  const price = +k.c;
+  if (priceLine) {
+    priceLine.applyOptions({ price });
+  } else {
+    priceLine = series.createPriceLine({
+      price,
+      color: '#2962FF',
+      lineWidth: 1,
+      lineStyle: LightweightCharts.LineStyle.Dashed,
+      axisLabelVisible: true
+    });
+  }
 };
 
 window.addEventListener('resize', () => {
