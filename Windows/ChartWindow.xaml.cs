@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ namespace BinanceUsdtTicker
     public partial class ChartWindow : Window
     {
         public string Symbol { get; private set; } = "";
+        private readonly BinanceSpotService? _service;
 
         // Parametresiz ctor (XAML designer/InitializeComponent için)
         public ChartWindow()
@@ -27,6 +29,13 @@ namespace BinanceUsdtTicker
 
             Title = string.IsNullOrEmpty(Symbol) ? "Grafik" : $"Grafik - {Symbol}";
             if (SymbolText != null) SymbolText.Text = Symbol;
+        }
+
+        public ChartWindow(string symbol, BinanceSpotService service) : this(symbol)
+        {
+            _service = service;
+            _service.OnCandle += Service_OnCandle;
+            Closed += (_, __) => _service.OnCandle -= Service_OnCandle;
         }
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -152,6 +161,16 @@ namespace BinanceUsdtTicker
 </script>
 </body>
 </html>";
+        }
+
+        private void Service_OnCandle(string sym, Candle candle)
+        {
+            if (!string.Equals(sym, Symbol, StringComparison.OrdinalIgnoreCase)) return;
+            if (ChartWebView?.CoreWebView2 == null) return;
+
+            string js = $"series.update({{ time: {candle.Time}, open: {candle.Open.ToString(CultureInfo.InvariantCulture)}, high: {candle.High.ToString(CultureInfo.InvariantCulture)}, low: {candle.Low.ToString(CultureInfo.InvariantCulture)}, close: {candle.Close.ToString(CultureInfo.InvariantCulture)} }});";
+
+            _ = Dispatcher.InvokeAsync(() => ChartWebView.CoreWebView2.ExecuteScriptAsync(js));
         }
     }
 }
