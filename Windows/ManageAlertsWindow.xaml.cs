@@ -30,8 +30,8 @@ namespace BinanceUsdtTicker
                 new AlertTypeOption { Value = AlertType.PriceAtOrAbove,            Text = "Fiyat ≥" },
                 new AlertTypeOption { Value = AlertType.PriceAtOrBelow,            Text = "Fiyat ≤" },
                 new AlertTypeOption { Value = AlertType.PriceBetween,              Text = "Fiyat [min,max]" },
-                new AlertTypeOption { Value = AlertType.ChangeSinceStartAtOrAbove, Text = "Başlangıca göre % ≥" },
-                new AlertTypeOption { Value = AlertType.ChangeSinceStartAtOrBelow, Text = "Başlangıca göre % ≤" }
+                new AlertTypeOption { Value = AlertType.ChangeSinceStartAtOrAbove, Text = "Anlık Değişim ≥" },
+                new AlertTypeOption { Value = AlertType.ChangeSinceStartAtOrBelow, Text = "Anlık Değişim ≤" }
             };
 
         // Orijinal listeyi al, klonla

@@ -8,8 +8,8 @@ namespace BinanceUsdtTicker
         PriceAtOrAbove,            // Fiyat >= A
         PriceAtOrBelow,            // Fiyat <= A
         PriceBetween,              // A <= Fiyat <= B
-        ChangeSinceStartAtOrAbove, // Başlangıca göre % >= A
-        ChangeSinceStartAtOrBelow  // Başlangıca göre % <= A
+        ChangeSinceStartAtOrAbove, // Anlık Değişim % >= A
+        ChangeSinceStartAtOrBelow  // Anlık Değişim % <= A
     }
 
     public class PriceAlert
@@ -71,9 +71,9 @@ namespace BinanceUsdtTicker
                     AlertType.PriceBetween =>
                         $"{Symbol}: Fiyat {row.Price:N6} → [{lower:N6}, {upper:N6}] bandına GİRDİ",
                     AlertType.ChangeSinceStartAtOrAbove =>
-                        $"{Symbol}: Başlangıca göre %{row.ChangeSinceStartPercent:N2} → ≥ %{A:N2}",
+                        $"{Symbol}: Anlık Değişim %{row.ChangeSinceStartPercent:N2} → ≥ %{A:N2}",
                     AlertType.ChangeSinceStartAtOrBelow =>
-                        $"{Symbol}: Başlangıca göre %{row.ChangeSinceStartPercent:N2} → ≤ %{A:N2}",
+                        $"{Symbol}: Anlık Değişim %{row.ChangeSinceStartPercent:N2} → ≤ %{A:N2}",
                     _ => $"{Symbol}: Alarm"
                 };
             }
