@@ -2,13 +2,50 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Base button style used across the app -->
-    <Style x:Key="BaseButtonStyle" TargetType="{x:Type Control}">
-        <Setter Property="Background"  Value="{DynamicResource SurfaceAlt}"/>
-        <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
-        <Setter Property="Padding"     Value="6,2"/>
+    <Style x:Key="BaseButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background"      Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Foreground"      Value="{DynamicResource OnSurface}"/>
+        <Setter Property="BorderBrush"     Value="{DynamicResource Divider}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding"         Value="6,2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#99000000" BlurRadius="4" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource TbHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource TbPressed}"/>
+                            <Setter TargetName="Bd" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="#66000000" BlurRadius="2" ShadowDepth="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource TbDisabledBg}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TbDisabledFg}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
+    <!-- Apply base style to all buttons and toggle buttons -->
     <Style TargetType="{x:Type Button}"       BasedOn="{StaticResource BaseButtonStyle}"/>
     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource BaseButtonStyle}"/>
 

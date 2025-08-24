@@ -133,35 +133,6 @@
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
     </Style>
-    <Style TargetType="Button">
-        <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
-        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
-        <Setter Property="Padding" Value="8,4"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1" CornerRadius="2">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource TbHover}"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource TbPressed}"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource TbDisabledBg}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TbDisabledFg}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
     <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
         <Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
