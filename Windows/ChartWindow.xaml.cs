@@ -92,8 +92,18 @@ namespace BinanceUsdtTicker
 <body style='margin:0;background:{bg};color:{fg};'>
 <div id='chart' style='width:100%;height:100%;'></div>
 <script>
-    const chart = LightweightCharts.createChart(document.getElementById('chart'), {{ width: window.innerWidth, height: window.innerHeight, layout: {{ background: {{ color: '{bg}' }}, textColor: '{fg}' }} }});
-    const series = chart.addCandlestickSeries();
+    const fmt = p => p.toLocaleString(undefined, {{ maximumFractionDigits: 8 }});
+    const chart = LightweightCharts.createChart(
+        document.getElementById('chart'),
+        {{
+            width: window.innerWidth,
+            height: window.innerHeight,
+            layout: {{ background: {{ color: '{bg}' }}, textColor: '{fg}' }},
+            localization: {{ priceFormatter: fmt }}
+        }});
+    const series = chart.addCandlestickSeries({{
+        priceFormat: {{ type: 'custom', minMove: 0.00000001, formatter: fmt }}
+    }});
     fetch('https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=200')
         .then(r => r.json())
         .then(data => {{
