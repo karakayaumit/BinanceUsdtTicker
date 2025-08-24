@@ -140,8 +140,8 @@ namespace BinanceUsdtTicker
 
             if (File.Exists(scriptPath))
             {
-                string chartJs = File.ReadAllText(scriptPath);
-                scriptTag = $"<script>{chartJs}</script>";
+                var localUri = new Uri(scriptPath);
+                scriptTag = $"<script src='{localUri.AbsoluteUri}'></script>";
             }
             else
             {
