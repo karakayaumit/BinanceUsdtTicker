@@ -169,16 +169,19 @@
         <Setter Property="Foreground"               Value="{DynamicResource OnSurface}"/>
         <Setter Property="RowBackground"            Value="{DynamicResource RowBg}"/>
         <Setter Property="AlternatingRowBackground" Value="{DynamicResource RowAltBg}"/>
-        <Setter Property="GridLinesVisibility"      Value="All"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource Divider}"/>
-        <Setter Property="VerticalGridLinesBrush"   Value="{DynamicResource Divider}"/>
-        <Setter Property="BorderBrush"              Value="{DynamicResource Divider}"/>
-        <Setter Property="BorderThickness"         Value="1"/>
+        <Setter Property="GridLinesVisibility"      Value="None"/>
+        <Setter Property="BorderBrush"              Value="Transparent"/>
+        <Setter Property="BorderThickness"         Value="0"/>
+        <Setter Property="AlternationCount"        Value="2"/>
     </Style>
     <Style TargetType="{x:Type DataGridRow}">
-        <Setter Property="Background" Value="{DynamicResource RowBg}"/>
-        <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+        <Setter Property="Margin"      Value="0,2"/>
+        <Setter Property="Padding"     Value="4"/>
+        <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
+            </Trigger>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource SelectionBg}"/>
                 <Setter Property="Foreground" Value="{DynamicResource SelectionFg}"/>
