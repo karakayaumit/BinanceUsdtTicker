@@ -313,8 +313,21 @@ namespace BinanceUsdtTicker
                 _positions.Clear();
                 foreach (var p in positions)
                     _positions.Add(p);
+
+                UpdatePositionPnls();
             }
             catch { }
+        }
+
+        private void UpdatePositionPnls()
+        {
+            foreach (var pos in _positions)
+            {
+                if (_rowBySymbol.TryGetValue(pos.Symbol, out var row))
+                {
+                    pos.UnrealizedPnl = (row.Price - pos.EntryPrice) * pos.PositionAmt;
+                }
+            }
         }
 
         private async Task LoadOrderHistoryAsync()
@@ -414,6 +427,8 @@ namespace BinanceUsdtTicker
                 if (last != null) last.Text = "Son veri: " + DateTime.Now.ToString("HH:mm:ss");
 
                 CollectionViewSource.GetDefaultView(_rows).Refresh();
+
+                UpdatePositionPnls();
 
                 // seçili moda göre bir kez hesapla
                 UpdateTopMovers(_topMoversUse24h);
