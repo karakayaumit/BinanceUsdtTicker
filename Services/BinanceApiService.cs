@@ -172,6 +172,45 @@ namespace BinanceUsdtTicker
             return list;
         }
 
+        public async Task<IList<FuturesOrder>> GetAllOrdersAsync(string symbol, int limit = 50, DateTime? startTime = null)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol,
+                ["limit"] = limit.ToString()
+            };
+
+            if (startTime.HasValue)
+            {
+                var ms = new DateTimeOffset(startTime.Value).ToUnixTimeMilliseconds();
+                query["startTime"] = ms.ToString();
+            }
+
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/allOrders", query);
+            var list = new List<FuturesOrder>();
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                foreach (var el in doc.RootElement.EnumerateArray())
+                {
+                    decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
+                    decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                    long time = el.GetProperty("time").GetInt64();
+                    list.Add(new FuturesOrder
+                    {
+                        Symbol = el.GetProperty("symbol").GetString() ?? symbol,
+                        Side = el.GetProperty("side").GetString() ?? string.Empty,
+                        Quantity = qty,
+                        Price = price,
+                        Status = el.GetProperty("status").GetString() ?? string.Empty,
+                        Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
+                    });
+                }
+            }
+            catch { }
+            return list;
+        }
+
         public async Task<string> SendSignedAsync(HttpMethod method, string endpoint, IDictionary<string, string>? parameters = null)
         {
             if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_secretKey))
