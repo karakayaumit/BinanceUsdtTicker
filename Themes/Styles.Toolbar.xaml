@@ -4,9 +4,9 @@
 
 	<!-- Softer, more readable toolbar controls -->
 	<!-- Tuning knobs -->
-	<CornerRadius x:Key="TbRadius">18</CornerRadius>
+        <CornerRadius x:Key="TbRadius">5</CornerRadius>
 	<!-- daha yuvarlak -->
-	<Thickness    x:Key="TbPad">12,6</Thickness>
+        <Thickness    x:Key="TbPad">10,8</Thickness>
 	<!-- daha geniş iç boşluk -->
 	<sys:Double   x:Key="TbFontSize">13</sys:Double>
 	<FontWeight   x:Key="TbFontWeight">SemiBold</FontWeight>
