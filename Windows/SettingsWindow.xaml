@@ -61,6 +61,15 @@
         </Grid.RowDefinitions>
 
         <TabControl Grid.Row="0" TabStripPlacement="Left">
+            <TabItem Header="Sistem Ayarları">
+                <TextBlock Margin="10" Text="Sistem ayarları burada yer alacaktır."/>
+            </TabItem>
+            <TabItem Header="Ticaret Tercihi">
+                <TextBlock Margin="10" Text="Ticaret tercihleri burada yer alacaktır."/>
+            </TabItem>
+            <TabItem Header="Bildirimler">
+                <TextBlock Margin="10" Text="Bildirim ayarları burada yer alacaktır."/>
+            </TabItem>
             <TabItem Header="Tema" IsSelected="True">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid Margin="10">
