@@ -75,13 +75,13 @@ namespace BinanceUsdtTicker
             Grid.ItemsSource = _rows;
             CollectionViewSource.GetDefaultView(_rows).Filter = RowFilter;
 
+            var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+
             // alarm geçmişi bağla
             var alertList = FindName("AlertList") as ListView;
             if (alertList != null)
             {
                 alertList.ItemsSource = _alertLog;
-
-                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
 
                 alertList.Height = screenHeight;
                 alertList.MinHeight = screenHeight;
@@ -94,16 +94,12 @@ namespace BinanceUsdtTicker
             {
                 walletList.ItemsSource = _walletAssets;
 
-                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
-
                 walletList.Height = screenHeight;
                 walletList.MinHeight = screenHeight;
                 walletList.MaxHeight = screenHeight;
             }
 
             // emir listeleri bağla
-            var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
-
             void SetupList(string name, IEnumerable? source = null)
             {
                 if (FindName(name) is ListView lv)
