@@ -871,7 +871,9 @@
                                                                                 <GridViewColumn Header="PNL" Width="80">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}"
+                                                       TextAlignment="Right"
+                                                       Foreground="{Binding PnlBrush}"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
