@@ -47,7 +47,8 @@ namespace BinanceUsdtTicker
         private static bool TryParseFlexibleDecimal(string? input, out decimal value)
         {
             value = 0m;
-            var result = _flexConv.ConvertBack(input, typeof(double), null, CultureInfo.InvariantCulture);
+            var result = _flexConv.ConvertBack(input ?? string.Empty, typeof(double), null!, CultureInfo.InvariantCulture);
+
             if (result is double d)
             {
                 value = (decimal)d;
