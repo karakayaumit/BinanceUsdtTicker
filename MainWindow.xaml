@@ -688,6 +688,13 @@
                                                         </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                         </StackPanel>
+                                        <TextBlock Text="Miktar" Margin="0,0,0,4"/>
+                                        <Slider x:Name="SizeSlider" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
+                                        <TextBlock x:Name="QuantityValueText" Margin="0,4,0,0"/>
+                                        <TextBlock Text="Fiyat" Margin="0,8,0,0"/>
+                                        <TextBlock x:Name="CurrentPriceText"/>
+                                        <TextBlock Text="Tutar (USDT)" Margin="0,8,0,0"/>
+                                        <TextBlock x:Name="TotalUsdtText"/>
                                 </StackPanel>
                         </GroupBox>
 
