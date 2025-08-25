@@ -8,7 +8,7 @@
         Background="{DynamicResource Surface}"
         Foreground="{DynamicResource OnSurface}">
 
-    <Grid Margin="16">
+    <Grid Margin="16" ShowGridLines="True">
         <!-- DOĞRU: Koleksiyon şeklinde tanımla -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
