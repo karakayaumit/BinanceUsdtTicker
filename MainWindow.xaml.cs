@@ -201,12 +201,13 @@ namespace BinanceUsdtTicker
         private void ApplyCustomColors()
         {
             TryApplyBrush("Surface", _ui.ThemeColor);
-            TryApplyBrush("SurfaceAlt", _ui.ControlColor);
+            TryApplyBrush("SurfaceAlt", _ui.ThemeColor);
             TryApplyBrush("RowBg", _ui.ThemeColor);
             TryApplyBrush("RowAltBg", _ui.ThemeColor);
             // button surfaces
-            TryApplyBrush("TbHover", _ui.ControlColor);
-            TryApplyBrush("TbPressed", _ui.ControlColor);
+            TryApplyBrush("BtnBg", _ui.ControlColor);
+            TryApplyBrush("BtnHover", _ui.ControlColor);
+            TryApplyBrush("BtnPressed", _ui.ControlColor);
             TryApplyBrush("HeaderBg", _ui.ThemeColor);
             TryApplyBrush("HeaderBorder", _ui.ThemeColor);
             TryApplyBrush("OnSurface", _ui.TextColor);
