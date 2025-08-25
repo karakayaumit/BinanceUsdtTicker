@@ -105,6 +105,18 @@
             <TabItem Header="Ticaret Tercihi">
                 <TextBlock Margin="10" Text="Ticaret tercihleri burada yer alacaktır."/>
             </TabItem>
+            <TabItem Header="Binance API Bilgileri">
+                <StackPanel Margin="10">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="API Key:" Width="120" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding BinanceApiKey}" Width="300"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Secret Key:" Width="120" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding BinanceApiSecret}" Width="300"/>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
             <TabItem Header="Bildirimler">
                 <StackPanel Margin="10">
                     <CheckBox Content="Windows bildirimi gönder" IsChecked="{Binding WindowsNotification}" Style="{StaticResource ToggleSwitchStyle}"/>

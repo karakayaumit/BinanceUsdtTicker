@@ -24,6 +24,7 @@ namespace BinanceUsdtTicker
     {
         private readonly ObservableCollection<TickerRow> _rows = new();
         private readonly BinanceFuturesService _service = new();
+        private readonly BinanceApiService _api = new();
         private readonly Dictionary<string, TickerRow> _rowBySymbol = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly ObservableCollection<PriceAlert> _alerts = new();
@@ -90,6 +91,7 @@ namespace BinanceUsdtTicker
             if (wsText != null) wsText.Text = "WS: " + _service.State;
 
             LoadUiSettingsSafe();
+            _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
             ApplyTheme(_themeFromString(_ui.Theme));
             ApplyCustomColors();
             ApplyFilterFromString(_ui.FilterMode);
@@ -216,6 +218,7 @@ namespace BinanceUsdtTicker
             if (win.ShowDialog() == true)
             {
                 ApplyCustomColors();
+                _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
                 SaveUiSettingsFromUi();
             }
         }
