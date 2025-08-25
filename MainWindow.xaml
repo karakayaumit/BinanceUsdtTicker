@@ -841,7 +841,45 @@
                                 <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
                                         <TabControl Margin="0,6,0,0">
                                                 <TabItem Header="Açık Pozisyonlar">
-                                                        <ListView x:Name="PositionsList"/>
+                                                        <ListView x:Name="PositionsList">
+                                                                <ListView.View>
+                                                                        <GridView>
+                                                                                <GridViewColumn Header="Sembol" Width="90">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock>
+                                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                                        </TextBlock>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Adet" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding PositionAmt, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Giriş" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="PNL" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="x" Width="40" DisplayMemberBinding="{Binding Leverage}"/>
+                                                                                <GridViewColumn Header="Marjin" Width="70" DisplayMemberBinding="{Binding MarginType}"/>
+                                                                        </GridView>
+                                                                </ListView.View>
+                                                        </ListView>
                                                 </TabItem>
                                                 <TabItem Header="Açık Emirler">
                                                         <ListView x:Name="OrdersList">
