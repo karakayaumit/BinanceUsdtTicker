@@ -32,14 +32,18 @@
                         <!-- Hücre arka planını miras al -->
                         <Setter Property="Background"
                                 Value="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Path=Background}"/>
-                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource SelectionBg}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="Focusable" Value="False"/>
                         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                         <Setter Property="Template">
                                 <Setter.Value>
                                         <ControlTemplate TargetType="Button">
-                                                <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                                                <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="4">
                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                                 <ControlTemplate.Triggers>
@@ -515,7 +519,7 @@
                                                         <DataTemplate>
                                                                 <Button Style="{StaticResource ChartButtonStyle}"
                                             Click="ChartButton_Click" Cursor="Hand">
-                                                                        <TextBlock Text="📈" FontSize="16" Foreground="{DynamicResource SubtleText}"/>
+                                                                        <TextBlock Text="📈" FontSize="16" Foreground="{DynamicResource SelectionBg}"/>
                                                                 </Button>
                                                         </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
