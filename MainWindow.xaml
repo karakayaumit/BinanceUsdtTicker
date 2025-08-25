@@ -1007,17 +1007,24 @@
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="PnL" Width="80">
+                                                                                <GridViewColumn Header="Ücret" Width="80">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding RealizedPnl, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                        <TextBlock Text="{Binding Fee, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Zaman" Width="120">
+                                                                                <GridViewColumn Header="Net" Width="80">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" TextAlignment="Center"/>
+                                                                                                        <TextBlock Text="{Binding NetProfit, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Zaman" Width="150">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>

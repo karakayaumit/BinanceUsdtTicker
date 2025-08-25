@@ -156,6 +156,7 @@ namespace BinanceUsdtTicker
                     decimal.TryParse(el.GetProperty("qty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                     decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
                     decimal.TryParse(el.GetProperty("realizedPnl").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
+                    decimal.TryParse(el.GetProperty("commission").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var fee);
                     long time = el.GetProperty("time").GetInt64();
                     list.Add(new FuturesTrade
                     {
@@ -163,6 +164,7 @@ namespace BinanceUsdtTicker
                         Side = el.GetProperty("side").GetString() ?? string.Empty,
                         Quantity = qty,
                         Price = price,
+                        Fee = fee,
                         RealizedPnl = pnl,
                         Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
                     });
