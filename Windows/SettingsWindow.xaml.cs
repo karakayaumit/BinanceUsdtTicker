@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 using WinForms = System.Windows.Forms;
+using BinanceUsdtTicker.Models;
 
 namespace BinanceUsdtTicker
 {
