@@ -55,6 +55,7 @@ namespace BinanceUsdtTicker
 
         // Top movers modu (%24s / Snapshot)
         private bool _topMoversUse24h = true;
+        private TickerRow? _selectedTicker;
 
         public MainWindow()
         {
@@ -1039,6 +1040,11 @@ namespace BinanceUsdtTicker
         {
             if (Grid?.SelectedItem is TickerRow row)
             {
+                if (_selectedTicker != null)
+                    _selectedTicker.PropertyChanged -= SelectedTicker_PropertyChanged;
+                _selectedTicker = row;
+                _selectedTicker.PropertyChanged += SelectedTicker_PropertyChanged;
+                UpdatePriceAndSize();
                 await LoadFuturesUiAsync(row.Symbol);
             }
         }
@@ -1138,6 +1144,45 @@ namespace BinanceUsdtTicker
             if (slider != null && slider.Value < slider.Maximum)
             {
                 slider.Value += 1;
+            }
+        }
+
+        private void SizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UpdatePriceAndSize();
+        }
+
+        private void SelectedTicker_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TickerRow.Price))
+            {
+                Dispatcher.Invoke(UpdatePriceAndSize);
+            }
+        }
+
+        private void UpdatePriceAndSize()
+        {
+            var priceText = Q<TextBlock>("CurrentPriceText");
+            var totalText = Q<TextBlock>("TotalUsdtText");
+            var qtyText = Q<TextBlock>("QuantityValueText");
+            var slider = Q<Slider>("SizeSlider");
+
+            if (_selectedTicker != null && slider != null)
+            {
+                var price = _selectedTicker.Price;
+                var qty = (decimal)slider.Value;
+                if (priceText != null)
+                    priceText.Text = price.ToString("#,0.####");
+                if (qtyText != null)
+                    qtyText.Text = qty.ToString("#,0.####");
+                if (totalText != null)
+                    totalText.Text = (price * qty).ToString("#,0.####");
+            }
+            else
+            {
+                if (priceText != null) priceText.Text = string.Empty;
+                if (qtyText != null) qtyText.Text = string.Empty;
+                if (totalText != null) totalText.Text = string.Empty;
             }
         }
 
