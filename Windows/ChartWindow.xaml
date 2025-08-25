@@ -7,35 +7,7 @@
         Foreground="{DynamicResource OnSurface}">
 
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Üst kontrol şeridi -->
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Sembol:" VerticalAlignment="Center" Margin="0,0,6,0"/>
-            <TextBlock x:Name="SymbolText" FontWeight="Bold" VerticalAlignment="Center"/>
-
-            <TextBlock Text="Aralık:" Margin="16,0,0,0" VerticalAlignment="Center"/>
-            <ComboBox x:Name="IntervalBox" Width="90"
-                      SelectionChanged="IntervalBox_SelectionChanged"
-                      Margin="6,0,0,0">
-                <ComboBoxItem Content="1m"  Tag="1m"  IsSelected="True"/>
-                <ComboBoxItem Content="5m"  Tag="5m"/>
-                <ComboBoxItem Content="15m" Tag="15m"/>
-                <ComboBoxItem Content="1h"  Tag="1h"/>
-                <ComboBoxItem Content="4h"  Tag="4h"/>
-                <ComboBoxItem Content="1d"  Tag="1d"/>
-            </ComboBox>
-
-            <Button Content="Yenile" Click="Refresh_Click" Margin="8,0,0,0"/>
-        </StackPanel>
-
-        <!-- TradingView Charting Library alanı -->
-        <Border Grid.Row="1" Margin="0,10,0,0"
-                BorderBrush="{DynamicResource Divider}" BorderThickness="1" Padding="0"
-                Background="{DynamicResource SurfaceAlt}">
+        <Border BorderBrush="{DynamicResource Divider}" BorderThickness="1" Background="{DynamicResource SurfaceAlt}">
             <wv2:WebView2 x:Name="ChartWebView"/>
         </Border>
     </Grid>
