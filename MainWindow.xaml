@@ -839,38 +839,51 @@
 
                                 <!-- EMIR VE POZISYONLAR -->
                                 <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
-                                        <ListView x:Name="OrdersList" Margin="0,6,0,0">
-                                                <ListView.View>
-                                                        <GridView>
-                                                                <GridViewColumn Header="Sembol" Width="90">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock>
-                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                <Run Text="/USDT" Foreground="Gray"/>
-                                                                                        </TextBlock>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="Yön" Width="60" DisplayMemberBinding="{Binding Side}"/>
-                                                                <GridViewColumn Header="Adet" Width="80">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="Fiyat" Width="80">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="Durum" Width="80" DisplayMemberBinding="{Binding Status}"/>
-                                                        </GridView>
-                                                </ListView.View>
-                                        </ListView>
+                                        <TabControl Margin="0,6,0,0">
+                                                <TabItem Header="Açık Pozisyonlar">
+                                                        <ListView x:Name="PositionsList"/>
+                                                </TabItem>
+                                                <TabItem Header="Açık Emirler">
+                                                        <ListView x:Name="OrdersList">
+                                                                <ListView.View>
+                                                                        <GridView>
+                                                                                <GridViewColumn Header="Sembol" Width="90">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock>
+                                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                                        </TextBlock>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Yön" Width="60" DisplayMemberBinding="{Binding Side}"/>
+                                                                                <GridViewColumn Header="Adet" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Fiyat" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Durum" Width="80" DisplayMemberBinding="{Binding Status}"/>
+                                                                        </GridView>
+                                                                </ListView.View>
+                                                        </ListView>
+                                                </TabItem>
+                                                <TabItem Header="Emir Geçmişi">
+                                                        <ListView x:Name="OrderHistoryList"/>
+                                                </TabItem>
+                                                <TabItem Header="Trade Geçmişi">
+                                                        <ListView x:Name="TradeHistoryList"/>
+                                                </TabItem>
+                                        </TabControl>
                                 </Expander>
 
                                 <!-- ALARM GEÇMİŞİ -->

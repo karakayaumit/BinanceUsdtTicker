@@ -1,5 +1,6 @@
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -100,18 +101,26 @@ namespace BinanceUsdtTicker
                 walletList.MaxHeight = screenHeight;
             }
 
-            // emir listesi bağla
-            var ordersList = FindName("OrdersList") as ListView;
-            if (ordersList != null)
+            // emir listeleri bağla
+            var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+
+            void SetupList(string name, IEnumerable? source = null)
             {
-                ordersList.ItemsSource = _orders;
+                if (FindName(name) is ListView lv)
+                {
+                    if (source != null)
+                        lv.ItemsSource = source;
 
-                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
-
-                ordersList.Height = screenHeight;
-                ordersList.MinHeight = screenHeight;
-                ordersList.MaxHeight = screenHeight;
+                    lv.Height = screenHeight;
+                    lv.MinHeight = screenHeight;
+                    lv.MaxHeight = screenHeight;
+                }
             }
+
+            SetupList("OrdersList", _orders);
+            SetupList("PositionsList");
+            SetupList("OrderHistoryList");
+            SetupList("TradeHistoryList");
 
             // servis
             _service.OnTickersUpdated += OnServiceTickersUpdated;
