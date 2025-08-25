@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Globalization;
 using BinanceUsdtTicker.Models;
 
 namespace BinanceUsdtTicker
@@ -57,8 +58,8 @@ namespace BinanceUsdtTicker
                     foreach (var item in assets.EnumerateArray())
                     {
                         var asset = item.GetProperty("asset").GetString() ?? string.Empty;
-                        decimal.TryParse(item.GetProperty("walletBalance").GetString(), out var balance);
-                        decimal.TryParse(item.GetProperty("availableBalance").GetString(), out var available);
+                        decimal.TryParse(item.GetProperty("walletBalance").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var balance);
+                        decimal.TryParse(item.GetProperty("availableBalance").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var available);
                         list.Add(new WalletAsset { Asset = asset, Balance = balance, Available = available });
                     }
                 }
