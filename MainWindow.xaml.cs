@@ -309,6 +309,7 @@ namespace BinanceUsdtTicker
             {
                 _orderHistory.Clear();
 
+                var weekAgoUtc = DateTime.UtcNow.AddDays(-7);
                 var json = await _api.GetAccountInfoAsync();
                 var symbols = new List<string>();
                 try
@@ -321,15 +322,18 @@ namespace BinanceUsdtTicker
                             var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
                             if (!sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)) continue;
                             decimal.TryParse(p.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
-                            if (Math.Abs(amt) > 0m)
+                            long updateMs = 0;
+                            if (p.TryGetProperty("updateTime", out var upd) && upd.TryGetInt64(out var ms))
+                                updateMs = ms;
+                            var updatedUtc = DateTimeOffset.FromUnixTimeMilliseconds(updateMs).UtcDateTime;
+                            if (Math.Abs(amt) > 0m || updatedUtc >= weekAgoUtc)
                                 symbols.Add(sym);
                         }
                     }
                 }
                 catch { }
 
-                var weekAgoUtc = DateTime.UtcNow.AddDays(-7);
-                foreach (var sym in symbols)
+                foreach (var sym in symbols.Distinct())
                 {
                     var orders = await _api.GetAllOrdersAsync(sym, 1000, weekAgoUtc);
                     foreach (var o in orders)
@@ -345,6 +349,9 @@ namespace BinanceUsdtTicker
             {
                 _tradeHistory.Clear();
 
+                var weekAgoUtc = DateTime.UtcNow.AddDays(-7);
+                var weekAgoLocal = DateTime.Now.AddDays(-7);
+
                 var json = await _api.GetAccountInfoAsync();
                 var symbols = new List<string>();
                 try
@@ -357,16 +364,18 @@ namespace BinanceUsdtTicker
                             var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
                             if (!sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)) continue;
                             decimal.TryParse(p.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
-                            if (Math.Abs(amt) > 0m)
+                            long updateMs = 0;
+                            if (p.TryGetProperty("updateTime", out var upd) && upd.TryGetInt64(out var ms))
+                                updateMs = ms;
+                            var updatedUtc = DateTimeOffset.FromUnixTimeMilliseconds(updateMs).UtcDateTime;
+                            if (Math.Abs(amt) > 0m || updatedUtc >= weekAgoUtc)
                                 symbols.Add(sym);
                         }
                     }
                 }
                 catch { }
 
-                var weekAgoUtc = DateTime.UtcNow.AddDays(-7);
-                var weekAgoLocal = DateTime.Now.AddDays(-7);
-                foreach (var sym in symbols)
+                foreach (var sym in symbols.Distinct())
                 {
                     var trades = await _api.GetUserTradesAsync(sym, 1000, weekAgoUtc);
                     foreach (var t in trades.Where(t => t.Time >= weekAgoLocal))
