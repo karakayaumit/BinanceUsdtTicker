@@ -81,7 +81,9 @@
                 <TextBlock Margin="10" Text="Ticaret tercihleri burada yer alacaktır."/>
             </TabItem>
             <TabItem Header="Bildirimler">
-                <TextBlock Margin="10" Text="Bildirim ayarları burada yer alacaktır."/>
+                <StackPanel Margin="10">
+                    <CheckBox Content="Windows bildirimi gönder" IsChecked="{Binding WindowsNotification}"/>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Tema" IsSelected="True">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
