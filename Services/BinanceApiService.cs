@@ -126,6 +126,43 @@ namespace BinanceUsdtTicker
             return list;
         }
 
+        /// <summary>
+        /// Belirtilen sembol için son gerçekleşen işlemleri döner.
+        /// </summary>
+        public async Task<IList<FuturesTrade>> GetUserTradesAsync(string symbol, int limit = 50)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol,
+                ["limit"] = limit.ToString()
+            };
+
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/userTrades", query);
+            var list = new List<FuturesTrade>();
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                foreach (var el in doc.RootElement.EnumerateArray())
+                {
+                    decimal.TryParse(el.GetProperty("qty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
+                    decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                    decimal.TryParse(el.GetProperty("realizedPnl").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
+                    long time = el.GetProperty("time").GetInt64();
+                    list.Add(new FuturesTrade
+                    {
+                        Symbol = el.GetProperty("symbol").GetString() ?? symbol,
+                        Side = el.GetProperty("side").GetString() ?? string.Empty,
+                        Quantity = qty,
+                        Price = price,
+                        RealizedPnl = pnl,
+                        Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
+                    });
+                }
+            }
+            catch { }
+            return list;
+        }
+
         public async Task<string> SendSignedAsync(HttpMethod method, string endpoint, IDictionary<string, string>? parameters = null)
         {
             if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_secretKey))
