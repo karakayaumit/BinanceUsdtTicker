@@ -11,6 +11,7 @@ namespace BinanceUsdtTicker.Models
         public string Side { get; set; } = string.Empty;
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }
+        public decimal Fee { get; set; }
         public decimal RealizedPnl { get; set; }
         public DateTime Time { get; set; }
 
@@ -18,5 +19,7 @@ namespace BinanceUsdtTicker.Models
             Symbol.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)
                 ? Symbol[..^4]
                 : Symbol;
+
+        public decimal NetProfit => RealizedPnl - Fee;
     }
 }
