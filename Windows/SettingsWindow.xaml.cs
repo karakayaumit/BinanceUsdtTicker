@@ -92,7 +92,11 @@ namespace BinanceUsdtTicker
 
         private static string? PickColor(string current)
         {
-            var dlg = new WinForms.ColorDialog { FullOpen = true };
+            var dlg = new WinForms.ColorDialog
+            {
+                FullOpen = false,
+                AllowFullOpen = false
+            };
             try
             {
                 if (!string.IsNullOrWhiteSpace(current))
