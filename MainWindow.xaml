@@ -829,18 +829,37 @@
                                         <ListView x:Name="WalletList" Margin="0,6,0,0">
                                                 <ListView.View>
                                                         <GridView>
-                                                                <GridViewColumn Header="Varlık" Width="80" DisplayMemberBinding="{Binding Asset}"/>
+                                                                <GridViewColumn Header="Varlık" Width="80">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <Border BorderBrush="{DynamicResource Divider}"
+                                                                                                BorderThickness="0,0,1,1" Padding="2">
+                                                                                                <TextBlock Text="{Binding Asset}"/>
+                                                                                        </Border>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
                                                                 <GridViewColumn Header="Bakiye" Width="100">
                                                                         <GridViewColumn.CellTemplate>
                                                                                 <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Balance, StringFormat={}{0:#,0.00}}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                                                                        <Border BorderBrush="{DynamicResource Divider}"
+                                                                                                BorderThickness="0,0,1,1" Padding="2">
+                                                                                                <TextBlock Text="{Binding Balance, StringFormat={}{0:#,0.00}}"
+                                                                                                           HorizontalAlignment="Right"
+                                                                                                           TextAlignment="Right"/>
+                                                                                        </Border>
                                                                                 </DataTemplate>
                                                                         </GridViewColumn.CellTemplate>
                                                                 </GridViewColumn>
                                                                 <GridViewColumn Header="Kullanılabilir" Width="120">
                                                                         <GridViewColumn.CellTemplate>
                                                                                 <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Available, StringFormat={}{0:#,0.00}}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                                                                        <Border BorderBrush="{DynamicResource Divider}"
+                                                                                                BorderThickness="0,0,0,1" Padding="2">
+                                                                                                <TextBlock Text="{Binding Available, StringFormat={}{0:#,0.00}}"
+                                                                                                           HorizontalAlignment="Right"
+                                                                                                           TextAlignment="Right"/>
+                                                                                        </Border>
                                                                                 </DataTemplate>
                                                                         </GridViewColumn.CellTemplate>
                                                                 </GridViewColumn>
