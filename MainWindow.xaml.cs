@@ -43,6 +43,8 @@ namespace BinanceUsdtTicker
         private static readonly string FavoritesFile = Path.Combine(AppDir, "favorites.json");
         private static readonly string UiSettingsFile = Path.Combine(AppDir, "ui_settings.json");
         private static readonly string UiDefaultsFile = Path.Combine(AppDir, "ui_defaults.json");
+        private static readonly string UiDefaultsSrcFile =
+            Path.Combine(AppContext.BaseDirectory, "Resources", "ui_defaults.json");
 
         private UiSettings _ui = new();
         private ThemeKind _theme = ThemeKind.Light;
@@ -864,6 +866,11 @@ namespace BinanceUsdtTicker
                     var json = File.ReadAllText(UiDefaultsFile);
                     _ui = JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
                 }
+                else if (File.Exists(UiDefaultsSrcFile))
+                {
+                    var json = File.ReadAllText(UiDefaultsSrcFile);
+                    _ui = JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
+                }
                 else
                 {
                     _ui = new UiSettings();
@@ -882,11 +889,8 @@ namespace BinanceUsdtTicker
             try
             {
                 Directory.CreateDirectory(AppDir);
-                if (!File.Exists(UiDefaultsFile))
-                {
-                    var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText(UiDefaultsFile, json);
-                }
+                var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(UiDefaultsFile, json);
             }
             catch { }
         }
