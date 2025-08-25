@@ -69,6 +69,63 @@ namespace BinanceUsdtTicker
             return list;
         }
 
+        /// <summary>
+        /// Belirtilen sembol için mevcut pozisyon bilgilerini döner.
+        /// </summary>
+        public async Task<(string MarginType, int Leverage)> GetPositionInfoAsync(string symbol)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol
+            };
+
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/positionRisk", query);
+
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var el = doc.RootElement.EnumerateArray().FirstOrDefault();
+                var mt = el.GetProperty("marginType").GetString() ?? "cross";
+                int.TryParse(el.GetProperty("leverage").GetString(), out var lev);
+                return (mt.ToLowerInvariant(), lev);
+            }
+            catch
+            {
+                return ("cross", 1);
+            }
+        }
+
+        /// <summary>
+        /// Sembol için kullanılabilir kaldıraç değerlerini döner.
+        /// </summary>
+        public async Task<IList<int>> GetLeverageOptionsAsync(string symbol)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol
+            };
+
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/leverageBracket", query);
+            var list = new List<int>();
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement.EnumerateArray().FirstOrDefault();
+                if (root.TryGetProperty("brackets", out var brackets))
+                {
+                    int max = 0;
+                    foreach (var br in brackets.EnumerateArray())
+                    {
+                        if (br.TryGetProperty("initialLeverage", out var il) && il.TryGetInt32(out var lvl))
+                            if (lvl > max) max = lvl;
+                    }
+                    for (int i = 1; i <= max; i++) list.Add(i);
+                }
+            }
+            catch { }
+            return list;
+        }
+
         public async Task<string> SendSignedAsync(HttpMethod method, string endpoint, IDictionary<string, string>? parameters = null)
         {
             if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_secretKey))
