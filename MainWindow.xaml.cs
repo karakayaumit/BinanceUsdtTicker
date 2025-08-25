@@ -33,6 +33,7 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<AlertHit> _alertLog = new();
         private readonly ObservableCollection<WalletAsset> _walletAssets = new();
         private readonly ObservableCollection<FuturesOrder> _orders = new();
+        private readonly ObservableCollection<FuturesOrder> _orderHistory = new();
         private readonly ObservableCollection<FuturesTrade> _tradeHistory = new();
         private const int MaxAlertLog = 500;
 
@@ -117,7 +118,7 @@ namespace BinanceUsdtTicker
 
             SetupList("OrdersList", _orders);
             SetupList("PositionsList");
-            SetupList("OrderHistoryList");
+            SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
 
             // servis
@@ -138,6 +139,7 @@ namespace BinanceUsdtTicker
                 EnsureSpecialColumnsOrder(); // ★ -> Sembol
                 await InitializeAsync();
                 await LoadWalletAsync();
+                await LoadOrderHistoryAsync();
                 await LoadTradeHistoryAsync();
             };
 
@@ -297,6 +299,42 @@ namespace BinanceUsdtTicker
                 _walletAssets.Clear();
                 foreach (var b in balances)
                     _walletAssets.Add(b);
+            }
+            catch { }
+        }
+
+        private async Task LoadOrderHistoryAsync()
+        {
+            try
+            {
+                _orderHistory.Clear();
+
+                var json = await _api.GetAccountInfoAsync();
+                var symbols = new List<string>();
+                try
+                {
+                    using var doc = JsonDocument.Parse(json);
+                    if (doc.RootElement.TryGetProperty("positions", out var positions))
+                    {
+                        foreach (var p in positions.EnumerateArray())
+                        {
+                            var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
+                            if (!sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)) continue;
+                            decimal.TryParse(p.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
+                            if (Math.Abs(amt) > 0m)
+                                symbols.Add(sym);
+                        }
+                    }
+                }
+                catch { }
+
+                var weekAgoUtc = DateTime.UtcNow.AddDays(-7);
+                foreach (var sym in symbols)
+                {
+                    var orders = await _api.GetAllOrdersAsync(sym, 1000, weekAgoUtc);
+                    foreach (var o in orders)
+                        _orderHistory.Add(o);
+                }
             }
             catch { }
         }

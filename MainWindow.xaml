@@ -878,7 +878,45 @@
                                                         </ListView>
                                                 </TabItem>
                                                 <TabItem Header="Emir Geçmişi">
-                                                        <ListView x:Name="OrderHistoryList"/>
+                                                        <ListView x:Name="OrderHistoryList">
+                                                                <ListView.View>
+                                                                        <GridView>
+                                                                                <GridViewColumn Header="Sembol" Width="90">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock>
+                                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                                        </TextBlock>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Yön" Width="60" DisplayMemberBinding="{Binding Side}"/>
+                                                                                <GridViewColumn Header="Adet" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Fiyat" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Durum" Width="80" DisplayMemberBinding="{Binding Status}"/>
+                                                                                <GridViewColumn Header="Zaman" Width="120">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" TextAlignment="Center"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                        </GridView>
+                                                                </ListView.View>
+                                                        </ListView>
                                                 </TabItem>
                                                 <TabItem Header="Trade Geçmişi">
                                                         <ListView x:Name="TradeHistoryList">

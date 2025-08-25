@@ -12,6 +12,7 @@ namespace BinanceUsdtTicker.Models
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }
         public string Status { get; set; } = string.Empty;
+        public DateTime Time { get; set; }
 
         public string BaseSymbol =>
             Symbol.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)
