@@ -1055,22 +1055,75 @@ namespace BinanceUsdtTicker
                 var pos = await posTask;
                 var levs = await levTask;
 
-                var margin = Q<ComboBox>("MarginModeCombo");
-                if (margin != null)
+                var crossBtn = Q<ToggleButton>("CrossMarginButton");
+                var isoBtn = Q<ToggleButton>("IsolatedMarginButton");
+                if (crossBtn != null && isoBtn != null)
                 {
-                    margin.SelectedIndex = pos.MarginType == "isolated" ? 1 : 0;
+                    var isIso = pos.MarginType == "isolated";
+                    isoBtn.IsChecked = isIso;
+                    crossBtn.IsChecked = !isIso;
                 }
 
-                var levCombo = Q<ComboBox>("LeverageCombo");
-                if (levCombo != null)
+                var levSlider = Q<Slider>("LeverageSlider");
+                var levText = Q<TextBlock>("LeverageValueText");
+                if (levSlider != null)
                 {
-                    levCombo.ItemsSource = levs;
-                    levCombo.SelectedItem = pos.Leverage;
+                    var max = levs.Count > 0 ? levs[^1] : 1;
+                    levSlider.Maximum = max;
+                    levSlider.Value = pos.Leverage;
+                    levSlider.Ticks = new DoubleCollection(new double[] { 1, 30, 60, 90, 120, 150 }.Where(v => v <= max));
+                }
+                if (levText != null)
+                {
+                    levText.Text = pos.Leverage + "x";
                 }
             }
             catch
             {
                 // hata varsa yoksay
+            }
+        }
+
+        private void MarginMode_Click(object sender, RoutedEventArgs e)
+        {
+            var crossBtn = Q<ToggleButton>("CrossMarginButton");
+            var isoBtn = Q<ToggleButton>("IsolatedMarginButton");
+            if (sender == crossBtn)
+            {
+                if (crossBtn != null) crossBtn.IsChecked = true;
+                if (isoBtn != null) isoBtn.IsChecked = false;
+            }
+            else if (sender == isoBtn)
+            {
+                if (isoBtn != null) isoBtn.IsChecked = true;
+                if (crossBtn != null) crossBtn.IsChecked = false;
+            }
+        }
+
+        private void LeverageSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var text = Q<TextBlock>("LeverageValueText");
+            if (text != null)
+            {
+                text.Text = ((int)e.NewValue).ToString() + "x";
+            }
+        }
+
+        private void LevMinusButton_Click(object sender, RoutedEventArgs e)
+        {
+            var slider = Q<Slider>("LeverageSlider");
+            if (slider != null && slider.Value > slider.Minimum)
+            {
+                slider.Value -= 1;
+            }
+        }
+
+        private void LevPlusButton_Click(object sender, RoutedEventArgs e)
+        {
+            var slider = Q<Slider>("LeverageSlider");
+            if (slider != null && slider.Value < slider.Maximum)
+            {
+                slider.Value += 1;
             }
         }
 
