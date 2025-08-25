@@ -830,8 +830,20 @@
                                                 <ListView.View>
                                                         <GridView>
                                                                 <GridViewColumn Header="Varlık" Width="80" DisplayMemberBinding="{Binding Asset}"/>
-                                                                <GridViewColumn Header="Bakiye" Width="100" DisplayMemberBinding="{Binding Balance, StringFormat={}{0:#,0.00}}"/>
-                                                                <GridViewColumn Header="Kullanılabilir" Width="120" DisplayMemberBinding="{Binding Available, StringFormat={}{0:#,0.00}}"/>
+                                                                <GridViewColumn Header="Bakiye" Width="100">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Balance, StringFormat={}{0:#,0.00}}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="Kullanılabilir" Width="120">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Available, StringFormat={}{0:#,0.00}}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
                                                         </GridView>
                                                 </ListView.View>
                                         </ListView>
