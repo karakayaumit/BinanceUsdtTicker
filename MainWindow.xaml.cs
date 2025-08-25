@@ -128,6 +128,8 @@ namespace BinanceUsdtTicker
         private FilterMode _filterMode = FilterMode.All;
         private QuickFilter _quickFilter = QuickFilter.None;
 
+        private const string SearchPlaceholder = "Ara";
+
         private static readonly string AppDir =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "BinanceUsdtTicker");
         private static readonly string AlertsFile = Path.Combine(AppDir, "alerts.json");
@@ -144,6 +146,14 @@ namespace BinanceUsdtTicker
         public MainWindow()
         {
             InitializeComponent();
+
+            var searchBox = Q<TextBox>("SearchBox");
+            if (searchBox != null)
+            {
+                searchBox.Text = SearchPlaceholder;
+                searchBox.GotFocus += SearchBox_GotFocus;
+                searchBox.LostFocus += SearchBox_LostFocus;
+            }
 
             // ana grid bağla
             Grid.ItemsSource = _rows;
@@ -192,7 +202,8 @@ namespace BinanceUsdtTicker
         private string GetSearchText()
         {
             var tb = Q<TextBox>("SearchBox");
-            return (tb?.Text ?? string.Empty).Trim();
+            var text = (tb?.Text ?? string.Empty).Trim();
+            return string.Equals(text, SearchPlaceholder, StringComparison.OrdinalIgnoreCase) ? string.Empty : text;
         }
 
         private ThemeKind _themeFromString(string s) =>
@@ -405,6 +416,22 @@ namespace BinanceUsdtTicker
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(_rows).Refresh();
+        }
+
+        private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox tb && tb.Text == SearchPlaceholder)
+            {
+                tb.Text = string.Empty;
+            }
+        }
+
+        private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox tb && string.IsNullOrWhiteSpace(tb.Text))
+            {
+                tb.Text = SearchPlaceholder;
+            }
         }
 
         private void ApplyFilterFromString(string s)
