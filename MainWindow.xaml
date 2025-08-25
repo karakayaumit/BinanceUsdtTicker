@@ -830,13 +830,13 @@
                                                 <ListView.View>
                                                         <GridView>
                                                                 <GridViewColumn Header="Varlık" Width="80" DisplayMemberBinding="{Binding Asset}"/>
-                                                                <GridViewColumn Header="Bakiye" Width="100" DisplayMemberBinding="{Binding Balance, StringFormat={}{0:#,0.####}}"/>
-                                                                <GridViewColumn Header="Kullanılabilir" Width="120" DisplayMemberBinding="{Binding Available, StringFormat={}{0:#,0.####}}"/>
+                                                                <GridViewColumn Header="Bakiye" Width="100" DisplayMemberBinding="{Binding Balance, StringFormat={}{0:#,0.00}}"/>
+                                                                <GridViewColumn Header="Kullanılabilir" Width="120" DisplayMemberBinding="{Binding Available, StringFormat={}{0:#,0.00}}"/>
                                                         </GridView>
                                                 </ListView.View>
                                         </ListView>
                                 </Expander>
                         </Grid>
-		</Grid>
-	</DockPanel>
+                </Grid>
+        </DockPanel>
 </Window>
