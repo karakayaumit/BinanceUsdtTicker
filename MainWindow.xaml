@@ -566,16 +566,46 @@
 						</DataGridTextColumn.ElementStyle>
 					</DataGridTextColumn>
 
-                                        <!-- Anlık Değişim -->
-                                        <DataGridTextColumn x:Name="ColChSnap" Header="Anlık Değişim"
-                                        Width="0.9*" MinWidth="80"
-                                        Binding="{Binding ChangeSinceStartPercent, StringFormat=N2}">
-						<DataGridTextColumn.ElementStyle>
-							<Style TargetType="TextBlock">
-								<Setter Property="TextAlignment" Value="Right"/>
-							</Style>
-						</DataGridTextColumn.ElementStyle>
-					</DataGridTextColumn>
+                                       <!-- Anlık Değişim -->
+                                       <DataGridTemplateColumn x:Name="ColChSnap" Header="Anlık Değişim"
+                                       Width="0.9*" MinWidth="80" SortMemberPath="ChangeSinceStartPercent">
+                                               <DataGridTemplateColumn.CellTemplate>
+                                                       <DataTemplate>
+                                                               <Border x:Name="border">
+                                                                       <TextBlock x:Name="tb" TextAlignment="Right">
+                                                                               <Run x:Name="ArrowRun"/>
+                                                                               <Run Text="{Binding ChangeSinceStartPercent, StringFormat=N2}"/>
+                                                                       </TextBlock>
+                                                               </Border>
+                                                               <DataTemplate.Triggers>
+                                                                       <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
+                                                                               <Setter TargetName="border" Property="Background" Value="{DynamicResource Up3Bg}"/>
+                                                                               <Setter TargetName="tb" Property="Foreground" Value="{DynamicResource Up3Fg}"/>
+                                                                               <Setter TargetName="tb" Property="FontWeight" Value="Bold"/>
+                                                                               <Setter TargetName="ArrowRun" Property="Text" Value="▲ "/>
+                                                                       </DataTrigger>
+                                                                       <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
+                                                                               <Setter TargetName="border" Property="Background" Value="{DynamicResource Up1Bg}"/>
+                                                                               <Setter TargetName="tb" Property="Foreground" Value="{DynamicResource Up1Fg}"/>
+                                                                               <Setter TargetName="tb" Property="FontWeight" Value="Bold"/>
+                                                                               <Setter TargetName="ArrowRun" Property="Text" Value="▲ "/>
+                                                                       </DataTrigger>
+                                                                       <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
+                                                                               <Setter TargetName="border" Property="Background" Value="{DynamicResource Down3Bg}"/>
+                                                                               <Setter TargetName="tb" Property="Foreground" Value="{DynamicResource Down3Fg}"/>
+                                                                               <Setter TargetName="tb" Property="FontWeight" Value="Bold"/>
+                                                                               <Setter TargetName="ArrowRun" Property="Text" Value="▼ "/>
+                                                                       </DataTrigger>
+                                                                       <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
+                                                                               <Setter TargetName="border" Property="Background" Value="{DynamicResource Down1Bg}"/>
+                                                                               <Setter TargetName="tb" Property="Foreground" Value="{DynamicResource Down1Fg}"/>
+                                                                               <Setter TargetName="tb" Property="FontWeight" Value="Bold"/>
+                                                                               <Setter TargetName="ArrowRun" Property="Text" Value="▼ "/>
+                                                                       </DataTrigger>
+                                                               </DataTemplate.Triggers>
+                                                       </DataTemplate>
+                                               </DataGridTemplateColumn.CellTemplate>
+                                       </DataGridTemplateColumn>
 
 					<!-- %24s -->
 					<DataGridTextColumn x:Name="ColCh24" Header="% 24s"
