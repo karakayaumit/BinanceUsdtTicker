@@ -2,11 +2,10 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.ComponentModel;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,110 +16,10 @@ using System.Windows.Media;
 using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
 using WinForms = System.Windows.Forms;
+using BinanceUsdtTicker.Models;
 
 namespace BinanceUsdtTicker
 {
-    public enum FilterMode { All, Positive, Negative }
-    public enum ThemeKind { Light, Dark }
-    public enum QuickFilter { None, Pos3Plus, Neg3Minus }
-
-    public class UiSettings : INotifyPropertyChanged
-    {
-        private string _theme = "Light";
-        public string Theme
-        {
-            get => _theme;
-            set { if (_theme != value) { _theme = value; OnPropertyChanged(); } }
-        }
-
-        private string _filterMode = "All";
-        public string FilterMode
-        {
-            get => _filterMode;
-            set { if (_filterMode != value) { _filterMode = value; OnPropertyChanged(); } }
-        }
-
-        private List<ColumnState> _columns = new();
-        public List<ColumnState> Columns
-        {
-            get => _columns;
-            set { if (_columns != value) { _columns = value; OnPropertyChanged(); } }
-        }
-
-        private string _themeColor = string.Empty;
-        public string ThemeColor
-        {
-            get => _themeColor;
-            set { if (_themeColor != value) { _themeColor = value; OnPropertyChanged(); } }
-        }
-
-        private string _textColor = string.Empty;
-        public string TextColor
-        {
-            get => _textColor;
-            set { if (_textColor != value) { _textColor = value; OnPropertyChanged(); } }
-        }
-
-        private string _up1Color = string.Empty;
-        public string Up1Color
-        {
-            get => _up1Color;
-            set { if (_up1Color != value) { _up1Color = value; OnPropertyChanged(); } }
-        }
-
-        private string _up3Color = string.Empty;
-        public string Up3Color
-        {
-            get => _up3Color;
-            set { if (_up3Color != value) { _up3Color = value; OnPropertyChanged(); } }
-        }
-
-        private string _down1Color = string.Empty;
-        public string Down1Color
-        {
-            get => _down1Color;
-            set { if (_down1Color != value) { _down1Color = value; OnPropertyChanged(); } }
-        }
-
-        private string _down3Color = string.Empty;
-        public string Down3Color
-        {
-            get => _down3Color;
-            set { if (_down3Color != value) { _down3Color = value; OnPropertyChanged(); } }
-        }
-
-        private string _dividerColor = string.Empty;
-        public string DividerColor
-        {
-            get => _dividerColor;
-            set { if (_dividerColor != value) { _dividerColor = value; OnPropertyChanged(); } }
-        }
-
-        private string _controlColor = string.Empty;
-        public string ControlColor
-        {
-            get => _controlColor;
-            set { if (_controlColor != value) { _controlColor = value; OnPropertyChanged(); } }
-        }
-
-        private bool _windowsNotification;
-        public bool WindowsNotification
-        {
-            get => _windowsNotification;
-            set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string? name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
-    public class ColumnState
-    {
-        public string Header { get; set; } = "";
-        public int DisplayIndex { get; set; }
-        public double Width { get; set; }
-    }
-
     public partial class MainWindow : Window
     {
         private readonly ObservableCollection<TickerRow> _rows = new();
