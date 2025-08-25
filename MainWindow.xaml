@@ -550,21 +550,12 @@
 					<DataGridTextColumn x:Name="ColPrice" Header="Fiyat"
                                         Width="1*" MinWidth="90"
                                         Binding="{Binding Price, StringFormat={}{0:#,0.########}}">
-						<DataGridTextColumn.ElementStyle>
-							<Style TargetType="TextBlock">
-								<Setter Property="TextAlignment" Value="Right"/>
-								<Setter Property="ToolTip">
-									<Setter.Value>
-										<StackPanel>
-											<TextBlock Text="{Binding Open,  StringFormat=O: {0:#,0.########}}"/>
-											<TextBlock Text="{Binding High,  StringFormat=H: {0:#,0.########}}"/>
-											<TextBlock Text="{Binding Low,   StringFormat=L: {0:#,0.########}}"/>
-										</StackPanel>
-									</Setter.Value>
-								</Setter>
-							</Style>
-						</DataGridTextColumn.ElementStyle>
-					</DataGridTextColumn>
+                                                <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                                <Setter Property="TextAlignment" Value="Right"/>
+                                                        </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
 
                                        <!-- Anlık Değişim -->
                                       <DataGridTemplateColumn x:Name="ColChSnap" Header="Anlık Değişim"
