@@ -30,6 +30,7 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<PriceAlert> _alerts = new();
         private readonly ObservableCollection<AlertHit> _alertLog = new();
         private readonly ObservableCollection<WalletAsset> _walletAssets = new();
+        private readonly ObservableCollection<FuturesOrder> _orders = new();
         private const int MaxAlertLog = 500;
 
         private readonly HashSet<string> _favoriteSymbols = new(StringComparer.OrdinalIgnoreCase);
@@ -97,6 +98,19 @@ namespace BinanceUsdtTicker
                 walletList.Height = screenHeight;
                 walletList.MinHeight = screenHeight;
                 walletList.MaxHeight = screenHeight;
+            }
+
+            // emir listesi bağla
+            var ordersList = FindName("OrdersList") as ListView;
+            if (ordersList != null)
+            {
+                ordersList.ItemsSource = _orders;
+
+                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+
+                ordersList.Height = screenHeight;
+                ordersList.MinHeight = screenHeight;
+                ordersList.MaxHeight = screenHeight;
             }
 
             // servis
