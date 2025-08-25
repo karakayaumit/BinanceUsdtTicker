@@ -117,10 +117,31 @@ namespace BinanceUsdtTicker
             Grid.CommitEdit();
             Grid.CommitEdit();
 
+            // Geçerli sembol ve gerekli değerleri kontrol et
+            foreach (var a in WorkingAlerts)
+            {
+                var sym = NormalizeToUsdt(a.Symbol ?? "");
+                if (string.IsNullOrWhiteSpace(sym))
+                {
+                    MessageBox.Show("Lütfen tüm sembolleri doldurun.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (a.Type == AlertType.PriceBetween && a.B is null)
+                {
+                    MessageBox.Show("Bant için ikinci değeri (B) girin.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+            }
+
             // Kaydet: normalize edip sonucu döndür
             ResultAlerts = WorkingAlerts
-                .Select(a => CloneAlert(a)) // kopya
-                .Select(a => { a.Symbol = NormalizeToUsdt(a.Symbol ?? ""); return a; })
+                .Select(a =>
+                {
+                    var clone = CloneAlert(a);
+                    clone.Symbol = NormalizeToUsdt(clone.Symbol ?? "");
+                    clone.CooldownSeconds = Math.Max(0, clone.CooldownSeconds);
+                    return clone;
+                })
                 .ToList();
 
             IsSaved = true;
