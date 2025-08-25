@@ -1066,12 +1066,25 @@ namespace BinanceUsdtTicker
 
                 var levSlider = Q<Slider>("LeverageSlider");
                 var levText = Q<TextBlock>("LeverageValueText");
+                var tickLabels = Q<ItemsControl>("LeverageTickLabels");
                 if (levSlider != null)
                 {
                     var max = levs.Count > 0 ? levs[^1] : 1;
                     levSlider.Maximum = max;
                     levSlider.Value = pos.Leverage;
                     levSlider.Ticks = new DoubleCollection(new double[] { 1, 30, 60, 90, 120, 150 }.Where(v => v <= max));
+
+                    if (tickLabels != null)
+                    {
+                        tickLabels.ItemsSource = levSlider.Ticks;
+                        tickLabels.ApplyTemplate();
+                        if (tickLabels.ItemsPanelRoot is Grid grid)
+                        {
+                            grid.ColumnDefinitions.Clear();
+                            foreach (var _ in levSlider.Ticks)
+                                grid.ColumnDefinitions.Add(new ColumnDefinition());
+                        }
+                    }
                 }
                 if (levText != null)
                 {

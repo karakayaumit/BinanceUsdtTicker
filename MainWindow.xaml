@@ -650,10 +650,14 @@
                       VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
                                 <StackPanel Margin="4">
                                         <TextBlock x:Name="FuturesSymbolText" FontWeight="Bold" Margin="0,0,0,8"/>
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <ToggleButton x:Name="CrossMarginButton" Content="Cross" Width="60" Margin="0,0,4,0" Click="MarginMode_Click"/>
-                                                <ToggleButton x:Name="IsolatedMarginButton" Content="Isolated" Width="60" IsChecked="True" Click="MarginMode_Click"/>
-                                        </StackPanel>
+                                        <Grid Margin="0,0,0,8">
+                                                <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ToggleButton x:Name="CrossMarginButton" Content="Cross" Grid.Column="0" Margin="0,0,4,0" Click="MarginMode_Click"/>
+                                                <ToggleButton x:Name="IsolatedMarginButton" Content="Isolated" Grid.Column="1" Margin="4,0,0,0" IsChecked="True" Click="MarginMode_Click"/>
+                                        </Grid>
                                         <StackPanel Margin="0,0,0,8">
                                                 <Grid Margin="0,0,0,4">
                                                         <Grid.ColumnDefinitions>
@@ -666,6 +670,23 @@
                                                         <Button x:Name="LevPlusButton" Grid.Column="2" Content="+" Width="30" Click="LevPlusButton_Click"/>
                                                 </Grid>
                                                 <Slider x:Name="LeverageSlider" Minimum="1" Maximum="150" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Value="1" ValueChanged="LeverageSlider_ValueChanged" Ticks="1,30,60,90,120,150"/>
+                                                <ItemsControl x:Name="LeverageTickLabels" Margin="0,4,0,0" AlternationCount="100">
+                                                        <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                        <Grid/>
+                                                                </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemContainerStyle>
+                                                                <Style TargetType="ContentPresenter">
+                                                                        <Setter Property="Grid.Column" Value="{Binding RelativeSource={RelativeSource Self}, Path=(ItemsControl.AlternationIndex)}"/>
+                                                                </Style>
+                                                        </ItemsControl.ItemContainerStyle>
+                                                        <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                        <TextBlock Text="{Binding StringFormat={}{0}x}" HorizontalAlignment="Center"/>
+                                                                </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                         </StackPanel>
                                 </StackPanel>
                         </GroupBox>
