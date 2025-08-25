@@ -65,6 +65,31 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="ToggleSwitchStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Width="50" Height="20">
+                                <Border x:Name="SwitchBorder" Background="Red" CornerRadius="10"/>
+                                <Border x:Name="SwitchKnob" Width="18" Height="18" Background="White" CornerRadius="9" Margin="1" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="SwitchText" Text="Off" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="4,0"/>
+                            </Grid>
+                            <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SwitchBorder" Property="Background" Value="Green"/>
+                                <Setter TargetName="SwitchKnob" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="SwitchText" Property="Text" Value="On"/>
+                                <Setter TargetName="SwitchText" Property="HorizontalAlignment" Value="Left"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="10">
@@ -82,7 +107,7 @@
             </TabItem>
             <TabItem Header="Bildirimler">
                 <StackPanel Margin="10">
-                    <CheckBox Content="Windows bildirimi gönder" IsChecked="{Binding WindowsNotification}"/>
+                    <CheckBox Content="Windows bildirimi gönder" IsChecked="{Binding WindowsNotification}" Style="{StaticResource ToggleSwitchStyle}"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Tema" IsSelected="True">
