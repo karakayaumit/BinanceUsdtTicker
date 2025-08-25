@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BinanceUsdtTicker
 {
@@ -23,28 +22,14 @@ namespace BinanceUsdtTicker
                 Symbol = symbol.Trim().ToUpperInvariant();
 
             Title = string.IsNullOrEmpty(Symbol) ? "Grafik" : $"Grafik - {Symbol}";
-            if (SymbolText != null) SymbolText.Text = Symbol;
         }
 
         private async void ChartWindow_Loaded(object? sender, RoutedEventArgs e)
         {
-            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "1m";
-            await LoadChartAsync(interval);
+            await LoadChartAsync();
         }
 
-        private async void IntervalBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "1m";
-            await LoadChartAsync(interval);
-        }
-
-        private async void Refresh_Click(object sender, RoutedEventArgs e)
-        {
-            string interval = (IntervalBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "1m";
-            await LoadChartAsync(interval);
-        }
-
-        private async Task LoadChartAsync(string interval)
+        private async Task LoadChartAsync()
         {
             if (string.IsNullOrWhiteSpace(Symbol)) return;
 
@@ -54,7 +39,7 @@ namespace BinanceUsdtTicker
             var uri = new Uri(path);
             var builder = new UriBuilder(uri)
             {
-                Query = $"symbol={Uri.EscapeDataString(Symbol)}&interval={Uri.EscapeDataString(interval)}"
+                Query = $"symbol={Uri.EscapeDataString(Symbol)}&interval=1m"
             };
             ChartWebView.CoreWebView2.Navigate(builder.Uri.ToString());
         }
