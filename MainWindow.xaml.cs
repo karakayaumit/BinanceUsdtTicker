@@ -791,33 +791,6 @@ namespace BinanceUsdtTicker
             if (symbol != null) symbol.DisplayIndex = idx++;
         }
 
-        private void SetColumnVisibilityByHeader(string header, Visibility v)
-        {
-            var col = Grid?.Columns?.FirstOrDefault(c => string.Equals(c.Header?.ToString(), header, StringComparison.OrdinalIgnoreCase));
-            if (col != null) col.Visibility = v;
-        }
-
-        // Görünüm: Özet (Unchecked) / Detay (Checked)
-        private void ViewToggle_Checked(object sender, RoutedEventArgs e)
-        {
-            var viewToggle = sender as ToggleButton ?? Q<ToggleButton>("ViewToggle");
-            if (viewToggle != null) viewToggle.Content = "Detay";
-            SetColumnVisibilityByHeader("Açılış", Visibility.Visible);
-            SetColumnVisibilityByHeader("Yüksek", Visibility.Visible);
-            SetColumnVisibilityByHeader("Düşük", Visibility.Visible);
-            EnsureSpecialColumnsOrder();
-        }
-
-        private void ViewToggle_Unchecked(object sender, RoutedEventArgs e)
-        {
-            var viewToggle = sender as ToggleButton ?? Q<ToggleButton>("ViewToggle");
-            if (viewToggle != null) viewToggle.Content = "Özet";
-            SetColumnVisibilityByHeader("Açılış", Visibility.Collapsed);
-            SetColumnVisibilityByHeader("Yüksek", Visibility.Collapsed);
-            SetColumnVisibilityByHeader("Düşük", Visibility.Collapsed);
-            EnsureSpecialColumnsOrder();
-        }
-
         // ---------- UI settings / favorites ----------
         private void SaveAlertsSafe()
         {

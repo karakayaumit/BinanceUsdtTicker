@@ -284,22 +284,10 @@
                                          TextChanged="SearchBox_TextChanged"/>
 
                                 <Separator/>
-
-                                <ToggleButton x:Name="ViewToggle"
-                                                          ToolBar.OverflowMode="Never"
-                                                          Style="{StaticResource ToolbarToggleButtonStyle}"
-                                                          IsChecked="True"
-                                                          Content="Detay"
-                                                          Checked="ViewToggle_Checked"
-                                                          Unchecked="ViewToggle_Unchecked"
-                                                          Margin="0,0,12,0"/>
-
-                                <Separator/>
-
-				<RadioButton x:Name="RbAll" ToolBar.OverflowMode="Never"
-							 Style="{StaticResource ToolbarRadioStyle}"
-							 Tag="All" Content="Tümü" GroupName="Mode" IsChecked="True"
-							 Checked="FilterModeChanged" Margin="6,0"/>
+                                <RadioButton x:Name="RbAll" ToolBar.OverflowMode="Never"
+                                                         Style="{StaticResource ToolbarRadioStyle}"
+                                                         Tag="All" Content="Tümü" GroupName="Mode" IsChecked="True"
+                                                         Checked="FilterModeChanged" Margin="6,0"/>
 				<RadioButton x:Name="RbPos" ToolBar.OverflowMode="Never"
 							 Style="{StaticResource ToolbarRadioStyle}"
 							 Tag="Positive" Content="Yükselen" GroupName="Mode"
