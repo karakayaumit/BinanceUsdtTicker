@@ -8,6 +8,7 @@ using System.Linq;
 using System.Media;
 using System.ComponentModel;
 using System.Text.Json;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,7 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<AlertHit> _alertLog = new();
         private readonly ObservableCollection<WalletAsset> _walletAssets = new();
         private readonly ObservableCollection<FuturesOrder> _orders = new();
+        private readonly ObservableCollection<FuturesTrade> _tradeHistory = new();
         private const int MaxAlertLog = 500;
 
         private readonly HashSet<string> _favoriteSymbols = new(StringComparer.OrdinalIgnoreCase);
@@ -116,7 +118,7 @@ namespace BinanceUsdtTicker
             SetupList("OrdersList", _orders);
             SetupList("PositionsList");
             SetupList("OrderHistoryList");
-            SetupList("TradeHistoryList");
+            SetupList("TradeHistoryList", _tradeHistory);
 
             // servis
             _service.OnTickersUpdated += OnServiceTickersUpdated;
@@ -136,6 +138,7 @@ namespace BinanceUsdtTicker
                 EnsureSpecialColumnsOrder(); // ★ -> Sembol
                 await InitializeAsync();
                 await LoadWalletAsync();
+                await LoadTradeHistoryAsync();
             };
 
             Closed += async (_, __) =>
@@ -294,6 +297,41 @@ namespace BinanceUsdtTicker
                 _walletAssets.Clear();
                 foreach (var b in balances)
                     _walletAssets.Add(b);
+            }
+            catch { }
+        }
+
+        private async Task LoadTradeHistoryAsync()
+        {
+            try
+            {
+                _tradeHistory.Clear();
+
+                var json = await _api.GetAccountInfoAsync();
+                var symbols = new List<string>();
+                try
+                {
+                    using var doc = JsonDocument.Parse(json);
+                    if (doc.RootElement.TryGetProperty("positions", out var positions))
+                    {
+                        foreach (var p in positions.EnumerateArray())
+                        {
+                            var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
+                            if (!sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)) continue;
+                            decimal.TryParse(p.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
+                            if (Math.Abs(amt) > 0m)
+                                symbols.Add(sym);
+                        }
+                    }
+                }
+                catch { }
+
+                foreach (var sym in symbols)
+                {
+                    var trades = await _api.GetUserTradesAsync(sym);
+                    foreach (var t in trades)
+                        _tradeHistory.Add(t);
+                }
             }
             catch { }
         }
