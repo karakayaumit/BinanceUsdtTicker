@@ -30,6 +30,11 @@
     <SolidColorBrush x:Key="TbDisabledBg"   Color="#33181A20"/>
     <SolidColorBrush x:Key="TbDisabledFg"   Color="#66C5C7CB"/>
 
+    <!-- Button tokens -->
+    <SolidColorBrush x:Key="BtnBg"      Color="#FF181A20"/>
+    <SolidColorBrush x:Key="BtnHover"   Color="#FF20252C"/>
+    <SolidColorBrush x:Key="BtnPressed" Color="#FF2B3139"/>
+
     <!-- Hover color for list rows -->
     <SolidColorBrush x:Key="RowHoverBg"      Color="#FF20252C"/>
 

@@ -3,7 +3,7 @@
 
     <!-- Base button style used across the app -->
     <Style x:Key="BaseButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Background"      Value="{DynamicResource SurfaceAlt}"/>
+        <Setter Property="Background"      Value="{DynamicResource BtnBg}"/>
         <Setter Property="Foreground"      Value="{DynamicResource OnSurface}"/>
         <Setter Property="BorderBrush"     Value="{DynamicResource Divider}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -25,10 +25,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource TbHover}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BtnHover}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource TbPressed}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BtnPressed}"/>
                             <Setter TargetName="Bd" Property="Effect">
                                 <Setter.Value>
                                     <DropShadowEffect Color="#66000000" BlurRadius="2" ShadowDepth="0"/>
