@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net.WebSockets;
@@ -15,12 +16,9 @@ namespace BinanceUsdtTicker
     /// <summary>
     /// miniTicker + bookTicker (mid price) birleşik canlı akış. (DECIMAL tabanlı)
     /// </summary>
-    public class BinanceSpotService
+    public class BinanceSpotService : INotifyPropertyChanged
     {
         public event Action<List<TickerRow>>? OnTickersUpdated;
-
-        // WS durum bildirimi: (durum, deneme sayısı)
-        public event Action<WsState, int>? OnWsStateChanged;
 
         private ClientWebSocket? _ws;
         private CancellationTokenSource? _cts;
@@ -35,7 +33,19 @@ namespace BinanceUsdtTicker
         private long _nextEmitTicks = 0;
 
 
-        public WsState State { get; private set; } = WsState.Closed;
+        private WsState _state = WsState.Closed;
+        public WsState State
+        {
+            get => _state;
+            private set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));
+                }
+            }
+        }
         public DateTime LastMessageUtc { get; private set; }
         public int MessageGapMs => LastMessageUtc == default ? -1
             : (int)Math.Max(0, (DateTime.UtcNow - LastMessageUtc).TotalMilliseconds);
@@ -69,7 +79,6 @@ namespace BinanceUsdtTicker
             _cts?.Dispose(); _cts = null;
             _monitor = null;
             State = WsState.Closed;
-            OnWsStateChanged?.Invoke(State, 0);
         }
 
         private async Task ConnectLoopAsync(CancellationToken ct)
@@ -83,7 +92,6 @@ namespace BinanceUsdtTicker
                 {
                     State = attempt == 0 ? WsState.Connecting : WsState.Retrying;
                     Logger.Log($"WS state {State} attempt {attempt}");
-                    OnWsStateChanged?.Invoke(State, attempt);
 
                     using var ws = new ClientWebSocket();
                     _ws = ws;
@@ -92,7 +100,6 @@ namespace BinanceUsdtTicker
                     State = WsState.Connected;
                     attempt = 0;
                     Logger.Log("WS connected");
-                    OnWsStateChanged?.Invoke(State, attempt);
 
                     await ReceiveLoop(ws, ct);
                 }
@@ -106,7 +113,6 @@ namespace BinanceUsdtTicker
                 attempt++;
                 State = WsState.Retrying;
                 Logger.Log($"Retrying attempt {attempt}");
-                OnWsStateChanged?.Invoke(State, attempt);
 
                 // exponential backoff (1,2,4,8,16,30 sn)
                 var sec = Math.Min(30, 1 << Math.Min(5, attempt));
@@ -115,7 +121,6 @@ namespace BinanceUsdtTicker
 
             State = WsState.Closed;
             Logger.Log("WS closed");
-            OnWsStateChanged?.Invoke(State, attempt);
         }
 
         private async Task ReceiveLoop(ClientWebSocket ws, CancellationToken ct)
@@ -300,5 +305,7 @@ namespace BinanceUsdtTicker
             _nextEmitTicks = nowTicks + _emitIntervalTicks;
             OnTickersUpdated?.Invoke(_state.Values.ToList());
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

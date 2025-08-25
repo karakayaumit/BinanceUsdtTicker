@@ -369,13 +369,17 @@
                                                 <TextBlock Text="≤-%3" Foreground="{DynamicResource Down3Fg}" VerticalAlignment="Center"
                                    Background="#22000000" Padding="0,0,2,0"/>
                                         </StackPanel>
-                                </StackPanel>
-                        </StatusBarItem>
+                </StackPanel>
+            </StatusBarItem>
 
-			<StatusBarItem HorizontalAlignment="Right">
-				<TextBlock x:Name="LastUpdateText"/>
-			</StatusBarItem>
-		</StatusBar>
+            <StatusBarItem HorizontalAlignment="Right" Margin="0,0,12,0">
+                <TextBlock x:Name="WsStateText"/>
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock x:Name="LastUpdateText"/>
+            </StatusBarItem>
+        </StatusBar>
 
                 <!-- ANA GÖVDE -->
 		<Grid Grid.Row="1">
