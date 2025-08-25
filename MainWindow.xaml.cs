@@ -29,6 +29,7 @@ namespace BinanceUsdtTicker
 
         private readonly ObservableCollection<PriceAlert> _alerts = new();
         private readonly ObservableCollection<AlertHit> _alertLog = new();
+        private readonly ObservableCollection<WalletAsset> _walletAssets = new();
         private const int MaxAlertLog = 500;
 
         private readonly HashSet<string> _favoriteSymbols = new(StringComparer.OrdinalIgnoreCase);
@@ -84,6 +85,19 @@ namespace BinanceUsdtTicker
                 alertList.MaxHeight = screenHeight;
             }
 
+            // cüzdan listesi bağla
+            var walletList = FindName("WalletList") as ListView;
+            if (walletList != null)
+            {
+                walletList.ItemsSource = _walletAssets;
+
+                var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
+
+                walletList.Height = screenHeight;
+                walletList.MinHeight = screenHeight;
+                walletList.MaxHeight = screenHeight;
+            }
+
             // servis
             _service.OnTickersUpdated += OnServiceTickersUpdated;
             _service.PropertyChanged += Service_PropertyChanged;
@@ -101,6 +115,7 @@ namespace BinanceUsdtTicker
                 ApplyColumnLayoutFromSettings();
                 EnsureSpecialColumnsOrder(); // ★ -> Sembol
                 await InitializeAsync();
+                await LoadWalletAsync();
             };
 
             Closed += async (_, __) =>
@@ -249,6 +264,18 @@ namespace BinanceUsdtTicker
             {
                 MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private async Task LoadWalletAsync()
+        {
+            try
+            {
+                var balances = await _api.GetAccountBalancesAsync();
+                _walletAssets.Clear();
+                foreach (var b in balances)
+                    _walletAssets.Add(b);
+            }
+            catch { }
         }
 
         private void OnServiceTickersUpdated(List<TickerRow> latest)

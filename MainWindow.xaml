@@ -772,50 +772,71 @@
 				</Grid>
 			</GroupBox>
 
-			<!-- ALARM GEÇMİŞİ -->
-			<Expander Grid.Row="1" Grid.ColumnSpan="2" IsExpanded="True" Padding="6,4">
-				<Expander.Header>
-					<DockPanel LastChildFill="False">
-						<TextBlock Foreground="{DynamicResource OnSurface}"
+                        <!-- ALARM VE CÜZDAN -->
+                        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                                <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- ALARM GEÇMİŞİ -->
+                                <Expander Grid.Column="0" IsExpanded="True" Padding="6,4">
+                                        <Expander.Header>
+                                                <DockPanel LastChildFill="False">
+                                                        <TextBlock Foreground="{DynamicResource OnSurface}"
                                    Text="{Binding ElementName=AlertList, Path=Items.Count, StringFormat=Alarm Geçmişi ({0})}"
                                    FontWeight="Bold" VerticalAlignment="Center"/>
-						<StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-							<Button Content="CSV Dışa Aktar" Click="ExportAlertLog_Click" Margin="8,0,0,0"/>
-							<Button Content="Temizle"        Click="ClearAlertLog_Click"  Margin="8,0,0,0"/>
-						</StackPanel>
-					</DockPanel>
-				</Expander.Header>
+                                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                                                <Button Content="CSV Dışa Aktar" Click="ExportAlertLog_Click" Margin="8,0,0,0"/>
+                                                                <Button Content="Temizle"        Click="ClearAlertLog_Click"  Margin="8,0,0,0"/>
+                                                        </StackPanel>
+                                                </DockPanel>
+                                        </Expander.Header>
 
-				<ListView x:Name="AlertList" Margin="0,6,0,0"
+                                        <ListView x:Name="AlertList" Margin="0,6,0,0"
                           Loaded="AlertList_Loaded"
                           SizeChanged="AlertList_SizeChanged">
-					<ListView.View>
-						<GridView>
-							<GridViewColumn Header="Zaman"  Width="80"  DisplayMemberBinding="{Binding LocalTime}"/>
-							<GridViewColumn Header="Sembol" Width="110">
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<TextBlock>
-											<Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-											<Run Text="/USDT" Foreground="Gray"/>
-										</TextBlock>
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
-							<GridViewColumn Header="Koşul"  Width="160" DisplayMemberBinding="{Binding TypeText}"/>
-							<GridViewColumn x:Name="MsgColumn" Header="Mesaj" Width="400">
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding Message}"
+                                                <ListView.View>
+                                                        <GridView>
+                                                                <GridViewColumn Header="Zaman"  Width="80"  DisplayMemberBinding="{Binding LocalTime}"/>
+                                                                <GridViewColumn Header="Sembol" Width="110">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock>
+                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                        </TextBlock>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="Koşul"  Width="160" DisplayMemberBinding="{Binding TypeText}"/>
+                                                                <GridViewColumn x:Name="MsgColumn" Header="Mesaj" Width="400">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Message}"
                                                    TextTrimming="CharacterEllipsis"
                                                    ToolTip="{Binding Message}"/>
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
-						</GridView>
-					</ListView.View>
-				</ListView>
-			</Expander>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                        </GridView>
+                                                </ListView.View>
+                                        </ListView>
+                                </Expander>
+
+                                <!-- CÜZDAN BİLGİLERİ -->
+                                <Expander Grid.Column="1" Header="Cüzdan" IsExpanded="True" Padding="6,4">
+                                        <ListView x:Name="WalletList" Margin="0,6,0,0">
+                                                <ListView.View>
+                                                        <GridView>
+                                                                <GridViewColumn Header="Varlık" Width="80" DisplayMemberBinding="{Binding Asset}"/>
+                                                                <GridViewColumn Header="Bakiye" Width="100" DisplayMemberBinding="{Binding Balance, StringFormat={}{0:#,0.####}}"/>
+                                                                <GridViewColumn Header="Kullanılabilir" Width="120" DisplayMemberBinding="{Binding Available, StringFormat={}{0:#,0.####}}"/>
+                                                        </GridView>
+                                                </ListView.View>
+                                        </ListView>
+                                </Expander>
+                        </Grid>
 		</Grid>
 	</DockPanel>
 </Window>
