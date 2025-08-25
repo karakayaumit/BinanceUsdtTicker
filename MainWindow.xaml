@@ -567,14 +567,14 @@
 					</DataGridTextColumn>
 
                                        <!-- Anlık Değişim -->
-                                       <DataGridTemplateColumn x:Name="ColChSnap" Header="Anlık Değişim"
-                                       Width="0.9*" MinWidth="80" SortMemberPath="ChangeSinceStartPercent">
+                                      <DataGridTemplateColumn x:Name="ColChSnap" Header="Anlık Değişim"
+                                      Width="0.9*" MinWidth="80" SortMemberPath="ChangeSinceStartPercent" IsReadOnly="True">
                                                <DataGridTemplateColumn.CellTemplate>
                                                        <DataTemplate>
                                                                <Border x:Name="border">
                                                                        <TextBlock x:Name="tb" TextAlignment="Right">
                                                                                <Run x:Name="ArrowRun"/>
-                                                                               <Run Text="{Binding ChangeSinceStartPercent, StringFormat=N2}"/>
+                                                                               <Run Text="{Binding ChangeSinceStartPercent, StringFormat=N2, Mode=OneWay}"/>
                                                                        </TextBlock>
                                                                </Border>
                                                                <DataTemplate.Triggers>
