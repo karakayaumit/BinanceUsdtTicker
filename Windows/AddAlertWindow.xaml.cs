@@ -41,40 +41,19 @@ namespace BinanceUsdtTicker
             return u;
         }
 
-        // Ondalık girişini esnek ve kültürden bağımsız parse et (DECIMAL)
+        // Ortak esnek dönüşümü kullanarak ondalığı parse et
+        private static readonly FlexibleDoubleConverter _flexConv = new();
+
         private static bool TryParseFlexibleDecimal(string? input, out decimal value)
         {
             value = 0m;
-            var s = (input ?? string.Empty).Trim();
-            if (s.Length == 0) return false;
-
-            int iDot = s.LastIndexOf('.');
-            int iCom = s.LastIndexOf(',');
-
-            if (iDot >= 0 && iCom >= 0)
+            var result = _flexConv.ConvertBack(input ?? string.Empty, typeof(double), null!, CultureInfo.InvariantCulture);
+            if (result is double d)
             {
-                // İki ayırıcı da var: sağdaki ondalık, soldaki binliktir
-                if (iCom > iDot)
-                {
-                    // "1.234,56" -> "1234.56"
-                    s = s.Replace(".", "");
-                    s = s.Replace(',', '.');
-                }
-                else
-                {
-                    // "1,234.56" -> "1234.56"
-                    s = s.Replace(",", "");
-                    // dot zaten ondalık
-                }
+                value = (decimal)d;
+                return true;
             }
-            else if (iCom >= 0)
-            {
-                // Sadece virgül var: ondalık olarak kabul
-                s = s.Replace(',', '.');
-            }
-            // else: ya sadece nokta var ya da hiç yok → olduğu gibi kalsın
-
-            return decimal.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+            return false;
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)
