@@ -709,7 +709,7 @@ namespace BinanceUsdtTicker
             var losersList = Q<ListView>("TopLosersList");
             if (gainersList == null || losersList == null) return;
 
-            var rows = _rows.ToList();
+            var rows = _service.GetTickersSnapshot();
 
             IEnumerable<TickerRow> positives = rows.Where(r =>
             {

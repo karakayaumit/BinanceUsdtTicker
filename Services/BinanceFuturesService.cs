@@ -298,6 +298,14 @@ namespace BinanceUsdtTicker
             }
         }
 
+        public List<TickerRow> GetTickersSnapshot()
+        {
+            lock (_tickers)
+            {
+                return _tickers.Values.ToList();
+            }
+        }
+
         private void MaybeEmit()
         {
             var nowTicks = DateTime.UtcNow.Ticks;
