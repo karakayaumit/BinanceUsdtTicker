@@ -1,10 +1,9 @@
 # Binance USDT Canlı Fiyat Gösterici (WPF, .NET 8)
 
-Bu uygulama, Binance spot borsasındaki **aktif (TRADING) USDT paritelerinin anlık fiyatlarını** gösterir.  
-- `/api/v3/exchangeInfo` ile aktif USDT pariteleri alır.  
-- WebSocket üzerinden `!miniTicker@arr` akışına bağlanır.  
-- Yalnızca USDT paritelerini filtreleyip listeler.  
-- Arama kutusu ve pozitif değişim filtresi vardır.  
+Bu uygulama, Binance **USDT futures** borsasındaki aktif paritelerin anlık fiyatlarını gösterir.
+- WebSocket üzerinden `wss://fstream.binance.com/stream?streams=!miniTicker@arr/!bookTicker@arr` akışına bağlanır.
+- Yalnızca USDT paritelerini filtreleyip listeler.
+- Arama kutusu ve pozitif değişim filtresi vardır.
 
 ## Kurulum / Çalıştırma
 
