@@ -32,6 +32,7 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<PriceAlert> _alerts = new();
         private readonly ObservableCollection<AlertHit> _alertLog = new();
         private readonly ObservableCollection<WalletAsset> _walletAssets = new();
+        private readonly ObservableCollection<FuturesPosition> _positions = new();
         private readonly ObservableCollection<FuturesOrder> _orders = new();
         private readonly ObservableCollection<FuturesOrder> _orderHistory = new();
         private readonly ObservableCollection<FuturesTrade> _tradeHistory = new();
@@ -117,7 +118,7 @@ namespace BinanceUsdtTicker
             }
 
             SetupList("OrdersList", _orders);
-            SetupList("PositionsList");
+            SetupList("PositionsList", _positions);
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
 
@@ -139,6 +140,7 @@ namespace BinanceUsdtTicker
                 EnsureSpecialColumnsOrder(); // ★ -> Sembol
                 await InitializeAsync();
                 await LoadWalletAsync();
+                await LoadOpenPositionsAsync();
                 await LoadOrderHistoryAsync();
                 await LoadTradeHistoryAsync();
             };
@@ -299,6 +301,18 @@ namespace BinanceUsdtTicker
                 _walletAssets.Clear();
                 foreach (var b in balances)
                     _walletAssets.Add(b);
+            }
+            catch { }
+        }
+
+        private async Task LoadOpenPositionsAsync()
+        {
+            try
+            {
+                var positions = await _api.GetOpenPositionsAsync();
+                _positions.Clear();
+                foreach (var p in positions)
+                    _positions.Add(p);
             }
             catch { }
         }
