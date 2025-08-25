@@ -1078,7 +1078,8 @@ namespace BinanceUsdtTicker
                     {
                         tickLabels.ItemsSource = levSlider.Ticks;
                         tickLabels.ApplyTemplate();
-                        if (tickLabels.ItemsPanelRoot is Grid grid)
+                        var grid = FindDescendant<Grid>(tickLabels);
+                        if (grid != null)
                         {
                             grid.ColumnDefinitions.Clear();
                             foreach (var _ in levSlider.Ticks)
