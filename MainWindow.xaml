@@ -830,12 +830,12 @@
 			</GroupBox>
 
                         <!-- ALARM VE CÜZDAN -->
-                        <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                                <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                        <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                                  <Grid.ColumnDefinitions>
+                                          <ColumnDefinition Width="3*"/>
+                                          <ColumnDefinition Width="*"/>
+                                          <ColumnDefinition Width="*"/>
+                                  </Grid.ColumnDefinitions>
 
                                 <!-- EMIR VE POZISYONLAR -->
                                 <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
@@ -874,7 +874,7 @@
                                 </Expander>
 
                                 <!-- ALARM GEÇMİŞİ -->
-                                <Expander Grid.Column="1" IsExpanded="True" Padding="6,4">
+                                <Expander Grid.Column="2" IsExpanded="True" Padding="6,4">
                                         <Expander.Header>
                                                 <DockPanel LastChildFill="False">
                                                         <TextBlock Foreground="{DynamicResource OnSurface}"
@@ -904,7 +904,7 @@
                                                                         </GridViewColumn.CellTemplate>
                                                                 </GridViewColumn>
                                                                 <GridViewColumn Header="Koşul"  Width="160" DisplayMemberBinding="{Binding TypeText}"/>
-                                                                <GridViewColumn x:Name="MsgColumn" Header="Mesaj" Width="400">
+                                                                <GridViewColumn x:Name="MsgColumn" Header="Mesaj" Width="260">
                                                                         <GridViewColumn.CellTemplate>
                                                                                 <DataTemplate>
                                                                                         <TextBlock Text="{Binding Message}"
@@ -919,11 +919,11 @@
                                 </Expander>
 
                                 <!-- CÜZDAN BİLGİLERİ -->
-                                <Expander Grid.Column="2" Header="Cüzdan" IsExpanded="True" Padding="6,4">
+                                <Expander Grid.Column="1" Header="Cüzdan" IsExpanded="True" Padding="6,4">
                                         <ListView x:Name="WalletList" Margin="0,6,0,0">
                                                 <ListView.View>
                                                         <GridView>
-                                                                <GridViewColumn Header="Varlık" Width="80">
+                                                                <GridViewColumn Header="Varlık" Width="70">
                                                                         <GridViewColumn.CellTemplate>
                                                                                 <DataTemplate>
                                                                                         <Border BorderBrush="{DynamicResource Divider}"
@@ -933,7 +933,7 @@
                                                                                 </DataTemplate>
                                                                         </GridViewColumn.CellTemplate>
                                                                 </GridViewColumn>
-                                                                <GridViewColumn Header="Bakiye" Width="100">
+                                                                <GridViewColumn Header="Bakiye" Width="90">
                                                                         <GridViewColumn.CellTemplate>
                                                                                 <DataTemplate>
                                                                                         <Border BorderBrush="{DynamicResource Divider}"
@@ -945,7 +945,7 @@
                                                                                 </DataTemplate>
                                                                         </GridViewColumn.CellTemplate>
                                                                 </GridViewColumn>
-                                                                <GridViewColumn Header="Kullanılabilir" Width="120">
+                                                                <GridViewColumn Header="Kullanılabilir" Width="90">
                                                                         <GridViewColumn.CellTemplate>
                                                                                 <DataTemplate>
                                                                                         <Border BorderBrush="{DynamicResource Divider}"
