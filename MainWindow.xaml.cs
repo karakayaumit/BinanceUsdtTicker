@@ -63,6 +63,8 @@ namespace BinanceUsdtTicker
         private bool _topMoversUse24h = true;
         private TickerRow? _selectedTicker;
 
+        private readonly DispatcherTimer _refreshTimer = new();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -146,6 +148,10 @@ namespace BinanceUsdtTicker
                 await LoadTradeHistoryAsync();
             };
 
+            _refreshTimer.Interval = TimeSpan.FromSeconds(5);
+            _refreshTimer.Tick += RefreshTimer_Tick;
+            _refreshTimer.Start();
+
             Closed += async (_, __) =>
             {
                 _service.OnTickersUpdated -= OnServiceTickersUpdated;
@@ -154,6 +160,7 @@ namespace BinanceUsdtTicker
                 SaveFavoritesSafe();
                 SaveUiSettingsFromUi();
                 _notifyIcon?.Dispose();
+                _refreshTimer.Stop();
             };
         }
 
@@ -330,6 +337,12 @@ namespace BinanceUsdtTicker
                     _orders.Add(o);
             }
             catch { }
+        }
+
+        private async void RefreshTimer_Tick(object? sender, EventArgs e)
+        {
+            await LoadOpenPositionsAsync();
+            await LoadOpenOrdersAsync();
         }
 
         private void UpdatePositionPnls()
