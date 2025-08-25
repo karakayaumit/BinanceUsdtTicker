@@ -48,6 +48,7 @@ namespace BinanceUsdtTicker
         {
             value = 0m;
             var result = _flexConv.ConvertBack(input ?? string.Empty, typeof(double), null!, CultureInfo.InvariantCulture);
+
             if (result is double d)
             {
                 value = (decimal)d;
