@@ -23,7 +23,7 @@ namespace BinanceUsdtTicker
     public partial class MainWindow : Window
     {
         private readonly ObservableCollection<TickerRow> _rows = new();
-        private readonly BinanceSpotService _service = new();
+        private readonly BinanceFuturesService _service = new();
         private readonly Dictionary<string, TickerRow> _rowBySymbol = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly ObservableCollection<PriceAlert> _alerts = new();
@@ -271,7 +271,7 @@ namespace BinanceUsdtTicker
 
         private void Service_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(BinanceSpotService.State))
+            if (e.PropertyName == nameof(BinanceFuturesService.State))
             {
                 if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
 

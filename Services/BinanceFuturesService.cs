@@ -15,8 +15,9 @@ namespace BinanceUsdtTicker
 
     /// <summary>
     /// miniTicker + bookTicker (mid price) birleşik canlı akış. (DECIMAL tabanlı)
+    /// Binance USDT futures piyasası için.
     /// </summary>
-    public class BinanceSpotService : INotifyPropertyChanged
+    public class BinanceFuturesService : INotifyPropertyChanged
     {
         public event Action<List<TickerRow>>? OnTickersUpdated;
 
@@ -84,7 +85,7 @@ namespace BinanceUsdtTicker
         private async Task ConnectLoopAsync(CancellationToken ct)
         {
             int attempt = 0;
-            var url = "wss://stream.binance.com:9443/stream?streams=!miniTicker@arr/!bookTicker@arr";
+            var url = "wss://fstream.binance.com/stream?streams=!miniTicker@arr/!bookTicker@arr";
 
             while (!ct.IsCancellationRequested)
             {
