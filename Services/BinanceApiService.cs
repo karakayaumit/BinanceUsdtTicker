@@ -211,6 +211,134 @@ namespace BinanceUsdtTicker
             return list;
         }
 
+        /// <summary>
+        /// Hesaptaki açık emirleri döner. Sembol verilmezse tüm semboller için çalışır.
+        /// </summary>
+        public async Task<IList<FuturesOrder>> GetOpenOrdersAsync(string? symbol = null)
+        {
+            var query = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(symbol))
+                query["symbol"] = symbol;
+
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/openOrders", query);
+            var list = new List<FuturesOrder>();
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                foreach (var el in doc.RootElement.EnumerateArray())
+                {
+                    decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
+                    decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                    long time = el.GetProperty("time").GetInt64();
+                    list.Add(new FuturesOrder
+                    {
+                        Symbol = el.GetProperty("symbol").GetString() ?? string.Empty,
+                        Side = el.GetProperty("side").GetString() ?? string.Empty,
+                        Quantity = qty,
+                        Price = price,
+                        Status = el.GetProperty("status").GetString() ?? string.Empty,
+                        Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
+                    });
+                }
+            }
+            catch { }
+            return list;
+        }
+
+        /// <summary>
+        /// Belirtilen sembol için tek bir açık emri döner.
+        /// </summary>
+        public async Task<FuturesOrder?> GetOpenOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol
+            };
+            if (orderId.HasValue)
+                query["orderId"] = orderId.Value.ToString();
+            if (!string.IsNullOrEmpty(origClientOrderId))
+                query["origClientOrderId"] = origClientOrderId;
+
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/openOrder", query);
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var el = doc.RootElement;
+                decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
+                decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                long time = el.GetProperty("time").GetInt64();
+                return new FuturesOrder
+                {
+                    Symbol = el.GetProperty("symbol").GetString() ?? symbol,
+                    Side = el.GetProperty("side").GetString() ?? string.Empty,
+                    Quantity = qty,
+                    Price = price,
+                    Status = el.GetProperty("status").GetString() ?? string.Empty,
+                    Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Hesaptaki açık pozisyonları döner.
+        /// </summary>
+        public async Task<IList<FuturesPosition>> GetOpenPositionsAsync()
+        {
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/positionRisk");
+            var positions = new List<FuturesPosition>();
+
+            // Pozisyon ayrıntılarını almak için hesap bilgisini çek.
+            var details = new Dictionary<string, (int Lev, string Mt)>();
+            try
+            {
+                var accJson = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/account");
+                using var docAcc = JsonDocument.Parse(accJson);
+                if (docAcc.RootElement.TryGetProperty("positions", out var posArr))
+                {
+                    foreach (var p in posArr.EnumerateArray())
+                    {
+                        var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
+                        int.TryParse(p.GetProperty("leverage").GetString(), out var lev);
+                        var mt = p.GetProperty("marginType").GetString() ?? "cross";
+                        details[sym] = (lev, mt);
+                    }
+                }
+            }
+            catch { }
+
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                foreach (var el in doc.RootElement.EnumerateArray())
+                {
+                    decimal.TryParse(el.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
+                    decimal.TryParse(el.GetProperty("entryPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var entry);
+                    decimal.TryParse(el.GetProperty("unRealizedProfit").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
+                    var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
+                    details.TryGetValue(sym, out var det);
+                    if (amt != 0m || pnl != 0m)
+                    {
+                        positions.Add(new FuturesPosition
+                        {
+                            Symbol = sym,
+                            PositionAmt = amt,
+                            EntryPrice = entry,
+                            UnrealizedPnl = pnl,
+                            Leverage = det.Lev,
+                            MarginType = det.Mt
+                        });
+                    }
+                }
+            }
+            catch { }
+
+            return positions;
+        }
+
         public async Task<string> SendSignedAsync(HttpMethod method, string endpoint, IDictionary<string, string>? parameters = null)
         {
             if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_secretKey))
