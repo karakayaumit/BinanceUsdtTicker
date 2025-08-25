@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BinanceUsdtTicker
 {
@@ -81,6 +83,31 @@ namespace BinanceUsdtTicker
                 if (Keyboard.FocusedElement is System.Windows.Controls.TextBox) return;
                 e.Handled = true;
             }
+        }
+
+        private void Grid_CellPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridCell cell && !cell.IsEditing && !cell.IsReadOnly)
+            {
+                if (!cell.IsFocused)
+                {
+                    cell.Focus();
+                }
+
+                var grid = FindParent<DataGrid>(cell);
+                grid?.BeginEdit(e);
+                e.Handled = true;
+            }
+        }
+
+        private static T? FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject? parent = VisualTreeHelper.GetParent(child);
+            while (parent is not null && parent is not T)
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+            return parent as T;
         }
 
         private void New_Click(object sender, RoutedEventArgs e)

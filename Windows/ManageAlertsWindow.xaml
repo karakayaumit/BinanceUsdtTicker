@@ -36,7 +36,19 @@
                   CanUserResizeColumns="True"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  RowHeight="36"
                   PreviewKeyDown="Grid_PreviewKeyDown">
+
+            <DataGrid.Resources>
+                <!-- Single-click edit -->
+                <Style TargetType="DataGridCell">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Grid_CellPreviewMouseLeftButtonDown"/>
+                </Style>
+                <!-- Extra spacing between rows -->
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Margin" Value="0,3"/>
+                </Style>
+            </DataGrid.Resources>
 
             <DataGrid.Columns>
                 <!-- Sembol -->
