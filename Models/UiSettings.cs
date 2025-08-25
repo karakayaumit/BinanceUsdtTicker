@@ -90,6 +90,20 @@ namespace BinanceUsdtTicker.Models
             set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
         }
 
+        private string _binanceApiKey = string.Empty;
+        public string BinanceApiKey
+        {
+            get => _binanceApiKey;
+            set { if (_binanceApiKey != value) { _binanceApiKey = value; OnPropertyChanged(); } }
+        }
+
+        private string _binanceApiSecret = string.Empty;
+        public string BinanceApiSecret
+        {
+            get => _binanceApiSecret;
+            set { if (_binanceApiSecret != value) { _binanceApiSecret = value; OnPropertyChanged(); } }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

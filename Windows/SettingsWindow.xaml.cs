@@ -26,7 +26,9 @@ namespace BinanceUsdtTicker
                 Down3Color = settings.Down3Color,
                 DividerColor = settings.DividerColor,
                 ControlColor = settings.ControlColor,
-                WindowsNotification = settings.WindowsNotification
+                WindowsNotification = settings.WindowsNotification,
+                BinanceApiKey = settings.BinanceApiKey,
+                BinanceApiSecret = settings.BinanceApiSecret
             };
             DataContext = _work;
         }
@@ -125,6 +127,8 @@ namespace BinanceUsdtTicker
             _settings.DividerColor = _work.DividerColor;
             _settings.ControlColor = _work.ControlColor;
             _settings.WindowsNotification = _work.WindowsNotification;
+            _settings.BinanceApiKey = _work.BinanceApiKey;
+            _settings.BinanceApiSecret = _work.BinanceApiSecret;
             DialogResult = true;
         }
     }
