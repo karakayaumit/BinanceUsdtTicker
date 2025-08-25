@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
+using WinForms = System.Windows.Forms;
 
 namespace BinanceUsdtTicker
 {
@@ -102,6 +103,13 @@ namespace BinanceUsdtTicker
             set { if (_controlColor != value) { _controlColor = value; OnPropertyChanged(); } }
         }
 
+        private bool _windowsNotification;
+        public bool WindowsNotification
+        {
+            get => _windowsNotification;
+            set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -139,6 +147,8 @@ namespace BinanceUsdtTicker
 
         private UiSettings _ui = new();
         private ThemeKind _theme = ThemeKind.Light;
+
+        private WinForms.NotifyIcon? _notifyIcon;
 
         // Top movers modu (%24s / Snapshot)
         private bool _topMoversUse24h = true;
@@ -193,6 +203,7 @@ namespace BinanceUsdtTicker
                 await _service.StopAsync();
                 SaveFavoritesSafe();
                 SaveUiSettingsFromUi();
+                _notifyIcon?.Dispose();
             };
         }
 
@@ -633,6 +644,7 @@ namespace BinanceUsdtTicker
                         var sb = Q<TextBlock>("SnapshotInfoText");
                         if (sb != null) sb.Text = $"🔔 {msg} • {DateTime.Now:HH:mm:ss}";
                         LogAlert(msg, alert, row, nowUtc);
+                        ShowWindowsNotification(msg);
                     }
                 }
 
@@ -657,6 +669,7 @@ namespace BinanceUsdtTicker
                     var sb = Q<TextBlock>("SnapshotInfoText");
                     if (sb != null) sb.Text = $"🔔 {msg} • {DateTime.Now:HH:mm:ss}";
                     LogAlert(msg, alert, row, nowUtc);
+                    ShowWindowsNotification(msg);
                 }
             }
 
@@ -703,6 +716,26 @@ namespace BinanceUsdtTicker
                 _alertLog.RemoveAt(_alertLog.Count - 1);
 
             AdjustAlertMsgColumnWidth();
+        }
+
+        private void ShowWindowsNotification(string msg)
+        {
+            if (!_ui.WindowsNotification) return;
+            try
+            {
+                if (_notifyIcon == null)
+                {
+                    _notifyIcon = new WinForms.NotifyIcon
+                    {
+                        Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                        Visible = true
+                    };
+                }
+                _notifyIcon.BalloonTipTitle = "Binance USDT Ticker";
+                _notifyIcon.BalloonTipText = msg;
+                _notifyIcon.ShowBalloonTip(3000);
+            }
+            catch { }
         }
 
         private void ClearAlertLog_Click(object sender, RoutedEventArgs e)
