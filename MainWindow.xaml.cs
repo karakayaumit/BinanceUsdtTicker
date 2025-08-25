@@ -124,6 +124,15 @@ namespace BinanceUsdtTicker
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
 
+            // show most recent orders/trades first
+            var orderView = CollectionViewSource.GetDefaultView(_orderHistory);
+            orderView.SortDescriptions.Clear();
+            orderView.SortDescriptions.Add(new SortDescription(nameof(FuturesOrder.Time), ListSortDirection.Descending));
+
+            var tradeView = CollectionViewSource.GetDefaultView(_tradeHistory);
+            tradeView.SortDescriptions.Clear();
+            tradeView.SortDescriptions.Add(new SortDescription(nameof(FuturesTrade.Time), ListSortDirection.Descending));
+
             // servis
             _service.OnTickersUpdated += OnServiceTickersUpdated;
             _service.PropertyChanged += Service_PropertyChanged;
