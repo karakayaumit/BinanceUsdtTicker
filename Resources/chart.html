@@ -11,6 +11,12 @@ const params = new URLSearchParams(location.search);
 const symbol = (params.get('symbol') || 'BTCUSDT').toUpperCase();
 const interval = (params.get('interval') || '1m').toLowerCase();
 
+// TradingView'de Binance USDT vadeli işlemler için sembol formatı
+// BTCUSDT -> BTCUSDTPERP
+const tvSymbol = symbol.endsWith('USDT')
+  ? symbol.replace('USDT', 'USDTPERP')
+  : symbol;
+
 const intervalMap = {
     '1m': '1',
     '5m': '5',
@@ -23,7 +29,8 @@ const intervalMap = {
 new TradingView.widget({
     autosize: true,
     container_id: 'tv_chart_container',
-    symbol: 'BINANCE:' + symbol,
+    // Vadeli sembolü kullan
+    symbol: 'BINANCE:' + tvSymbol,
     interval: intervalMap[interval] || '1',
     timezone: 'Etc/UTC',
     theme: 'light',
