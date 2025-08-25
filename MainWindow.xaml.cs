@@ -83,6 +83,9 @@ namespace BinanceUsdtTicker
 
             // servis
             _service.OnTickersUpdated += OnServiceTickersUpdated;
+            _service.PropertyChanged += Service_PropertyChanged;
+            var wsText = Q<TextBlock>("WsStateText");
+            if (wsText != null) wsText.Text = "WS: " + _service.State;
 
             LoadUiSettingsSafe();
             ApplyTheme(_themeFromString(_ui.Theme));
@@ -99,6 +102,7 @@ namespace BinanceUsdtTicker
             Closed += async (_, __) =>
             {
                 _service.OnTickersUpdated -= OnServiceTickersUpdated;
+                _service.PropertyChanged -= Service_PropertyChanged;
                 await _service.StopAsync();
                 SaveFavoritesSafe();
                 SaveUiSettingsFromUi();
@@ -261,6 +265,21 @@ namespace BinanceUsdtTicker
                 // seçili moda göre bir kez hesapla
                 UpdateTopMovers(_topMoversUse24h);
             });
+        }
+
+        private void Service_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(BinanceSpotService.State))
+            {
+                if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
+
+                Dispatcher.Invoke(() =>
+                {
+                    var tb = Q<TextBlock>("WsStateText");
+                    if (tb != null)
+                        tb.Text = "WS: " + _service.State;
+                });
+            }
         }
 
         private void ApplyUpdate(List<TickerRow> latest)
