@@ -326,10 +326,12 @@ namespace BinanceUsdtTicker
                 }
                 catch { }
 
+                var weekAgoUtc = DateTime.UtcNow.AddDays(-7);
+                var weekAgoLocal = DateTime.Now.AddDays(-7);
                 foreach (var sym in symbols)
                 {
-                    var trades = await _api.GetUserTradesAsync(sym);
-                    foreach (var t in trades)
+                    var trades = await _api.GetUserTradesAsync(sym, 1000, weekAgoUtc);
+                    foreach (var t in trades.Where(t => t.Time >= weekAgoLocal))
                         _tradeHistory.Add(t);
                 }
             }

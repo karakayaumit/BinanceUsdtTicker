@@ -127,15 +127,24 @@ namespace BinanceUsdtTicker
         }
 
         /// <summary>
-        /// Belirtilen sembol için son gerçekleşen işlemleri döner.
+        /// Belirtilen sembol için gerçekleşen işlemleri döner.
         /// </summary>
-        public async Task<IList<FuturesTrade>> GetUserTradesAsync(string symbol, int limit = 50)
+        /// <param name="symbol">İşlem yapılacak sembol.</param>
+        /// <param name="limit">Döndürülecek maksimum kayıt sayısı.</param>
+        /// <param name="startTime">Başlangıç zamanı (UTC). Belirtilirse bu tarihten sonraki işlemler getirilir.</param>
+        public async Task<IList<FuturesTrade>> GetUserTradesAsync(string symbol, int limit = 50, DateTime? startTime = null)
         {
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
                 ["limit"] = limit.ToString()
             };
+
+            if (startTime.HasValue)
+            {
+                var ms = new DateTimeOffset(startTime.Value).ToUnixTimeMilliseconds();
+                query["startTime"] = ms.ToString();
+            }
 
             var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/userTrades", query);
             var list = new List<FuturesTrade>();
