@@ -60,7 +60,8 @@ namespace BinanceUsdtTicker
                         var asset = item.GetProperty("asset").GetString() ?? string.Empty;
                         decimal.TryParse(item.GetProperty("walletBalance").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var balance);
                         decimal.TryParse(item.GetProperty("availableBalance").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var available);
-                        list.Add(new WalletAsset { Asset = asset, Balance = balance, Available = available });
+                        if (balance > 0m || available > 0m)
+                            list.Add(new WalletAsset { Asset = asset, Balance = balance, Available = available });
                     }
                 }
             }
