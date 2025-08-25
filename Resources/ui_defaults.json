@@ -1,0 +1,14 @@
+{
+  "Theme": "Light",
+  "FilterMode": "All",
+  "Columns": [],
+  "ThemeColor": "#FFF9FAFB",
+  "TextColor": "#FF1F2937",
+  "Up1Color": "#FF90EE90",
+  "Up3Color": "#FF006400",
+  "Down1Color": "#FFF08080",
+  "Down3Color": "#FF8B0000",
+  "DividerColor": "#FFE5E7EB",
+  "ControlColor": "#FFFFFFFF",
+  "WindowsNotification": false
+}
