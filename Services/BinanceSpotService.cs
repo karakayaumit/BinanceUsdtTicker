@@ -25,7 +25,7 @@ namespace BinanceUsdtTicker
         private Task? _runner;
         private Task? _monitor;
 
-        private readonly Dictionary<string, TickerRow> _state =
+        private readonly Dictionary<string, TickerRow> _tickers =
             new(StringComparer.OrdinalIgnoreCase);
 
         // Emit throttle
@@ -195,7 +195,7 @@ namespace BinanceUsdtTicker
                     ? ((price - open) / open) * 100m
                     : chgPctFromBinance;
 
-                if (!_state.TryGetValue(s, out var row))
+                if (!_tickers.TryGetValue(s, out var row))
                 {
                     row = new TickerRow
                     {
@@ -208,7 +208,7 @@ namespace BinanceUsdtTicker
                         ChangePercent = changePct,
                         LastUpdate = now
                     };
-                    _state[s] = row;
+                    _tickers[s] = row;
                 }
                 else
                 {
@@ -241,7 +241,7 @@ namespace BinanceUsdtTicker
                 decimal mid = (bid > 0m && ask > 0m) ? (bid + ask) / 2m
                               : (ask > 0m ? ask : bid);
 
-                if (!_state.TryGetValue(s, out var row))
+                if (!_tickers.TryGetValue(s, out var row))
                 {
                     row = new TickerRow
                     {
@@ -249,7 +249,7 @@ namespace BinanceUsdtTicker
                         Price = mid,
                         LastUpdate = now
                     };
-                    _state[s] = row;
+                    _tickers[s] = row;
                 }
                 else
                 {
@@ -303,7 +303,7 @@ namespace BinanceUsdtTicker
             if (nowTicks < _nextEmitTicks) return;
 
             _nextEmitTicks = nowTicks + _emitIntervalTicks;
-            OnTickersUpdated?.Invoke(_state.Values.ToList());
+            OnTickersUpdated?.Invoke(_tickers.Values.ToList());
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
