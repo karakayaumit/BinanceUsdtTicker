@@ -320,7 +320,7 @@ namespace BinanceUsdtTicker
                     decimal.TryParse(el.GetProperty("unRealizedProfit").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
                     var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
                     details.TryGetValue(sym, out var det);
-                    if (amt != 0m || pnl != 0m)
+                    if (amt != 0m)
                     {
                         positions.Add(new FuturesPosition
                         {
