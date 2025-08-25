@@ -141,6 +141,7 @@ namespace BinanceUsdtTicker
                 await InitializeAsync();
                 await LoadWalletAsync();
                 await LoadOpenPositionsAsync();
+                await LoadOpenOrdersAsync();
                 await LoadOrderHistoryAsync();
                 await LoadTradeHistoryAsync();
             };
@@ -315,6 +316,18 @@ namespace BinanceUsdtTicker
                     _positions.Add(p);
 
                 UpdatePositionPnls();
+            }
+            catch { }
+        }
+
+        private async Task LoadOpenOrdersAsync()
+        {
+            try
+            {
+                var orders = await _api.GetOpenOrdersAsync();
+                _orders.Clear();
+                foreach (var o in orders)
+                    _orders.Add(o);
             }
             catch { }
         }
