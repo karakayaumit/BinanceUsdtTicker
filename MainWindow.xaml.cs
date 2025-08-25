@@ -640,7 +640,8 @@ namespace BinanceUsdtTicker
                     if (alert.Evaluate(row, nowUtc, out var msg))
                     {
                         anyTriggered = true;
-                        try { SystemSounds.Exclamation.Play(); } catch { }
+                        if (!_ui.WindowsNotification)
+                            try { SystemSounds.Exclamation.Play(); } catch { }
                         var sb = Q<TextBlock>("SnapshotInfoText");
                         if (sb != null) sb.Text = $"🔔 {msg} • {DateTime.Now:HH:mm:ss}";
                         LogAlert(msg, alert, row, nowUtc);
@@ -665,7 +666,8 @@ namespace BinanceUsdtTicker
                 if (alert.Evaluate(row, nowUtc, out var msg))
                 {
                     anyTriggered = true;
-                    try { SystemSounds.Exclamation.Play(); } catch { }
+                    if (!_ui.WindowsNotification)
+                        try { SystemSounds.Exclamation.Play(); } catch { }
                     var sb = Q<TextBlock>("SnapshotInfoText");
                     if (sb != null) sb.Text = $"🔔 {msg} • {DateTime.Now:HH:mm:ss}";
                     LogAlert(msg, alert, row, nowUtc);
