@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using BinanceUsdtTicker.Models;
 
 namespace BinanceUsdtTicker
 {
@@ -38,6 +40,31 @@ namespace BinanceUsdtTicker
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString()
             };
             return await SendSignedAsync(HttpMethod.Get, "/fapi/v2/account", query);
+        }
+
+        /// <summary>
+        /// Hesaptaki varlık bakiyelerini döner.
+        /// </summary>
+        public async Task<IList<WalletAsset>> GetAccountBalancesAsync()
+        {
+            var json = await GetAccountInfoAsync();
+            var list = new List<WalletAsset>();
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("assets", out var assets))
+                {
+                    foreach (var item in assets.EnumerateArray())
+                    {
+                        var asset = item.GetProperty("asset").GetString() ?? string.Empty;
+                        decimal.TryParse(item.GetProperty("walletBalance").GetString(), out var balance);
+                        decimal.TryParse(item.GetProperty("availableBalance").GetString(), out var available);
+                        list.Add(new WalletAsset { Asset = asset, Balance = balance, Available = available });
+                    }
+                }
+            }
+            catch { }
+            return list;
         }
 
         public async Task<string> SendSignedAsync(HttpMethod method, string endpoint, IDictionary<string, string>? parameters = null)
