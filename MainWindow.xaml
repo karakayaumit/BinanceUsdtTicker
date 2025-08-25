@@ -395,7 +395,8 @@
 			</Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="220"/>
+                                <!-- Futures panel expanded for better usability -->
+                                <ColumnDefinition Width="300"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="260"/>
                         </Grid.ColumnDefinitions>
@@ -833,10 +834,47 @@
                                 <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
+                                <!-- EMIR VE POZISYONLAR -->
+                                <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
+                                        <ListView x:Name="OrdersList" Margin="0,6,0,0">
+                                                <ListView.View>
+                                                        <GridView>
+                                                                <GridViewColumn Header="Sembol" Width="90">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock>
+                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                                <Run Text="/USDT" Foreground="Gray"/>
+                                                                                        </TextBlock>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="Yön" Width="60" DisplayMemberBinding="{Binding Side}"/>
+                                                                <GridViewColumn Header="Adet" Width="80">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="Fiyat" Width="80">
+                                                                        <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                </DataTemplate>
+                                                                        </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                                <GridViewColumn Header="Durum" Width="80" DisplayMemberBinding="{Binding Status}"/>
+                                                        </GridView>
+                                                </ListView.View>
+                                        </ListView>
+                                </Expander>
+
                                 <!-- ALARM GEÇMİŞİ -->
-                                <Expander Grid.Column="0" IsExpanded="True" Padding="6,4">
+                                <Expander Grid.Column="1" IsExpanded="True" Padding="6,4">
                                         <Expander.Header>
                                                 <DockPanel LastChildFill="False">
                                                         <TextBlock Foreground="{DynamicResource OnSurface}"
@@ -881,7 +919,7 @@
                                 </Expander>
 
                                 <!-- CÜZDAN BİLGİLERİ -->
-                                <Expander Grid.Column="1" Header="Cüzdan" IsExpanded="True" Padding="6,4">
+                                <Expander Grid.Column="2" Header="Cüzdan" IsExpanded="True" Padding="6,4">
                                         <ListView x:Name="WalletList" Margin="0,6,0,0">
                                                 <ListView.View>
                                                         <GridView>
