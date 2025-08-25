@@ -650,11 +650,23 @@
                       VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
                                 <StackPanel Margin="4">
                                         <TextBlock x:Name="FuturesSymbolText" FontWeight="Bold" Margin="0,0,0,8"/>
-                                        <ComboBox x:Name="MarginModeCombo" Margin="0,0,0,8">
-                                                <ComboBoxItem Content="Cross"/>
-                                                <ComboBoxItem Content="Isolated"/>
-                                        </ComboBox>
-                                        <ComboBox x:Name="LeverageCombo"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <ToggleButton x:Name="CrossMarginButton" Content="Cross" Width="60" Margin="0,0,4,0" Click="MarginMode_Click"/>
+                                                <ToggleButton x:Name="IsolatedMarginButton" Content="Isolated" Width="60" IsChecked="True" Click="MarginMode_Click"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,8">
+                                                <Grid Margin="0,0,0,4">
+                                                        <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button x:Name="LevMinusButton" Content="-" Width="30" Click="LevMinusButton_Click"/>
+                                                        <TextBlock x:Name="LeverageValueText" Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" Text="1x"/>
+                                                        <Button x:Name="LevPlusButton" Grid.Column="2" Content="+" Width="30" Click="LevPlusButton_Click"/>
+                                                </Grid>
+                                                <Slider x:Name="LeverageSlider" Minimum="1" Maximum="150" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Value="1" ValueChanged="LeverageSlider_ValueChanged" Ticks="1,30,60,90,120,150"/>
+                                        </StackPanel>
                                 </StackPanel>
                         </GroupBox>
 
