@@ -99,8 +99,9 @@ namespace BinanceUsdtTicker
         {
             var dlg = new WinForms.ColorDialog
             {
-                FullOpen = false,
-                AllowFullOpen = false
+                FullOpen = true,
+                AllowFullOpen = true,
+                AnyColor = true
             };
             try
             {
