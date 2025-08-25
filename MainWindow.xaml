@@ -394,10 +394,11 @@
 
 			</Grid.RowDefinitions>
 
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="260"/>
-			</Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="260"/>
+                        </Grid.ColumnDefinitions>
 
 			<!-- FİYAT TABLOSU -->
                         <DataGrid x:Name="Grid"
@@ -411,7 +412,8 @@
                       Background="{DynamicResource SurfaceAlt}"
                       Foreground="{DynamicResource OnSurface}"
                       GridLinesVisibility="None"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0">
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0"
+                      SelectionChanged="Grid_SelectionChanged">
 
 				<!-- Satır stili -->
                                 <DataGrid.RowStyle>
@@ -642,8 +644,22 @@
 				</DataGrid.Columns>
 			</DataGrid>
 
-			<!-- TOP MOVERS -->
-			<GroupBox Grid.Row="0" Grid.Column="1" Header="Top Movers" Margin="8,0,8,0"
+                        <!-- FUTURES INFO -->
+                        <GroupBox Grid.Row="0" Grid.Column="1" Header="Futures" Margin="0,0,8,0"
+                      Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                      VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
+                                <StackPanel Margin="4">
+                                        <TextBlock x:Name="FuturesSymbolText" FontWeight="Bold" Margin="0,0,0,8"/>
+                                        <ComboBox x:Name="MarginModeCombo" Margin="0,0,0,8">
+                                                <ComboBoxItem Content="Cross"/>
+                                                <ComboBoxItem Content="Isolated"/>
+                                        </ComboBox>
+                                        <ComboBox x:Name="LeverageCombo"/>
+                                </StackPanel>
+                        </GroupBox>
+
+                        <!-- TOP MOVERS -->
+                        <GroupBox Grid.Row="0" Grid.Column="2" Header="Top Movers" Margin="0,0,8,0"
                       Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                       VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
 				<Grid>

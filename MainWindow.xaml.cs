@@ -1034,5 +1034,45 @@ namespace BinanceUsdtTicker
             if (hdr != null) hdr.Text = "Top Movers — %24s";
         }
 
+        // Grid satır seçildiğinde futures bilgilerini yükle
+        private async void Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Grid?.SelectedItem is TickerRow row)
+            {
+                await LoadFuturesUiAsync(row.Symbol);
+            }
+        }
+
+        private async Task LoadFuturesUiAsync(string symbol)
+        {
+            var symText = Q<TextBlock>("FuturesSymbolText");
+            if (symText != null) symText.Text = symbol;
+
+            try
+            {
+                var posTask = _api.GetPositionInfoAsync(symbol);
+                var levTask = _api.GetLeverageOptionsAsync(symbol);
+                var pos = await posTask;
+                var levs = await levTask;
+
+                var margin = Q<ComboBox>("MarginModeCombo");
+                if (margin != null)
+                {
+                    margin.SelectedIndex = pos.MarginType == "isolated" ? 1 : 0;
+                }
+
+                var levCombo = Q<ComboBox>("LeverageCombo");
+                if (levCombo != null)
+                {
+                    levCombo.ItemsSource = levs;
+                    levCombo.SelectedItem = pos.Leverage;
+                }
+            }
+            catch
+            {
+                // hata varsa yoksay
+            }
+        }
+
     }
 }
