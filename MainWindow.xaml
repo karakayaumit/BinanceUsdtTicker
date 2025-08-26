@@ -695,7 +695,7 @@
                                                 <TabItem Header="Limit">
                                                         <StackPanel Margin="4">
                                                                 <TextBlock Text="Price" Margin="0,0,0,4"/>
-                                                                <TextBox x:Name="LimitPriceTextBox" Margin="0,0,0,8"/>
+                                                                <TextBox x:Name="LimitPriceTextBox" Margin="0,0,0,8" Height="40" FontSize="18" FontWeight="Bold"/>
                                                                 <TextBlock Text="Size" Margin="0,0,0,4"/>
                                                                 <Slider x:Name="LimitSizeSlider" Minimum="0" Maximum="100" TickPlacement="BottomRight" Ticks="0,25,50,75,100" IsSnapToTickEnabled="False" ValueChanged="SizeSlider_ValueChanged"/>
                                                                 <TextBlock x:Name="LimitSizeValueText" Margin="0,4,0,0"/>
