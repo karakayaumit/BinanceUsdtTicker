@@ -17,7 +17,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Spacing="12">
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                 <TextBlock Text="Symbol" VerticalAlignment="Center"/>
                 <TextBox Width="90" Text="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -41,7 +41,7 @@
                 <TextBlock Text="{Binding WalletPercent, StringFormat=P0}" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="12">
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
                 <TextBlock Text="Margin" VerticalAlignment="Center"/>
                 <ComboBox Width="110" SelectedItem="{Binding MarginMode}">
                     <ComboBoxItem Content="Cross"/>
