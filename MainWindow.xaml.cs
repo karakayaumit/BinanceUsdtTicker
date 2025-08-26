@@ -1338,6 +1338,12 @@ namespace BinanceUsdtTicker
             UpdatePriceAndSize();
         }
 
+        private void OrderTypeTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+                UpdatePriceAndSize();
+        }
+
         private void SelectedTicker_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(TickerRow.Price))
@@ -1348,27 +1354,27 @@ namespace BinanceUsdtTicker
 
         private void UpdatePriceAndSize()
         {
-            var priceText = Q<TextBlock>("CurrentPriceText");
-            var totalText = Q<TextBlock>("TotalUsdtText");
-            var qtyText = Q<TextBlock>("QuantityValueText");
-            var slider = Q<Slider>("SizeSlider");
+            var tab = Q<TabControl>("OrderTypeTab");
+            if (tab == null)
+                return;
 
-            if (_selectedTicker != null && slider != null)
+            Slider? slider = null;
+            TextBlock? qtyText = null;
+
+            if (tab.SelectedIndex == 0)
             {
-                var price = _selectedTicker.Price;
-                var qty = (decimal)slider.Value;
-                if (priceText != null)
-                    priceText.Text = price.ToString("#,0.####");
-                if (qtyText != null)
-                    qtyText.Text = qty.ToString("#,0.####");
-                if (totalText != null)
-                    totalText.Text = (price * qty).ToString("#,0.####");
+                slider = Q<Slider>("LimitSizeSlider");
+                qtyText = Q<TextBlock>("LimitSizeValueText");
             }
             else
             {
-                if (priceText != null) priceText.Text = string.Empty;
-                if (qtyText != null) qtyText.Text = string.Empty;
-                if (totalText != null) totalText.Text = string.Empty;
+                slider = Q<Slider>("MarketSizeSlider");
+                qtyText = Q<TextBlock>("MarketSizeValueText");
+            }
+
+            if (slider != null && qtyText != null)
+            {
+                qtyText.Text = $"{slider.Value:0}%";
             }
         }
 
