@@ -1389,12 +1389,13 @@ namespace BinanceUsdtTicker
         private void UpdateCostAndMax()
         {
             var usdt = _walletAssets.FirstOrDefault(a => a.Asset.Equals("USDT", StringComparison.OrdinalIgnoreCase));
+            var ticker = _selectedTicker;
             var buyCostText = Q<TextBlock>("BuyCostText");
             var sellCostText = Q<TextBlock>("SellCostText");
             var buyMaxText = Q<TextBlock>("BuyMaxText");
             var sellMaxText = Q<TextBlock>("SellMaxText");
 
-            if (usdt == null)
+            if (usdt == null || ticker == null)
             {
                 if (buyCostText != null) buyCostText.Text = "Cost 0 USDT";
                 if (sellCostText != null) sellCostText.Text = "Cost 0 USDT";
@@ -1405,6 +1406,8 @@ namespace BinanceUsdtTicker
 
             var levSlider = Q<Slider>("LeverageSlider");
             int leverage = (int)Math.Round(levSlider?.Value ?? 1d);
+            if (leverage <= 0) leverage = 1;
+            decimal imr = 1m / leverage;
 
             var tab = Q<TabControl>("OrderTypeTab");
             Slider? sizeSlider = null;
@@ -1413,19 +1416,46 @@ namespace BinanceUsdtTicker
 
             var percent = sizeSlider?.Value ?? 0d;
 
-            var denom = 1m + _maintMarginRate * leverage;
-            if (denom <= 0m) denom = 1m;
+            var denom = imr + _maintMarginRate;
+            if (denom <= 0m) denom = imr;
 
-            decimal cost = usdt.Available * (decimal)percent / 100m / denom;
-            decimal max = usdt.Available * leverage / denom;
+            var position = _positions.FirstOrDefault(p => p.Symbol.Equals(ticker.Symbol, StringComparison.OrdinalIgnoreCase));
+            decimal posAmt = position?.PositionAmt ?? 0m;
+            decimal entryPrice = position?.EntryPrice ?? 0m;
 
-            var costStr = cost.ToString("0.##", CultureInfo.InvariantCulture);
-            var maxStr = max.ToString("0.##", CultureInfo.InvariantCulture);
+            decimal mark = ticker.Price;
+            decimal openLoss = 0m;
+            if (posAmt != 0m)
+            {
+                var pnl = (mark - entryPrice) * posAmt;
+                if (pnl < 0m) openLoss = -pnl;
+            }
 
-            if (buyCostText != null) buyCostText.Text = $"Cost {costStr} USDT";
-            if (sellCostText != null) sellCostText.Text = $"Cost {costStr} USDT";
-            if (buyMaxText != null) buyMaxText.Text = $"Max {maxStr} USDT";
-            if (sellMaxText != null) sellMaxText.Text = $"Max {maxStr} USDT";
+            decimal available = usdt.Available - openLoss;
+            if (available < 0m) available = 0m;
+
+            decimal baseMax = available / denom;
+            if (baseMax < 0m) baseMax = 0m;
+
+            decimal posNotional = Math.Abs(posAmt) * mark;
+            decimal buyMax = posAmt < 0m ? baseMax + posNotional : baseMax;
+            decimal sellMax = posAmt > 0m ? baseMax + posNotional : baseMax;
+
+            decimal buyNotional = buyMax * (decimal)percent / 100m;
+            decimal sellNotional = sellMax * (decimal)percent / 100m;
+
+            decimal buyCost = buyNotional * imr + openLoss;
+            decimal sellCost = sellNotional * imr + openLoss;
+
+            var buyCostStr = buyCost.ToString("0.##", CultureInfo.InvariantCulture);
+            var sellCostStr = sellCost.ToString("0.##", CultureInfo.InvariantCulture);
+            var buyMaxStr = buyMax.ToString("0.##", CultureInfo.InvariantCulture);
+            var sellMaxStr = sellMax.ToString("0.##", CultureInfo.InvariantCulture);
+
+            if (buyCostText != null) buyCostText.Text = $"Cost {buyCostStr} USDT";
+            if (sellCostText != null) sellCostText.Text = $"Cost {sellCostStr} USDT";
+            if (buyMaxText != null) buyMaxText.Text = $"Max {buyMaxStr} USDT";
+            if (sellMaxText != null) sellMaxText.Text = $"Max {sellMaxStr} USDT";
         }
 
     }
