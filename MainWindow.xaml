@@ -659,7 +659,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <ToggleButton x:Name="CrossMarginButton" Content="Cross" Grid.Column="0" Margin="0,0,4,0" Click="MarginMode_Click" Style="{StaticResource ToolbarToggleButtonStyle}"/>
-                                                <ToggleButton x:Name="IsolatedMarginButton" Content="Isolated" Grid.Column="1" Margin="4,0,0,0" IsChecked="True" Click="MarginMode_Click" Style="{StaticResource ToolbarToggleButtonStyle}"/>
+                                                <ToggleButton x:Name="IsolatedMarginButton" Content="Isolated" Grid.Column="1" Margin="4,0,0,0" Click="MarginMode_Click" Style="{StaticResource ToolbarToggleButtonStyle}"/>
                                         </Grid>
                                         <StackPanel Margin="0,0,0,8">
                                                 <Grid Margin="0,0,0,4">

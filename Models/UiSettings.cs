@@ -83,6 +83,13 @@ namespace BinanceUsdtTicker.Models
             set { if (_controlColor != value) { _controlColor = value; OnPropertyChanged(); } }
         }
 
+        private string _marginMode = "Isolated";
+        public string MarginMode
+        {
+            get => _marginMode;
+            set { if (_marginMode != value) { _marginMode = value; OnPropertyChanged(); } }
+        }
+
         private bool _windowsNotification;
         public bool WindowsNotification
         {

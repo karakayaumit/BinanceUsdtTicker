@@ -103,7 +103,17 @@
                 <TextBlock Margin="10" Text="Sistem ayarları burada yer alacaktır."/>
             </TabItem>
             <TabItem Header="Ticaret Tercihi">
-                <TextBlock Margin="10" Text="Ticaret tercihleri burada yer alacaktır."/>
+                <StackPanel Margin="10">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Margin Mod:" Width="120" VerticalAlignment="Center"/>
+                        <ComboBox Width="150"
+                                  SelectedValue="{Binding MarginMode}"
+                                  SelectedValuePath="Content">
+                            <ComboBoxItem Content="Isolated"/>
+                            <ComboBoxItem Content="Cross"/>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Binance API Bilgileri">
                 <StackPanel Margin="10">

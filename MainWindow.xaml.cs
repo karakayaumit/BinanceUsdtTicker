@@ -144,6 +144,7 @@ namespace BinanceUsdtTicker
             ApplyTheme(_themeFromString(_ui.Theme));
             ApplyCustomColors();
             ApplyFilterFromString(_ui.FilterMode);
+            ApplyMarginModeFromSettings();
 
             Loaded += async (_, __) =>
             {
@@ -209,6 +210,18 @@ namespace BinanceUsdtTicker
             TryApplyBrush("Up3Fg", IdealText(_ui.Up3Color));
             TryApplyBrush("Down1Fg", IdealText(_ui.Down1Color));
             TryApplyBrush("Down3Fg", IdealText(_ui.Down3Color));
+        }
+
+        private void ApplyMarginModeFromSettings()
+        {
+            var crossBtn = Q<ToggleButton>("CrossMarginButton");
+            var isoBtn = Q<ToggleButton>("IsolatedMarginButton");
+            if (crossBtn != null && isoBtn != null)
+            {
+                var isCross = string.Equals(_ui.MarginMode, "Cross", StringComparison.OrdinalIgnoreCase);
+                crossBtn.IsChecked = isCross;
+                isoBtn.IsChecked = !isCross;
+            }
         }
 
         private static void TryApplyBrush(string key, string color)
@@ -1231,17 +1244,8 @@ namespace BinanceUsdtTicker
                 var pos = await posTask;
                 var levs = await levTask;
 
-                var crossBtn = Q<ToggleButton>("CrossMarginButton");
-                var isoBtn = Q<ToggleButton>("IsolatedMarginButton");
-                if (crossBtn != null && isoBtn != null)
-                {
-                    // Always default to isolated margin mode when a new
-                    // symbol is selected. This ensures the futures panel
-                    // starts with Isolated margin regardless of the
-                    // account's current margin setting.
-                    isoBtn.IsChecked = true;
-                    crossBtn.IsChecked = false;
-                }
+                // Use preferred margin mode for new selections
+                ApplyMarginModeFromSettings();
 
                 var levSlider = Q<Slider>("LeverageSlider");
                 var levText = Q<TextBlock>("LeverageValueText");

@@ -26,6 +26,7 @@ namespace BinanceUsdtTicker
                 Down3Color = settings.Down3Color,
                 DividerColor = settings.DividerColor,
                 ControlColor = settings.ControlColor,
+                MarginMode = settings.MarginMode,
                 WindowsNotification = settings.WindowsNotification,
                 BinanceApiKey = settings.BinanceApiKey,
                 BinanceApiSecret = settings.BinanceApiSecret
@@ -127,6 +128,7 @@ namespace BinanceUsdtTicker
             _settings.Down3Color = _work.Down3Color;
             _settings.DividerColor = _work.DividerColor;
             _settings.ControlColor = _work.ControlColor;
+            _settings.MarginMode = _work.MarginMode;
             _settings.WindowsNotification = _work.WindowsNotification;
             _settings.BinanceApiKey = _work.BinanceApiKey;
             _settings.BinanceApiSecret = _work.BinanceApiSecret;
