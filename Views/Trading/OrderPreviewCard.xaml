@@ -4,9 +4,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignHeight="420" d:DesignWidth="680">
-    <Border Padding="16" CornerRadius="16" Background="{DynamicResource CardBackgroundBrush}" 
+    <Border Padding="16" CornerRadius="16" Background="{DynamicResource CardBackgroundBrush}"
             BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
-        <Grid RowDefinitions="Auto,Auto,Auto,*" ColumnDefinitions="*,*">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Spacing="12">
                 <TextBlock Text="Symbol" VerticalAlignment="Center"/>
                 <TextBox Width="90" Text="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}"/>
@@ -55,7 +65,19 @@
                 <Button Content="Hesapla" Margin="12,0,0,0" Command="{Binding RecalcCommand}"/>
             </StackPanel>
 
-            <Grid Grid.Row="2" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Last"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Preview.LastPrice}"/>
 
