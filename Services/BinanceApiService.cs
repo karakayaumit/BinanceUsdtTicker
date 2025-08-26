@@ -96,9 +96,9 @@ namespace BinanceUsdtTicker
         }
 
         /// <summary>
-        /// Sembol için kullanılabilir kaldıraç değerlerini döner.
+        /// Sembol için kullanılabilir kaldıraç değerlerini ve bakım marj oranını döner.
         /// </summary>
-        public async Task<IList<int>> GetLeverageOptionsAsync(string symbol)
+        public async Task<(IList<int> Options, decimal MaintMarginRatio)> GetLeverageOptionsAsync(string symbol)
         {
             var query = new Dictionary<string, string>
             {
@@ -107,6 +107,7 @@ namespace BinanceUsdtTicker
 
             var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/leverageBracket", query);
             var list = new List<int>();
+            decimal mmr = 0m;
             try
             {
                 using var doc = JsonDocument.Parse(json);
@@ -114,6 +115,13 @@ namespace BinanceUsdtTicker
                 if (root.TryGetProperty("brackets", out var brackets))
                 {
                     int max = 0;
+                    var first = brackets.EnumerateArray().FirstOrDefault();
+                    if (first.ValueKind != JsonValueKind.Undefined)
+                    {
+                        if (first.TryGetProperty("maintMarginRatio", out var mmrEl))
+                            mmr = mmrEl.GetDecimal();
+                    }
+
                     foreach (var br in brackets.EnumerateArray())
                     {
                         if (br.TryGetProperty("initialLeverage", out var il) && il.TryGetInt32(out var lvl))
@@ -123,7 +131,7 @@ namespace BinanceUsdtTicker
                 }
             }
             catch { }
-            return list;
+            return (list, mmr);
         }
 
         /// <summary>
