@@ -331,6 +331,7 @@ namespace BinanceUsdtTicker
                 _walletAssets.Clear();
                 foreach (var b in balances)
                     _walletAssets.Add(b);
+                UpdateCostAndMax();
             }
             catch { }
         }
@@ -1227,6 +1228,7 @@ namespace BinanceUsdtTicker
                 UpdateLimitPrice();
                 UpdatePriceAndSize();
                 await LoadFuturesUiAsync(row.Symbol);
+                UpdateCostAndMax();
             }
         }
 
@@ -1310,6 +1312,7 @@ namespace BinanceUsdtTicker
                 {
                     text.Text = ((int)rounded).ToString() + "x";
                 }
+                UpdateCostAndMax();
             }
         }
 
@@ -1376,6 +1379,47 @@ namespace BinanceUsdtTicker
             {
                 qtyText.Text = $"{slider.Value:0}%";
             }
+
+            UpdateCostAndMax();
+        }
+
+        private void UpdateCostAndMax()
+        {
+            var usdt = _walletAssets.FirstOrDefault(a => a.Asset.Equals("USDT", StringComparison.OrdinalIgnoreCase));
+            var buyCostText = Q<TextBlock>("BuyCostText");
+            var sellCostText = Q<TextBlock>("SellCostText");
+            var buyMaxText = Q<TextBlock>("BuyMaxText");
+            var sellMaxText = Q<TextBlock>("SellMaxText");
+
+            if (usdt == null)
+            {
+                if (buyCostText != null) buyCostText.Text = "Cost 0 USDT";
+                if (sellCostText != null) sellCostText.Text = "Cost 0 USDT";
+                if (buyMaxText != null) buyMaxText.Text = "Max 0 USDT";
+                if (sellMaxText != null) sellMaxText.Text = "Max 0 USDT";
+                return;
+            }
+
+            var levSlider = Q<Slider>("LeverageSlider");
+            int leverage = (int)Math.Round(levSlider?.Value ?? 1d);
+
+            var tab = Q<TabControl>("OrderTypeTab");
+            Slider? sizeSlider = null;
+            if (tab != null)
+                sizeSlider = tab.SelectedIndex == 0 ? Q<Slider>("LimitSizeSlider") : Q<Slider>("MarketSizeSlider");
+
+            var percent = sizeSlider?.Value ?? 0d;
+
+            decimal cost = usdt.Available * (decimal)percent / 100m;
+            decimal max = usdt.Available * leverage;
+
+            var costStr = cost.ToString("0.##", CultureInfo.InvariantCulture);
+            var maxStr = max.ToString("0.##", CultureInfo.InvariantCulture);
+
+            if (buyCostText != null) buyCostText.Text = $"Cost {costStr} USDT";
+            if (sellCostText != null) sellCostText.Text = $"Cost {costStr} USDT";
+            if (buyMaxText != null) buyMaxText.Text = $"Max {maxStr} USDT";
+            if (sellMaxText != null) sellMaxText.Text = $"Max {maxStr} USDT";
         }
 
     }
