@@ -65,6 +65,8 @@ namespace BinanceUsdtTicker
 
         private readonly DispatcherTimer _refreshTimer = new();
 
+        private decimal _maintMarginRate = 0m;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -1242,7 +1244,8 @@ namespace BinanceUsdtTicker
                 var posTask = _api.GetPositionInfoAsync(symbol);
                 var levTask = _api.GetLeverageOptionsAsync(symbol);
                 var pos = await posTask;
-                var levs = await levTask;
+                var (levs, mmr) = await levTask;
+                _maintMarginRate = mmr;
 
                 // Use preferred margin mode for new selections
                 ApplyMarginModeFromSettings();
@@ -1410,8 +1413,11 @@ namespace BinanceUsdtTicker
 
             var percent = sizeSlider?.Value ?? 0d;
 
-            decimal cost = usdt.Available * (decimal)percent / 100m;
-            decimal max = usdt.Available * leverage;
+            var denom = 1m + _maintMarginRate * leverage;
+            if (denom <= 0m) denom = 1m;
+
+            decimal cost = usdt.Available * (decimal)percent / 100m / denom;
+            decimal max = usdt.Available * leverage / denom;
 
             var costStr = cost.ToString("0.##", CultureInfo.InvariantCulture);
             var maxStr = max.ToString("0.##", CultureInfo.InvariantCulture);
