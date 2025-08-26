@@ -10,5 +10,6 @@
   "Down3Color": "#FF8B0000",
   "DividerColor": "#FFE5E7EB",
   "ControlColor": "#FFFFFFFF",
+  "MarginMode": "Isolated",
   "WindowsNotification": false
 }
