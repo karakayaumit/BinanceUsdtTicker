@@ -416,7 +416,8 @@
                       Foreground="{DynamicResource OnSurface}"
                       GridLinesVisibility="None"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0"
-                      SelectionChanged="Grid_SelectionChanged">
+                      SelectionChanged="Grid_SelectionChanged"
+                      MouseDoubleClick="Grid_MouseDoubleClick">
 
 				<!-- Satır stili -->
                                 <DataGrid.RowStyle>
@@ -530,13 +531,15 @@
 						</DataGridTextColumn.ElementStyle>
 					</DataGridTextColumn>
 
-					<!-- Fiyat -->
-					<DataGridTextColumn x:Name="ColPrice" Header="Fiyat"
-                                        Width="1*" MinWidth="90"
+                                        <!-- Fiyat -->
+                                        <DataGridTextColumn x:Name="ColPrice" Header="Fiyat"
+                                        Width="1.5*" MinWidth="120"
                                         Binding="{Binding Price, StringFormat={}{0:#,0.########}}">
                                                 <DataGridTextColumn.ElementStyle>
                                                         <Style TargetType="TextBlock">
                                                                 <Setter Property="TextAlignment" Value="Right"/>
+                                                                <Setter Property="FontSize" Value="16"/>
+                                                                <Setter Property="FontWeight" Value="Bold"/>
                                                         </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>

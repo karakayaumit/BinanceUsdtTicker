@@ -19,6 +19,7 @@ using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
+using Microsoft.VisualBasic;
 
 namespace BinanceUsdtTicker
 {
@@ -305,8 +306,6 @@ namespace BinanceUsdtTicker
 
                 await _service.StartAsync();
 
-                TakeSnapshot();
-
                 if (EvaluateAllAlertsNow())
                     SaveAlertsSafe();
 
@@ -516,7 +515,6 @@ namespace BinanceUsdtTicker
                 }
                 else
                 {
-                    kv.Value.BaselinePrice ??= kv.Value.Price;
                     kv.Value.IsFavorite = _favoriteSymbols.Contains(kv.Key);
                     _rowBySymbol[kv.Key] = kv.Value;
                     _rows.Add(kv.Value);
@@ -1229,6 +1227,23 @@ namespace BinanceUsdtTicker
                 _selectedTicker.PropertyChanged += SelectedTicker_PropertyChanged;
                 UpdatePriceAndSize();
                 await LoadFuturesUiAsync(row.Symbol);
+            }
+        }
+
+        // Satıra çift tıklanınca başlangıç fiyatını kullanıcıdan al
+        private void Grid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (Grid?.SelectedItem is TickerRow row)
+            {
+                var input = Interaction.InputBox(
+                    "Başlangıç fiyatını giriniz:",
+                    "Başlangıç Fiyatı",
+                    row.Price.ToString(CultureInfo.InvariantCulture));
+
+                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
+                {
+                    row.BaselinePrice = value;
+                }
             }
         }
 
