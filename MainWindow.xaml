@@ -698,6 +698,14 @@
                                         <TextBlock x:Name="CurrentPriceText"/>
                                         <TextBlock Text="Tutar (USDT)" Margin="0,8,0,0"/>
                                         <TextBlock x:Name="TotalUsdtText"/>
+                                        <Grid Margin="0,8,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Button Content="Buy/Long" Grid.Column="0" Margin="0,0,4,0" Background="#2ecc71" Foreground="White" FontWeight="Bold" Height="40"/>
+                                                <Button Content="Sell/Short" Grid.Column="1" Margin="4,0,0,0" Background="#e74c3c" Foreground="White" FontWeight="Bold" Height="40"/>
+                                        </Grid>
                                 </StackPanel>
                         </GroupBox>
 
