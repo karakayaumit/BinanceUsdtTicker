@@ -1227,6 +1227,7 @@ namespace BinanceUsdtTicker
                     _selectedTicker.PropertyChanged -= SelectedTicker_PropertyChanged;
                 _selectedTicker = row;
                 _selectedTicker.PropertyChanged += SelectedTicker_PropertyChanged;
+                UpdateLimitPrice();
                 UpdatePriceAndSize();
                 await LoadFuturesUiAsync(row.Symbol);
             }
@@ -1348,8 +1349,22 @@ namespace BinanceUsdtTicker
         {
             if (e.PropertyName == nameof(TickerRow.Price))
             {
-                Dispatcher.Invoke(UpdatePriceAndSize);
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateLimitPrice();
+                    UpdatePriceAndSize();
+                });
             }
+        }
+
+        private void UpdateLimitPrice()
+        {
+            if (_selectedTicker == null)
+                return;
+
+            var priceBox = Q<TextBox>("LimitPriceTextBox");
+            if (priceBox != null)
+                priceBox.Text = _selectedTicker.Price.ToString("0.########", CultureInfo.InvariantCulture);
         }
 
         private void UpdatePriceAndSize()
