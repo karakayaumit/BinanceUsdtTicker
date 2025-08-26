@@ -1226,10 +1226,23 @@ namespace BinanceUsdtTicker
         {
             if (Grid?.SelectedItem is TickerRow row)
             {
+                if (_selectedTicker != null)
+                    _selectedTicker.PropertyChanged -= SelectedTicker_PropertyChanged;
+
                 _selectedTicker = row;
+                _selectedTicker.PropertyChanged += SelectedTicker_PropertyChanged;
+
                 UpdateLimitPrice();
                 UpdatePriceAndSize();
                 await LoadFuturesUiAsync(row.Symbol);
+                UpdateCostAndMax();
+            }
+        }
+
+        private void SelectedTicker_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TickerRow.Price))
+            {
                 UpdateCostAndMax();
             }
         }
