@@ -691,13 +691,24 @@
                                                         </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                         </StackPanel>
-                                        <TextBlock Text="Miktar" Margin="0,0,0,4"/>
-                                        <Slider x:Name="SizeSlider" Minimum="0" Maximum="100" ValueChanged="SizeSlider_ValueChanged"/>
-                                        <TextBlock x:Name="QuantityValueText" Margin="0,4,0,0"/>
-                                        <TextBlock Text="Fiyat" Margin="0,8,0,0"/>
-                                        <TextBlock x:Name="CurrentPriceText"/>
-                                        <TextBlock Text="Tutar (USDT)" Margin="0,8,0,0"/>
-                                        <TextBlock x:Name="TotalUsdtText"/>
+                                        <TabControl x:Name="OrderTypeTab" Margin="0,8,0,0" SelectionChanged="OrderTypeTab_SelectionChanged">
+                                                <TabItem Header="Limit">
+                                                        <StackPanel Margin="4">
+                                                                <TextBlock Text="Price" Margin="0,0,0,4"/>
+                                                                <TextBox x:Name="LimitPriceTextBox" Margin="0,0,0,8"/>
+                                                                <TextBlock Text="Size" Margin="0,0,0,4"/>
+                                                                <Slider x:Name="LimitSizeSlider" Minimum="0" Maximum="100" TickPlacement="BottomRight" Ticks="0,25,50,75,100" IsSnapToTickEnabled="False" ValueChanged="SizeSlider_ValueChanged"/>
+                                                                <TextBlock x:Name="LimitSizeValueText" Margin="0,4,0,0"/>
+                                                        </StackPanel>
+                                                </TabItem>
+                                                <TabItem Header="Market">
+                                                        <StackPanel Margin="4">
+                                                                <TextBlock Text="Size" Margin="0,0,0,4"/>
+                                                                <Slider x:Name="MarketSizeSlider" Minimum="0" Maximum="100" TickPlacement="BottomRight" Ticks="0,25,50,75,100" IsSnapToTickEnabled="False" ValueChanged="SizeSlider_ValueChanged"/>
+                                                                <TextBlock x:Name="MarketSizeValueText" Margin="0,4,0,0"/>
+                                                        </StackPanel>
+                                                </TabItem>
+                                        </TabControl>
                                         <Grid Margin="0,8,0,0">
                                                 <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
