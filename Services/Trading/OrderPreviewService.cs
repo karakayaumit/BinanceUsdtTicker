@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -380,7 +381,7 @@ namespace BinanceUsdtTicker.Trading
         public SymbolInfo() { }
 
         [OnDeserialized]
-        public void OnDeserializedMethod()
+        public void OnDeserializedMethod(StreamingContext context)
         {
             if (RawFilters.ValueKind != JsonValueKind.Array) return;
             foreach (var f in RawFilters.EnumerateArray())
