@@ -64,6 +64,7 @@ namespace BinanceUsdtTicker
         private TickerRow? _selectedTicker;
 
         private readonly DispatcherTimer _refreshTimer = new();
+        private readonly DispatcherTimer _costTimer = new();
 
         private decimal _maintMarginRate = 0m;
 
@@ -164,6 +165,10 @@ namespace BinanceUsdtTicker
             _refreshTimer.Tick += RefreshTimer_Tick;
             _refreshTimer.Start();
 
+            _costTimer.Interval = TimeSpan.FromSeconds(1);
+            _costTimer.Tick += (_, __) => UpdateCostAndMax();
+            _costTimer.Start();
+
             Closed += async (_, __) =>
             {
                 _service.OnTickersUpdated -= OnServiceTickersUpdated;
@@ -173,6 +178,7 @@ namespace BinanceUsdtTicker
                 SaveUiSettingsFromUi();
                 _notifyIcon?.Dispose();
                 _refreshTimer.Stop();
+                _costTimer.Stop();
             };
         }
 
