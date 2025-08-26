@@ -1235,9 +1235,12 @@ namespace BinanceUsdtTicker
                 var isoBtn = Q<ToggleButton>("IsolatedMarginButton");
                 if (crossBtn != null && isoBtn != null)
                 {
-                    var isIso = pos.MarginType == "isolated";
-                    isoBtn.IsChecked = isIso;
-                    crossBtn.IsChecked = !isIso;
+                    // Always default to isolated margin mode when a new
+                    // symbol is selected. This ensures the futures panel
+                    // starts with Isolated margin regardless of the
+                    // account's current margin setting.
+                    isoBtn.IsChecked = true;
+                    crossBtn.IsChecked = false;
                 }
 
                 var levSlider = Q<Slider>("LeverageSlider");
