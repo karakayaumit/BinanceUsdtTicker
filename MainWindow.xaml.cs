@@ -1292,10 +1292,19 @@ namespace BinanceUsdtTicker
 
         private void LeverageSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var text = Q<TextBlock>("LeverageValueText");
-            if (text != null)
+            if (sender is Slider slider)
             {
-                text.Text = ((int)e.NewValue).ToString() + "x";
+                var rounded = Math.Round(slider.Value);
+                if (rounded != slider.Value)
+                {
+                    slider.Value = rounded;
+                }
+
+                var text = Q<TextBlock>("LeverageValueText");
+                if (text != null)
+                {
+                    text.Text = ((int)rounded).ToString() + "x";
+                }
             }
         }
 

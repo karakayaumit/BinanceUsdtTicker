@@ -672,7 +672,7 @@
                                                         <TextBlock x:Name="LeverageValueText" Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" Text="1x"/>
                                                         <Button x:Name="LevPlusButton" Grid.Column="2" Content="+" Width="30" Click="LevPlusButton_Click"/>
                                                 </Grid>
-                                                <Slider x:Name="LeverageSlider" Minimum="1" Maximum="150" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Value="1" ValueChanged="LeverageSlider_ValueChanged" Ticks="1,30,60,90,120,150"/>
+                                               <Slider x:Name="LeverageSlider" Minimum="1" Maximum="150" TickPlacement="BottomRight" IsSnapToTickEnabled="False" Value="1" ValueChanged="LeverageSlider_ValueChanged" Ticks="1,30,60,90,120,150"/>
                                                 <ItemsControl x:Name="LeverageTickLabels" Margin="0,4,0,0" AlternationCount="100">
                                                         <ItemsControl.ItemsPanel>
                                                                 <ItemsPanelTemplate>
