@@ -52,7 +52,7 @@ namespace BinanceUsdtTicker.ViewModels.Trading
             {
                 var req = new OrderPreviewRequest(
                     Symbol,
-                    OrderType == "Market" ? OrderType.Market : OrderType.Limit,
+                    OrderType == "Market" ? BinanceUsdtTicker.Trading.OrderType.Market : BinanceUsdtTicker.Trading.OrderType.Limit,
                     Side == "Buy" ? OrderSide.Buy : OrderSide.Sell,
                     PositionSide == "Long" ? BinanceUsdtTicker.Trading.PositionSide.Long :
                         PositionSide == "Short" ? BinanceUsdtTicker.Trading.PositionSide.Short : BinanceUsdtTicker.Trading.PositionSide.OneWay,

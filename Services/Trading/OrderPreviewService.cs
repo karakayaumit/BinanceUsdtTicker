@@ -109,7 +109,11 @@ namespace BinanceUsdtTicker.Trading
             };
 
             var meta = await _cache.GetOrLoadAsync(_client, symbol, ct);
-            var lot = r.OrderType == OrderType.Market ? meta.MarketLot : meta.Lot;
+            var lot = r.OrderType == OrderType.Market
+                ? (meta.MarketLot != null
+                    ? new LotSizeFilter { MinQty = meta.MarketLot.MinQty, StepSize = meta.MarketLot.StepSize }
+                    : meta.Lot)
+                : meta.Lot;
             var minNotional = meta.MinNotional;
 
             decimal usable;
