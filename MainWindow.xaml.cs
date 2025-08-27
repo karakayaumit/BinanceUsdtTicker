@@ -341,7 +341,10 @@ namespace BinanceUsdtTicker
                     _walletAssets.Add(b);
                 UpdateCostAndMax();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task LoadOpenPositionsAsync()
