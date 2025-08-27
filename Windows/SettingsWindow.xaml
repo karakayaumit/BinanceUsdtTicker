@@ -119,11 +119,11 @@
                 <StackPanel Margin="10">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <TextBlock Text="API Key:" Width="120" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding BinanceApiKey}" Width="300"/>
+                        <TextBox Text="{Binding BinanceApiKey}" Width="300" MaxLength="64"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Secret Key:" Width="120" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding BinanceApiSecret}" Width="300"/>
+                        <TextBox Text="{Binding BinanceApiSecret}" Width="300" MaxLength="64"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
