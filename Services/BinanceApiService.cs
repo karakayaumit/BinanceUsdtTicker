@@ -64,8 +64,20 @@ namespace BinanceUsdtTicker
                             list.Add(new WalletAsset { Asset = asset, Balance = balance, Available = available });
                     }
                 }
+                else if (doc.RootElement.TryGetProperty("msg", out var msg))
+                {
+                    throw new Exception(msg.GetString() ?? "Bilinmeyen hata");
+                }
+                else
+                {
+                    throw new Exception("Beklenmeyen yanıt alındı.");
+                }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                throw new Exception($"Cüzdan bilgileri alınırken hata oluştu: {ex.Message}", ex);
+            }
+
             return list;
         }
 
