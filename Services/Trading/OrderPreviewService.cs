@@ -230,12 +230,12 @@ namespace BinanceUsdtTicker.Trading
         private readonly string _apiSecret;
         private readonly string _baseUrl;
 
-        public BinanceFuturesRestClient(HttpClient http, string apiKey, string apiSecret, bool useTestnet = false)
+        public BinanceFuturesRestClient(HttpClient http, string apiKey, string apiSecret)
         {
             _http = http;
             _apiKey = apiKey;
             _apiSecret = apiSecret;
-            _baseUrl = useTestnet ? "https://testnet.binancefuture.com" : "https://fapi.binance.com";
+            _baseUrl = "https://fapi.binance.com";
         }
 
         public async Task<decimal> GetLastPriceAsync(string symbol, CancellationToken ct)

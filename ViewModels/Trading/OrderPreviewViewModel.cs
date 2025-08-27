@@ -41,7 +41,7 @@ namespace BinanceUsdtTicker.ViewModels.Trading
         public OrderPreviewViewModel(string apiKey, string apiSecret)
         {
             var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-            var client = new BinanceFuturesRestClient(http, apiKey, apiSecret, useTestnet: false);
+            var client = new BinanceFuturesRestClient(http, apiKey, apiSecret);
             _service = new OrderPreviewService(client);
             RecalcCommand = new AsyncCommand(RecalcAsync);
         }
