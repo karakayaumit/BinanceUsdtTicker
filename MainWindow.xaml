@@ -405,6 +405,7 @@
 
                         <!-- FİYAT TABLOSU -->
                         <DataGrid x:Name="Grid"
+                      Style="{DynamicResource MahApps.Styles.DataGrid.Azure}"
                       Grid.Row="0" Grid.Column="1"
                       AutoGenerateColumns="False"
                       EnableRowVirtualization="True"
@@ -412,8 +413,6 @@
                       CanUserSortColumns="True"
                       CanUserReorderColumns="True"
                       HeadersVisibility="Column"
-                      Background="{DynamicResource SurfaceAlt}"
-                      Foreground="{DynamicResource OnSurface}"
                       GridLinesVisibility="None"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0"
                       SelectionChanged="Grid_SelectionChanged">
