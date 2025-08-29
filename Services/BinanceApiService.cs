@@ -428,6 +428,9 @@ namespace BinanceUsdtTicker
                     decimal.TryParse(el.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
                     decimal.TryParse(el.GetProperty("entryPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var entry);
                     decimal.TryParse(el.GetProperty("unRealizedProfit").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
+                    decimal margin = 0m;
+                    if (el.TryGetProperty("positionInitialMargin", out var imEl))
+                        decimal.TryParse(imEl.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out margin);
                     var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
                     details.TryGetValue(sym, out var det);
                     if (amt != 0m)
@@ -439,7 +442,8 @@ namespace BinanceUsdtTicker
                             EntryPrice = entry,
                             UnrealizedPnl = pnl,
                             Leverage = det.Lev,
-                            MarginType = det.Mt
+                            MarginType = det.Mt,
+                            InitialMargin = margin
                         });
                     }
                 }

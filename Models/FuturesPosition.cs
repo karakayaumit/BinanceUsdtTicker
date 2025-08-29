@@ -29,6 +29,26 @@ namespace BinanceUsdtTicker.Models
         public int Leverage { get; set; }
         public string MarginType { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Pozisyonun kullandığı başlangıç marjı (USDT).
+        /// </summary>
+        public decimal InitialMargin { get; set; }
+
+        private decimal? _closeLimitPrice;
+        /// <summary>
+        /// Kapatma işlemi için kullanıcı tarafından girilen limit fiyatı.
+        /// </summary>
+        public decimal? CloseLimitPrice
+        {
+            get => _closeLimitPrice;
+            set
+            {
+                if (_closeLimitPrice == value) return;
+                _closeLimitPrice = value;
+                OnPropertyChanged(nameof(CloseLimitPrice));
+            }
+        }
+
         public Brush PnlBrush =>
             _unrealizedPnl >= 0m ? Brushes.ForestGreen : Brushes.Red;
 
