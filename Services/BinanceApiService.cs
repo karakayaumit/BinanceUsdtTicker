@@ -430,13 +430,12 @@ namespace BinanceUsdtTicker
                     decimal.TryParse(el.GetProperty("unRealizedProfit").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
                     decimal.TryParse(el.GetProperty("markPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var mark);
                     decimal.TryParse(el.GetProperty("liquidationPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var liq);
-                    decimal margin = 0m;
-                    if (el.TryGetProperty("positionInitialMargin", out var imEl))
-                        decimal.TryParse(imEl.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out margin);
                     var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
                     details.TryGetValue(sym, out var det);
                     if (amt != 0m)
                     {
+                        var lev = det.Lev == 0 ? 1 : det.Lev;
+                        var margin = Math.Abs(mark * amt / lev);
                         positions.Add(new FuturesPosition
                         {
                             Symbol = sym,
