@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Windows.Media;
 
 namespace BinanceUsdtTicker.Models
@@ -7,7 +6,7 @@ namespace BinanceUsdtTicker.Models
     /// <summary>
     /// Temel vadeli işlem pozisyon bilgisi.
     /// </summary>
-    public class FuturesPosition : INotifyPropertyChanged
+    public class FuturesPosition : BindableBase
     {
         public string Symbol { get; set; } = string.Empty;
         private decimal _positionAmt;
@@ -124,13 +123,6 @@ namespace BinanceUsdtTicker.Models
         public Brush SideBrush =>
             _positionAmt >= 0m ? Brushes.Green : Brushes.Red;
 
-        public string BaseSymbol =>
-            Symbol.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)
-                ? Symbol[..^4]
-                : Symbol;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged(string name) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public string BaseSymbol => Symbol.ToBaseSymbol();
     }
 }

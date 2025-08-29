@@ -18,8 +18,6 @@ namespace BinanceUsdtTicker
                 ? string.Empty
                 : TimeZoneInfo.ConvertTimeFromUtc(TimestampUtc, TimeZoneInfo.Local).ToString("HH:mm:ss");
 
-        public string BaseSymbol => Symbol?.EndsWith("USDT", StringComparison.OrdinalIgnoreCase) == true
-            ? Symbol[..^4]
-            : Symbol ?? string.Empty;
+        public string BaseSymbol => Symbol.ToBaseSymbol();
     }
 }

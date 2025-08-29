@@ -1,16 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
-
 namespace BinanceUsdtTicker
-{
-    public class TickerRow : INotifyPropertyChanged
+{ 
+    public class TickerRow : BindableBase
     {
         public string Symbol { get; set; } = string.Empty;
 
-        public string BaseSymbol =>
-            !string.IsNullOrEmpty(Symbol) && Symbol.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)
-                ? Symbol[..^4]
-                : Symbol;
+        public string BaseSymbol => Symbol.ToBaseSymbol();
 
         private decimal _price;
         public decimal Price
@@ -132,9 +127,5 @@ namespace BinanceUsdtTicker
                 ChangeSinceStartPercent = 0m;
             }
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged(string name) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
