@@ -1,6 +1,13 @@
-﻿################################################################################
+################################################################################
 # Bu .gitignore dosyası Microsoft(R) Visual Studio tarafından otomatik olarak oluşturulmuştur.
 ################################################################################
 
-/.vs/BinanceUsdtTicker/FileContentIndex
+# Visual Studio dosyaları
+.vs/
+
+# Derleme çıktı dizinleri
+bin/
+obj/
+
+# Kaynak dışı varlıklar
 /Resources/charting_library/
