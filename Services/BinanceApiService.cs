@@ -401,25 +401,6 @@ namespace BinanceUsdtTicker
             var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/positionRisk");
             var positions = new List<FuturesPosition>();
 
-            // Pozisyon ayrıntılarını almak için hesap bilgisini çek.
-            var details = new Dictionary<string, (int Lev, string Mt)>();
-            try
-            {
-                var accJson = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/account");
-                using var docAcc = JsonDocument.Parse(accJson);
-                if (docAcc.RootElement.TryGetProperty("positions", out var posArr))
-                {
-                    foreach (var p in posArr.EnumerateArray())
-                    {
-                        var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
-                        int.TryParse(p.GetProperty("leverage").GetString(), out var lev);
-                        var mt = p.GetProperty("marginType").GetString() ?? "cross";
-                        details[sym] = (lev, mt);
-                    }
-                }
-            }
-            catch { }
-
             try
             {
                 using var doc = JsonDocument.Parse(json);
@@ -430,12 +411,13 @@ namespace BinanceUsdtTicker
                     decimal.TryParse(el.GetProperty("unRealizedProfit").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
                     decimal.TryParse(el.GetProperty("markPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var mark);
                     decimal.TryParse(el.GetProperty("liquidationPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var liq);
+                    int.TryParse(el.GetProperty("leverage").GetString(), out var lev);
                     var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
-                    details.TryGetValue(sym, out var det);
+                    var mt = el.GetProperty("marginType").GetString() ?? "cross";
                     if (amt != 0m)
                     {
-                        var lev = det.Lev == 0 ? 1 : det.Lev;
-                        var margin = Math.Abs(mark * amt / lev);
+                        var levEff = lev == 0 ? 1 : lev;
+                        var margin = Math.Abs(entry * amt / levEff);
                         positions.Add(new FuturesPosition
                         {
                             Symbol = sym,
@@ -444,9 +426,9 @@ namespace BinanceUsdtTicker
                             UnrealizedPnl = pnl,
                             MarkPrice = mark,
                             LiquidationPrice = liq,
-                            Leverage = det.Lev,
-                            MarginType = det.Mt,
-                            InitialMargin = margin
+                            Leverage = levEff,
+                            MarginType = mt,
+                            EntryAmount = margin
                         });
                     }
                 }
