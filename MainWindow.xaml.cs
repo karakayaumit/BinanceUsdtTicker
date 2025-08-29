@@ -1518,16 +1518,22 @@ namespace BinanceUsdtTicker
             bool isLimit = tab?.SelectedIndex == 0;
 
             var price = ticker.Price;
+            TextBox? priceBox = null;
             if (isLimit)
             {
-                var priceBox = Q<TextBox>("LimitPriceTextBox");
+                priceBox = Q<TextBox>("LimitPriceTextBox");
                 if (priceBox != null && decimal.TryParse(priceBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out var px) && px > 0m)
                     price = px;
             }
 
             var filters = await _api.GetSymbolFiltersAsync(symbol);
+            int pricePrecision = GetPrecision(filters.TickSize);
             if (filters.TickSize > 0m)
-                price = Math.Floor(price / filters.TickSize) * filters.TickSize;
+            {
+                price = Math.Round(price, pricePrecision, MidpointRounding.ToZero);
+                if (isLimit && priceBox != null)
+                    priceBox.Text = price.ToString($"F{pricePrecision}", CultureInfo.InvariantCulture);
+            }
 
             var sizeSlider = tab?.SelectedIndex == 0 ? Q<Slider>("LimitSizeSlider") : Q<Slider>("MarketSizeSlider");
             var percent = (decimal)(sizeSlider?.Value ?? 0d) / 100m;
@@ -1537,8 +1543,16 @@ namespace BinanceUsdtTicker
 
             decimal notional = usdt.Available * leverage * percent;
             decimal qty = price > 0m ? notional / price : 0m;
+            int qtyPrecision = GetPrecision(filters.StepSize);
             if (filters.StepSize > 0m)
-                qty = Math.Floor(qty / filters.StepSize) * filters.StepSize;
+            {
+                qty = Math.Round(qty, qtyPrecision, MidpointRounding.ToZero);
+                if (qty < filters.StepSize)
+                {
+                    MessageBox.Show(this, $"Hesaplanan miktar minimum lot ({filters.StepSize}) değerinden küçük.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+            }
             if (qty <= 0m) return;
 
             var crossBtn = Q<ToggleButton>("CrossMarginButton");
@@ -1602,6 +1616,13 @@ namespace BinanceUsdtTicker
             {
                 MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private static int GetPrecision(decimal step)
+        {
+            var s = step.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
+            var idx = s.IndexOf('.');
+            return idx >= 0 ? s.Length - idx - 1 : 0;
         }
 
         private async Task RefreshTradingDataAsync()
