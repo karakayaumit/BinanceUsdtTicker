@@ -422,8 +422,15 @@ namespace BinanceUsdtTicker
             var request = new HttpRequestMessage(method, url);
             request.Headers.Add("X-MBX-APIKEY", _apiKey);
             var response = await _http.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Response status code does not indicate success: {(int)response.StatusCode} ({response.StatusCode}). Content: {content}");
+            }
+
+            return content;
         }
 
         private string Sign(string queryString)
