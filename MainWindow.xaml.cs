@@ -1446,14 +1446,14 @@ namespace BinanceUsdtTicker
             decimal entryPrice = position?.EntryPrice ?? 0m;
 
             decimal mark = ticker.Price;
-            decimal openLoss = 0m;
+            decimal posOpenLoss = 0m;
             if (posAmt != 0m)
             {
                 var pnl = (mark - entryPrice) * posAmt;
-                if (pnl < 0m) openLoss = -pnl;
+                if (pnl < 0m) posOpenLoss = -pnl;
             }
 
-            decimal available = usdt.Available - openLoss;
+            decimal available = usdt.Available - posOpenLoss;
             if (available < 0m) available = 0m;
 
             decimal baseMax = available / denom;
@@ -1466,8 +1466,26 @@ namespace BinanceUsdtTicker
             decimal buyNotional = buyMax * (decimal)percent / 100m;
             decimal sellNotional = sellMax * (decimal)percent / 100m;
 
-            decimal buyCost = buyNotional * imr + openLoss;
-            decimal sellCost = sellNotional * imr + openLoss;
+            decimal orderPrice = mark;
+            if (tab != null && tab.SelectedIndex == 0)
+            {
+                var priceBox = Q<TextBox>("LimitPriceTextBox");
+                if (priceBox != null && decimal.TryParse(priceBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out var userPx) && userPx > 0m)
+                    orderPrice = userPx;
+            }
+
+            decimal buyOpenLoss = 0m;
+            decimal sellOpenLoss = 0m;
+            if (orderPrice > 0m)
+            {
+                if (orderPrice > mark)
+                    buyOpenLoss = (orderPrice - mark) * buyNotional / orderPrice;
+                if (orderPrice < mark)
+                    sellOpenLoss = (mark - orderPrice) * sellNotional / orderPrice;
+            }
+
+            decimal buyCost = buyNotional * imr + buyOpenLoss;
+            decimal sellCost = sellNotional * imr + sellOpenLoss;
 
             var buyCostStr = buyCost.ToString("0.##", CultureInfo.InvariantCulture);
             var sellCostStr = sellCost.ToString("0.##", CultureInfo.InvariantCulture);
