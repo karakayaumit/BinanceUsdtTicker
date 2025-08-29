@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1496,6 +1497,102 @@ namespace BinanceUsdtTicker
             if (sellCostText != null) sellCostText.Text = $"Cost {sellCostStr} USDT";
             if (buyMaxText != null) buyMaxText.Text = $"Max {buyMaxStr} USDT";
             if (sellMaxText != null) sellMaxText.Text = $"Max {sellMaxStr} USDT";
+        }
+
+        // --- Trading actions ---
+
+        private async void BuyButton_Click(object sender, RoutedEventArgs e) => await PlaceOrderAsync(true);
+        private async void SellButton_Click(object sender, RoutedEventArgs e) => await PlaceOrderAsync(false);
+
+        private async Task PlaceOrderAsync(bool isBuy)
+        {
+            var ticker = _selectedTicker;
+            var usdt = _walletAssets.FirstOrDefault(a => a.Asset.Equals("USDT", StringComparison.OrdinalIgnoreCase));
+            if (ticker == null || usdt == null) return;
+
+            var symbol = ticker.Symbol;
+            var tab = Q<TabControl>("OrderTypeTab");
+            bool isLimit = tab?.SelectedIndex == 0;
+
+            var price = ticker.Price;
+            if (isLimit)
+            {
+                var priceBox = Q<TextBox>("LimitPriceTextBox");
+                if (priceBox != null && decimal.TryParse(priceBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out var px) && px > 0m)
+                    price = px;
+            }
+
+            var sizeSlider = tab?.SelectedIndex == 0 ? Q<Slider>("LimitSizeSlider") : Q<Slider>("MarketSizeSlider");
+            var percent = (decimal)(sizeSlider?.Value ?? 0d) / 100m;
+            var levSlider = Q<Slider>("LeverageSlider");
+            int leverage = (int)Math.Round(levSlider?.Value ?? 1d);
+            if (leverage < 1) leverage = 1;
+
+            decimal notional = usdt.Available * leverage * percent;
+            decimal qty = price > 0m ? notional / price : 0m;
+            if (qty <= 0m) return;
+
+            var crossBtn = Q<ToggleButton>("CrossMarginButton");
+            var margin = crossBtn?.IsChecked == true ? "CROSS" : "ISOLATED";
+
+            var side = isBuy ? "BUY" : "SELL";
+
+            try
+            {
+                await _api.SetMarginTypeAsync(symbol, margin);
+                await _api.SetLeverageAsync(symbol, leverage);
+                await _api.PlaceOrderAsync(symbol, side, isLimit ? "LIMIT" : "MARKET", qty, isLimit ? price : (decimal?)null);
+                await RefreshTradingDataAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void ClosePositionMarket_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is FuturesPosition pos)
+                await ClosePositionAsync(pos, null);
+        }
+
+        private async void ClosePositionLimit_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is FuturesPosition pos)
+            {
+                var input = Interaction.InputBox("Limit fiyatı giriniz", "Limit Kapat", pos.EntryPrice.ToString(CultureInfo.InvariantCulture));
+                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var px) && px > 0m)
+                    await ClosePositionAsync(pos, px);
+            }
+        }
+
+        private async Task ClosePositionAsync(FuturesPosition pos, decimal? limitPrice)
+        {
+            var side = pos.PositionAmt > 0 ? "SELL" : "BUY";
+            var qty = Math.Abs(pos.PositionAmt);
+            if (qty <= 0m) return;
+            try
+            {
+                if (limitPrice.HasValue)
+                    await _api.PlaceOrderAsync(pos.Symbol, side, "LIMIT", qty, limitPrice.Value, true);
+                else
+                    await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true);
+
+                await RefreshTradingDataAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task RefreshTradingDataAsync()
+        {
+            await LoadWalletAsync();
+            await LoadOpenPositionsAsync();
+            await LoadOpenOrdersAsync();
+            await LoadOrderHistoryAsync();
+            await LoadTradeHistoryAsync();
         }
 
     }
