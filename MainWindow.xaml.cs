@@ -1525,6 +1525,10 @@ namespace BinanceUsdtTicker
                     price = px;
             }
 
+            var filters = await _api.GetSymbolFiltersAsync(symbol);
+            if (filters.TickSize > 0m)
+                price = Math.Floor(price / filters.TickSize) * filters.TickSize;
+
             var sizeSlider = tab?.SelectedIndex == 0 ? Q<Slider>("LimitSizeSlider") : Q<Slider>("MarketSizeSlider");
             var percent = (decimal)(sizeSlider?.Value ?? 0d) / 100m;
             var levSlider = Q<Slider>("LeverageSlider");
@@ -1533,6 +1537,8 @@ namespace BinanceUsdtTicker
 
             decimal notional = usdt.Available * leverage * percent;
             decimal qty = price > 0m ? notional / price : 0m;
+            if (filters.StepSize > 0m)
+                qty = Math.Floor(qty / filters.StepSize) * filters.StepSize;
             if (qty <= 0m) return;
 
             var crossBtn = Q<ToggleButton>("CrossMarginButton");
