@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
@@ -223,45 +221,39 @@ namespace BinanceUsdtTicker.Trading
 
     #region REST Client + Cache + DTOs
 
-    public class BinanceFuturesRestClient
+    public class BinanceFuturesRestClient : BinanceRestClientBase
     {
-        private readonly HttpClient _http;
-        private readonly string _apiKey;
-        private readonly string _apiSecret;
-        private readonly string _baseUrl;
-
-        public BinanceFuturesRestClient(HttpClient http, string apiKey, string apiSecret)
+        public BinanceFuturesRestClient(HttpClient http, string apiKey, string apiSecret) : base(http)
         {
-            _http = http;
-            _apiKey = apiKey;
-            _apiSecret = apiSecret;
-            _baseUrl = "https://fapi.binance.com";
+            if (http.BaseAddress == null)
+                http.BaseAddress = new Uri("https://fapi.binance.com");
+            SetApiCredentials(apiKey, apiSecret);
         }
 
         public async Task<decimal> GetLastPriceAsync(string symbol, CancellationToken ct)
         {
-            var s = await SendAsync($"/fapi/v1/ticker/price?symbol={symbol}", HttpMethod.Get, false, ct);
+            var s = await SendAsync(HttpMethod.Get, $"/fapi/v1/ticker/price?symbol={symbol}", ct);
             using var d = JsonDocument.Parse(s);
             return d.RootElement.GetProperty("price").GetDecimalString();
         }
 
         public async Task<decimal> GetMarkPriceAsync(string symbol, CancellationToken ct)
         {
-            var s = await SendAsync($"/fapi/v1/premiumIndex?symbol={symbol}", HttpMethod.Get, false, ct);
+            var s = await SendAsync(HttpMethod.Get, $"/fapi/v1/premiumIndex?symbol={symbol}", ct);
             using var d = JsonDocument.Parse(s);
             return d.RootElement.GetProperty("markPrice").GetDecimalString();
         }
 
         public async Task<AccountV3> GetAccountV3Async(CancellationToken ct)
         {
-            var s = await SendSignedAsync("/fapi/v3/account", HttpMethod.Get, null, ct);
+            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/account", null, ct);
             return JsonSerializer.Deserialize<AccountV3>(s, JsonOptions) ?? new();
         }
 
         public async Task<List<PositionRisk>> GetPositionRiskAsync(string symbol, CancellationToken ct)
         {
             var qp = new Dictionary<string, string> { ["symbol"] = symbol };
-            var s = await SendSignedAsync("/fapi/v3/positionRisk", HttpMethod.Get, qp, ct);
+            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/positionRisk", qp, ct);
             return JsonSerializer.Deserialize<List<PositionRisk>>(s, JsonOptions) ?? new();
         }
 
@@ -273,46 +265,17 @@ namespace BinanceUsdtTicker.Trading
 
         public async Task<ExchangeInfo> GetExchangeInfoAsync(CancellationToken ct)
         {
-            var s = await SendAsync("/fapi/v1/exchangeInfo", HttpMethod.Get, false, ct);
+            var s = await SendAsync(HttpMethod.Get, "/fapi/v1/exchangeInfo", ct);
             return JsonSerializer.Deserialize<ExchangeInfo>(s, JsonOptions) ?? new();
         }
 
         public async Task<List<LeverageBracket>> GetLeverageBracketsAsync(string symbol, CancellationToken ct)
         {
-            var s = await SendSignedAsync("/fapi/v1/leverageBracket", HttpMethod.Get, new() { ["symbol"] = symbol }, ct);
+            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/leverageBracket", new() { ["symbol"] = symbol }, ct);
             if (s.TrimStart().StartsWith("["))
                 return JsonSerializer.Deserialize<List<LeverageBracket>>(s, JsonOptions) ?? new();
             var one = JsonSerializer.Deserialize<LeverageBracketSingle>(s, JsonOptions);
             return one != null ? new List<LeverageBracket> { one } : new();
-        }
-
-        private async Task<string> SendSignedAsync(string path, HttpMethod method, Dictionary<string, string>? query, CancellationToken ct)
-        {
-            query ??= new();
-            query["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(CultureInfo.InvariantCulture);
-            var qs = string.Join("&", query.Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value)}"));
-            var sig = Sign(qs, _apiSecret);
-            var url = $"{_baseUrl}{path}?{qs}&signature={sig}";
-            using var req = new HttpRequestMessage(method, url);
-            req.Headers.Add("X-MBX-APIKEY", _apiKey);
-            using var res = await _http.SendAsync(req, ct);
-            res.EnsureSuccessStatusCode();
-            return await res.Content.ReadAsStringAsync(ct);
-        }
-
-        private async Task<string> SendAsync(string path, HttpMethod method, bool signed, CancellationToken ct)
-        {
-            using var req = new HttpRequestMessage(method, _baseUrl + path);
-            if (signed) req.Headers.Add("X-MBX-APIKEY", _apiKey);
-            using var res = await _http.SendAsync(req, ct);
-            res.EnsureSuccessStatusCode();
-            return await res.Content.ReadAsStringAsync(ct);
-        }
-
-        private static string Sign(string data, string secret)
-        {
-            using var h = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
-            return Convert.ToHexString(h.ComputeHash(Encoding.UTF8.GetBytes(data))).ToLowerInvariant();
         }
 
         internal static readonly JsonSerializerOptions JsonOptions = new()
