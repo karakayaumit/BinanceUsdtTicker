@@ -398,6 +398,24 @@ namespace BinanceUsdtTicker
         /// </summary>
         public async Task<IList<FuturesPosition>> GetOpenPositionsAsync()
         {
+            // Fetch isolated wallet values for each symbol using the account endpoint.
+            var wallets = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                var accJson = await GetAccountInfoAsync();
+                using var accDoc = JsonDocument.Parse(accJson);
+                if (accDoc.RootElement.TryGetProperty("positions", out var accPositions))
+                {
+                    foreach (var p in accPositions.EnumerateArray())
+                    {
+                        var sym = p.GetProperty("symbol").GetString() ?? string.Empty;
+                        if (decimal.TryParse(p.GetProperty("isolatedWallet").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var wallet))
+                            wallets[sym] = wallet;
+                    }
+                }
+            }
+            catch { }
+
             var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/positionRisk");
             var positions = new List<FuturesPosition>();
 
@@ -415,21 +433,10 @@ namespace BinanceUsdtTicker
                     var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
                     var mt = el.GetProperty("marginType").GetString() ?? "cross";
 
-                    // Some values like initial margin might be provided by the API. If available,
-                    // use it directly to match Binance's displayed entry amount; otherwise fall
-                    // back to a calculation using entry price, quantity and leverage.
-                    decimal initialMargin = 0m;
-                    if (el.TryGetProperty("positionInitialMargin", out var pim))
-                        decimal.TryParse(pim.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out initialMargin);
-                    else if (el.TryGetProperty("initialMargin", out var im))
-                        decimal.TryParse(im.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out initialMargin);
-
                     if (amt != 0m)
                     {
                         var levEff = lev == 0 ? 1 : lev;
-                        var margin = initialMargin != 0m
-                            ? Math.Abs(initialMargin)
-                            : Math.Abs(entry * amt / levEff);
+                        var margin = wallets.TryGetValue(sym, out var wallet) ? Math.Abs(wallet) : 0m;
 
                         positions.Add(new FuturesPosition
                         {
