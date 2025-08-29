@@ -20,6 +20,8 @@ namespace BinanceUsdtTicker
         private string _apiKey = string.Empty;
         private string _secretKey = string.Empty;
 
+        private readonly Dictionary<string, (decimal TickSize, decimal StepSize)> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
+
         public BinanceApiService()
         {
             _http = new HttpClient { BaseAddress = new Uri("https://fapi.binance.com") };
@@ -329,17 +331,58 @@ namespace BinanceUsdtTicker
             catch { }
         }
 
+        private async Task<(decimal TickSize, decimal StepSize)> GetSymbolFiltersAsync(string symbol)
+        {
+            if (_symbolFilters.TryGetValue(symbol, out var f))
+                return f;
+
+            var json = await _http.GetStringAsync($"/fapi/v1/exchangeInfo?symbol={symbol}");
+            decimal tick = 0m;
+            decimal step = 0m;
+
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var sym = doc.RootElement.GetProperty("symbols").EnumerateArray().FirstOrDefault();
+                if (sym.ValueKind != JsonValueKind.Undefined && sym.TryGetProperty("filters", out var filters))
+                {
+                    foreach (var fl in filters.EnumerateArray())
+                    {
+                        var type = fl.GetProperty("filterType").GetString();
+                        if (type == "PRICE_FILTER")
+                        {
+                            decimal.TryParse(fl.GetProperty("tickSize").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out tick);
+                        }
+                        else if (type == "LOT_SIZE")
+                        {
+                            decimal.TryParse(fl.GetProperty("stepSize").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out step);
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            var res = (tick, step);
+            _symbolFilters[symbol] = res;
+            return res;
+        }
+
         public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
         {
+            var filters = await GetSymbolFiltersAsync(symbol);
+            var adjQty = filters.StepSize > 0 ? Math.Floor(quantity / filters.StepSize) * filters.StepSize : quantity;
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
                 ["side"] = side.ToUpperInvariant(),
                 ["type"] = type.ToUpperInvariant(),
-                ["quantity"] = quantity.ToString(CultureInfo.InvariantCulture)
+                ["quantity"] = adjQty.ToString(CultureInfo.InvariantCulture)
             };
             if (price.HasValue)
-                query["price"] = price.Value.ToString(CultureInfo.InvariantCulture);
+            {
+                var adjPrice = filters.TickSize > 0 ? Math.Floor(price.Value / filters.TickSize) * filters.TickSize : price.Value;
+                query["price"] = adjPrice.ToString(CultureInfo.InvariantCulture);
+            }
             if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
                 query["timeInForce"] = "GTC";
             if (reduceOnly)
