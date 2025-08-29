@@ -248,7 +248,7 @@ namespace BinanceUsdtTicker.Trading
         LotSizeFilter Lot,
         MarketLotSizeFilter? MarketLot,
         decimal? MinNotional,
-        List<LeverageBracket> Brackets)
+        IList<LeverageBracket> Brackets)
     {
         public decimal? ResolveNotionalCapForLeverage(int leverage)
         {
