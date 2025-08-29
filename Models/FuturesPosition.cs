@@ -10,7 +10,18 @@ namespace BinanceUsdtTicker.Models
     public class FuturesPosition : INotifyPropertyChanged
     {
         public string Symbol { get; set; } = string.Empty;
-        public decimal PositionAmt { get; set; }
+        private decimal _positionAmt;
+        public decimal PositionAmt
+        {
+            get => _positionAmt;
+            set
+            {
+                if (_positionAmt == value) return;
+                _positionAmt = value;
+                OnPropertyChanged(nameof(PositionAmt));
+                OnPropertyChanged(nameof(PositionSize));
+            }
+        }
         public decimal EntryPrice { get; set; }
 
         private decimal _unrealizedPnl;
@@ -31,17 +42,17 @@ namespace BinanceUsdtTicker.Models
         public string MarginType { get; set; } = string.Empty;
 
         /// <summary>
-        /// Pozisyonun kullandığı başlangıç marjı (USDT).
+        /// Pozisyonun girişte kullanılan tutarı (USDT).
         /// </summary>
-        private decimal _initialMargin;
-        public decimal InitialMargin
+        private decimal _entryAmount;
+        public decimal EntryAmount
         {
-            get => _initialMargin;
+            get => _entryAmount;
             set
             {
-                if (_initialMargin == value) return;
-                _initialMargin = value;
-                OnPropertyChanged(nameof(InitialMargin));
+                if (_entryAmount == value) return;
+                _entryAmount = value;
+                OnPropertyChanged(nameof(EntryAmount));
                 OnPropertyChanged(nameof(RoiPercent));
             }
         }
@@ -58,6 +69,7 @@ namespace BinanceUsdtTicker.Models
                 if (_markPrice == value) return;
                 _markPrice = value;
                 OnPropertyChanged(nameof(MarkPrice));
+                OnPropertyChanged(nameof(PositionSize));
             }
         }
 
@@ -77,10 +89,15 @@ namespace BinanceUsdtTicker.Models
         }
 
         /// <summary>
+        /// Pozisyon boyutu (notional değeri).
+        /// </summary>
+        public decimal PositionSize => Math.Abs(_markPrice * _positionAmt);
+
+        /// <summary>
         /// Pozisyonun Yatırım Getiri yüzdesi.
         /// </summary>
         public decimal RoiPercent =>
-            _initialMargin != 0m ? _unrealizedPnl / _initialMargin * 100m : 0m;
+            _entryAmount != 0m ? _unrealizedPnl / _entryAmount * 100m : 0m;
 
         private decimal? _closeLimitPrice;
         /// <summary>
