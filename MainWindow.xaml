@@ -868,7 +868,7 @@
 
                                 <!-- EMIR VE POZISYONLAR -->
                                 <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
-                                        <TabControl Margin="0,6,0,0">
+                                        <TabControl x:Name="AccountTab" Margin="0,6,0,0" SelectionChanged="AccountTab_SelectionChanged">
                                                 <TabItem Header="Açık Pozisyonlar">
                                                         <ListView x:Name="PositionsList" HorizontalContentAlignment="Stretch">
                                                                 <ListView.View>
