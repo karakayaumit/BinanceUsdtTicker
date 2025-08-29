@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:BinanceUsdtTicker"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
         Background="{DynamicResource Surface}"
@@ -62,23 +63,23 @@
                 </Style>
 
                 <!-- DataGrid başlığı -->
-                <Style TargetType="DataGridColumnHeader">
-			<Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
-			<Setter Property="Foreground"  Value="{DynamicResource HeaderFg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
-			<Setter Property="BorderThickness" Value="0,0,1,1"/>
-			<Setter Property="FontWeight"  Value="SemiBold"/>
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
-			<Setter Property="Padding" Value="6,3"/>
-			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="{DynamicResource HeaderHoverBg}"/>
-				</Trigger>
-				<Trigger Property="IsPressed" Value="True">
-					<Setter Property="Background" Value="{DynamicResource HeaderHoverBg}"/>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
+                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                        <Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
+                        <Setter Property="Foreground"  Value="{DynamicResource HeaderFg}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        <Setter Property="FontWeight"  Value="SemiBold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="6,3"/>
+                        <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource HeaderHoverBg}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource HeaderHoverBg}"/>
+                                </Trigger>
+                        </Style.Triggers>
+                </Style>
 
 		<!-- GridView başlığı -->
 		<Style TargetType="{x:Type GridViewColumnHeader}">
@@ -159,7 +160,7 @@
                 </Style>
 
 		<!-- DataGrid hücre -->
-                <Style TargetType="DataGridCell">
+                <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
                         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
                         <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
@@ -169,7 +170,7 @@
                         </Style.Triggers>
                 </Style>
 
-                <Style TargetType="DataGridRowHeader">
+                <Style TargetType="DataGridRowHeader" BasedOn="{StaticResource MaterialDesignDataGridRowHeader}">
                         <Setter Property="Background"  Value="{DynamicResource SurfaceAlt}"/>
                         <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
                         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
@@ -405,7 +406,7 @@
 
                         <!-- FİYAT TABLOSU -->
                         <DataGrid x:Name="Grid"
-                      Style="{DynamicResource MahApps.Styles.DataGrid.Azure}"
+                      Style="{DynamicResource MaterialDesignDataGrid}"
                       Grid.Row="0" Grid.Column="1"
                       AutoGenerateColumns="False"
                       EnableRowVirtualization="True"
@@ -419,7 +420,7 @@
 
 				<!-- Satır stili -->
                                 <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                 <Style.Triggers>
                                                         <!-- Renklendirme -->
                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
@@ -447,7 +448,7 @@
 
                                 <!-- Hücre stili -->
                                 <DataGrid.CellStyle>
-                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
                                                 <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
                                                                 <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
