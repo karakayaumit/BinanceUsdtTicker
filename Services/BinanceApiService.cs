@@ -370,8 +370,7 @@ namespace BinanceUsdtTicker
         public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
         {
             var filters = await GetSymbolFiltersAsync(symbol);
-            int qtyPrecision = GetPrecision(filters.StepSize);
-            var adjQty = filters.StepSize > 0 ? Math.Round(quantity, qtyPrecision, MidpointRounding.ToZero) : quantity;
+            var adjQty = filters.StepSize > 0 ? AdjustToStep(quantity, filters.StepSize) : quantity;
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
@@ -381,8 +380,7 @@ namespace BinanceUsdtTicker
             };
             if (price.HasValue)
             {
-                int pricePrecision = GetPrecision(filters.TickSize);
-                var adjPrice = filters.TickSize > 0 ? Math.Round(price.Value, pricePrecision, MidpointRounding.ToZero) : price.Value;
+                var adjPrice = filters.TickSize > 0 ? AdjustToStep(price.Value, filters.TickSize) : price.Value;
                 query["price"] = adjPrice.ToString(CultureInfo.InvariantCulture);
             }
             if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
@@ -400,6 +398,12 @@ namespace BinanceUsdtTicker
             var s = step.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
             var idx = s.IndexOf('.');
             return idx >= 0 ? s.Length - idx - 1 : 0;
+        }
+
+        private static decimal AdjustToStep(decimal value, decimal step)
+        {
+            if (step <= 0m) return value;
+            return Math.Floor(value / step) * step;
         }
 
         /// <summary>

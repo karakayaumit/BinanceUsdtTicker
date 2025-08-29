@@ -1530,7 +1530,7 @@ namespace BinanceUsdtTicker
             int pricePrecision = GetPrecision(filters.TickSize);
             if (filters.TickSize > 0m)
             {
-                price = Math.Round(price, pricePrecision, MidpointRounding.ToZero);
+                price = AdjustToStep(price, filters.TickSize);
                 if (isLimit && priceBox != null)
                     priceBox.Text = price.ToString($"F{pricePrecision}", CultureInfo.InvariantCulture);
             }
@@ -1543,10 +1543,9 @@ namespace BinanceUsdtTicker
 
             decimal notional = usdt.Available * leverage * percent;
             decimal qty = price > 0m ? notional / price : 0m;
-            int qtyPrecision = GetPrecision(filters.StepSize);
             if (filters.StepSize > 0m)
             {
-                qty = Math.Round(qty, qtyPrecision, MidpointRounding.ToZero);
+                qty = AdjustToStep(qty, filters.StepSize);
                 if (qty < filters.StepSize)
                 {
                     MessageBox.Show(this, $"Hesaplanan miktar minimum lot ({filters.StepSize}) değerinden küçük.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -1623,6 +1622,12 @@ namespace BinanceUsdtTicker
             var s = step.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
             var idx = s.IndexOf('.');
             return idx >= 0 ? s.Length - idx - 1 : 0;
+        }
+
+        private static decimal AdjustToStep(decimal value, decimal step)
+        {
+            if (step <= 0m) return value;
+            return Math.Floor(value / step) * step;
         }
 
         private async Task RefreshTradingDataAsync()
