@@ -271,7 +271,11 @@ namespace BinanceUsdtTicker.Trading
 
         public async Task<List<LeverageBracket>> GetLeverageBracketsAsync(string symbol, CancellationToken ct)
         {
-            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/leverageBracket", new() { ["symbol"] = symbol }, ct);
+            var s = await SendSignedAsync(
+                HttpMethod.Get,
+                "/fapi/v1/leverageBracket",
+                new Dictionary<string, string> { ["symbol"] = symbol },
+                ct);
             if (s.TrimStart().StartsWith("["))
                 return JsonSerializer.Deserialize<List<LeverageBracket>>(s, JsonOptions) ?? new();
             var one = JsonSerializer.Deserialize<LeverageBracketSingle>(s, JsonOptions);
