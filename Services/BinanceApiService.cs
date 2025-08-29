@@ -305,6 +305,49 @@ namespace BinanceUsdtTicker
             }
         }
 
+        public async Task SetLeverageAsync(string symbol, int leverage)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol,
+                ["leverage"] = leverage.ToString(CultureInfo.InvariantCulture)
+            };
+            await SendSignedAsync(HttpMethod.Post, "/fapi/v1/leverage", query);
+        }
+
+        public async Task SetMarginTypeAsync(string symbol, string marginType)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol,
+                ["marginType"] = marginType.ToUpperInvariant()
+            };
+            try
+            {
+                await SendSignedAsync(HttpMethod.Post, "/fapi/v1/marginType", query);
+            }
+            catch { }
+        }
+
+        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol,
+                ["side"] = side.ToUpperInvariant(),
+                ["type"] = type.ToUpperInvariant(),
+                ["quantity"] = quantity.ToString(CultureInfo.InvariantCulture)
+            };
+            if (price.HasValue)
+                query["price"] = price.Value.ToString(CultureInfo.InvariantCulture);
+            if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
+                query["timeInForce"] = "GTC";
+            if (reduceOnly)
+                query["reduceOnly"] = "true";
+
+            await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", query);
+        }
+
         /// <summary>
         /// Hesaptaki açık pozisyonları döner.
         /// </summary>
