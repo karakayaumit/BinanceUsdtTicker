@@ -264,3 +264,5 @@ namespace BinanceUsdtTicker.Trading
     }
 
 #endregion
+
+}
