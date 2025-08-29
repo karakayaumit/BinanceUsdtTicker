@@ -154,9 +154,7 @@ namespace BinanceUsdtTicker
                 ApplyColumnLayoutFromSettings();
                 EnsureSpecialColumnsOrder(); // ★ -> Sembol
                 await InitializeAsync();
-                await LoadWalletAsync();
-                await LoadOpenPositionsAsync();
-                await LoadOpenOrdersAsync();
+                await RefreshAccountDataAsync();
                 await LoadOrderHistoryAsync();
                 await LoadTradeHistoryAsync();
             };
@@ -373,12 +371,16 @@ namespace BinanceUsdtTicker
             catch { }
         }
 
-        private async void RefreshTimer_Tick(object? sender, EventArgs e)
+        private async Task RefreshAccountDataAsync()
         {
+            await LoadWalletAsync();
             await LoadOpenPositionsAsync();
             await LoadOpenOrdersAsync();
-            await LoadOrderHistoryAsync();
-            await LoadTradeHistoryAsync();
+        }
+
+        private async void RefreshTimer_Tick(object? sender, EventArgs e)
+        {
+            await RefreshAccountDataAsync();
         }
 
         private void UpdatePositionPnls()
@@ -1371,6 +1373,22 @@ namespace BinanceUsdtTicker
         {
             if (e.Source is TabControl)
                 UpdatePriceAndSize();
+        }
+
+        private async void AccountTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl tc && tc.SelectedItem is TabItem item)
+            {
+                var header = item.Header as string;
+                if (string.Equals(header, "Emir Geçmişi", StringComparison.OrdinalIgnoreCase))
+                {
+                    await LoadOrderHistoryAsync();
+                }
+                else if (string.Equals(header, "Trade Geçmişi", StringComparison.OrdinalIgnoreCase))
+                {
+                    await LoadTradeHistoryAsync();
+                }
+            }
         }
 
         private void UpdateLimitPrice()
