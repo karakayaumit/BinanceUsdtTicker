@@ -472,8 +472,8 @@
                                 <DataGrid.Columns>
 
 					<!-- 0) ⭐ Favori -->
-					<DataGridTemplateColumn x:Name="ColStar"
-                                            Header="★" Width="32"
+                                        <DataGridTemplateColumn x:Name="ColStar"
+                                            Header="★" Width="48"
                                             IsReadOnly="True" CanUserSort="False">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
@@ -495,7 +495,7 @@
 
                                         <!-- 1) Grafik -->
                                         <DataGridTemplateColumn x:Name="ColChart"
-                                            Header="Grafik" Width="32"
+                                            Header="Grafik" Width="48"
                                             IsReadOnly="True" CanUserSort="False">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
