@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace BinanceUsdtTicker.Models
 {
-    public class UiSettings : INotifyPropertyChanged
+    public class UiSettings : BindableBase
     {
         private string _theme = "Light";
         public string Theme
@@ -111,8 +109,5 @@ namespace BinanceUsdtTicker.Models
             set { if (_binanceApiSecret != value) { _binanceApiSecret = value; OnPropertyChanged(); } }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string? name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
