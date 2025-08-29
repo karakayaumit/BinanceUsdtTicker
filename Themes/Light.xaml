@@ -9,7 +9,7 @@
     <SolidColorBrush x:Key="Divider"        Color="#FFE5E7EB"/>
 
     <SolidColorBrush x:Key="HeaderBg"       Color="#FFF3F4F6"/>
-    <SolidColorBrush x:Key="HeaderFg"       Color="#FF111827"/>
+    <SolidColorBrush x:Key="HeaderFg"       Color="#FF000000"/>
     <SolidColorBrush x:Key="HeaderBorder"   Color="#FFE5E7EB"/>
 
     <SolidColorBrush x:Key="RowBg"          Color="#FFFFFFFF"/>
