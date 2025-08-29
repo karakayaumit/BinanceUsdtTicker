@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Text.Json.Serialization;
 using System.Globalization;
+using BinanceUsdtTicker.Models;
 
 
 namespace BinanceUsdtTicker
