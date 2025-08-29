@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Text.Json.Serialization;
 using System.Globalization;
-using BinanceUsdtTicker.Models;
+
 
 namespace BinanceUsdtTicker
 {
@@ -15,9 +17,80 @@ namespace BinanceUsdtTicker
     public class BinanceApiService : BinanceRestClientBase
     {
         private readonly Dictionary<string, (decimal TickSize, decimal StepSize)> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
+        private ExchangeInfo? _exchangeInfo;
+        internal static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
+            ReadCommentHandling = JsonCommentHandling.Skip
+        };
 
         public BinanceApiService() : base(new HttpClient { BaseAddress = new Uri("https://fapi.binance.com") })
         {
+        }
+
+        public BinanceApiService(HttpClient httpClient) : base(httpClient)
+        {
+            if (httpClient.BaseAddress == null)
+                httpClient.BaseAddress = new Uri("https://fapi.binance.com");
+        }
+        public async Task<decimal> GetLastPriceAsync(string symbol, CancellationToken ct = default)
+        {
+            var s = await SendAsync(HttpMethod.Get, $"/fapi/v1/ticker/price?symbol={symbol}", ct);
+            using var d = JsonDocument.Parse(s);
+            return d.RootElement.GetProperty("price").GetDecimalString();
+        }
+
+        public async Task<decimal> GetMarkPriceAsync(string symbol, CancellationToken ct = default)
+        {
+            var s = await SendAsync(HttpMethod.Get, $"/fapi/v1/premiumIndex?symbol={symbol}", ct);
+            using var d = JsonDocument.Parse(s);
+            return d.RootElement.GetProperty("markPrice").GetDecimalString();
+        }
+
+        public async Task<AccountV3> GetAccountV3Async(CancellationToken ct = default)
+        {
+            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/account", null, ct);
+            return JsonSerializer.Deserialize<AccountV3>(s, JsonOptions) ?? new();
+        }
+
+        public async Task<IList<PositionRisk>> GetPositionRiskV3Async(string symbol, CancellationToken ct = default)
+        {
+            var qp = new Dictionary<string, string> { ["symbol"] = symbol };
+            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/positionRisk", qp, ct);
+            return JsonSerializer.Deserialize<IList<PositionRisk>>(s, JsonOptions) ?? new List<PositionRisk>();
+        }
+
+        public async Task<decimal> GetAbsNotionalAsync(string symbol, CancellationToken ct = default)
+        {
+            var list = await GetPositionRiskV3Async(symbol, ct);
+            return list.Sum(x => Math.Abs(x.Notional));
+        }
+
+        public async Task<ExchangeInfo> GetExchangeInfoAsync(CancellationToken ct = default)
+        {
+            if (_exchangeInfo != null) return _exchangeInfo;
+            var s = await SendAsync(HttpMethod.Get, "/fapi/v1/exchangeInfo", ct);
+            _exchangeInfo = JsonSerializer.Deserialize<ExchangeInfo>(s, JsonOptions) ?? new ExchangeInfo();
+            return _exchangeInfo;
+        }
+
+        public async Task<IList<LeverageBracket>> GetLeverageBracketsAsync(string symbol, CancellationToken ct = default)
+        {
+            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/leverageBracket", new Dictionary<string, string> { ["symbol"] = symbol }, ct);
+            if (s.TrimStart().StartsWith("["))
+                return JsonSerializer.Deserialize<IList<LeverageBracket>>(s, JsonOptions) ?? new List<LeverageBracket>();
+            var one = JsonSerializer.Deserialize<LeverageBracketSingle>(s, JsonOptions);
+            return one != null ? new List<LeverageBracket> { one } : new List<LeverageBracket>();
+        }
+
+        public async Task<IList<PositionRisk>> GetPositionRiskV2Async(string? symbol = null, CancellationToken ct = default)
+        {
+            var query = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(symbol))
+                query["symbol"] = symbol;
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/positionRisk", query, ct);
+            return JsonSerializer.Deserialize<IList<PositionRisk>>(json, JsonOptions) ?? new List<PositionRisk>();
         }
 
         /// <summary>
@@ -69,65 +142,30 @@ namespace BinanceUsdtTicker
         /// <summary>
         /// Belirtilen sembol için mevcut pozisyon bilgilerini döner.
         /// </summary>
+
         public async Task<(string MarginType, int Leverage)> GetPositionInfoAsync(string symbol)
         {
-            var query = new Dictionary<string, string>
-            {
-                ["symbol"] = symbol
-            };
-
-            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/positionRisk", query);
-
-            try
-            {
-                using var doc = JsonDocument.Parse(json);
-                var el = doc.RootElement.EnumerateArray().FirstOrDefault();
-                var mt = el.GetProperty("marginType").GetString() ?? "cross";
-                int.TryParse(el.GetProperty("leverage").GetString(), out var lev);
-                return (mt.ToLowerInvariant(), lev);
-            }
-            catch
-            {
-                return ("cross", 1);
-            }
+            var list = await GetPositionRiskV2Async(symbol);
+            var el = list.FirstOrDefault();
+            if (el != null)
+                return (el.MarginType.ToLowerInvariant(), el.Leverage);
+            return ("cross", 1);
         }
-
         /// <summary>
         /// Sembol için kullanılabilir kaldıraç değerlerini ve bakım marj oranını döner.
         /// </summary>
         public async Task<(IList<int> Options, decimal MaintMarginRatio)> GetLeverageOptionsAsync(string symbol)
         {
-            var query = new Dictionary<string, string>
-            {
-                ["symbol"] = symbol
-            };
-
-            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/leverageBracket", query);
+            var brackets = await GetLeverageBracketsAsync(symbol);
             var list = new List<int>();
             decimal mmr = 0m;
-            try
+            var first = brackets.FirstOrDefault()?.Brackets.FirstOrDefault();
+            if (first != null)
             {
-                using var doc = JsonDocument.Parse(json);
-                var root = doc.RootElement.EnumerateArray().FirstOrDefault();
-                if (root.TryGetProperty("brackets", out var brackets))
-                {
-                    int max = 0;
-                    var first = brackets.EnumerateArray().FirstOrDefault();
-                    if (first.ValueKind != JsonValueKind.Undefined)
-                    {
-                        if (first.TryGetProperty("maintMarginRatio", out var mmrEl))
-                            mmr = mmrEl.GetDecimal();
-                    }
-
-                    foreach (var br in brackets.EnumerateArray())
-                    {
-                        if (br.TryGetProperty("initialLeverage", out var il) && il.TryGetInt32(out var lvl))
-                            if (lvl > max) max = lvl;
-                    }
-                    for (int i = 1; i <= max; i++) list.Add(i);
-                }
+                mmr = first.MaintMarginRatio;
+                var max = brackets.First().Brackets.Max(b => b.InitialLeverage);
+                for (int i = 1; i <= max; i++) list.Add(i);
             }
-            catch { }
             return (list, mmr);
         }
 
@@ -319,31 +357,17 @@ namespace BinanceUsdtTicker
             if (_symbolFilters.TryGetValue(symbol, out var f))
                 return f;
 
-            var json = await SendAsync(HttpMethod.Get, $"/fapi/v1/exchangeInfo?symbol={symbol}");
+            var info = await GetExchangeInfoAsync();
             decimal tick = 0m;
             decimal step = 0m;
-
-            try
+            var sym = info.Symbols.FirstOrDefault(s => s.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase));
+            if (sym != null)
             {
-                using var doc = JsonDocument.Parse(json);
-                var sym = doc.RootElement.GetProperty("symbols").EnumerateArray().FirstOrDefault();
-                if (sym.ValueKind != JsonValueKind.Undefined && sym.TryGetProperty("filters", out var filters))
-                {
-                    foreach (var fl in filters.EnumerateArray())
-                    {
-                        var type = fl.GetProperty("filterType").GetString();
-                        if (type == "PRICE_FILTER")
-                        {
-                            decimal.TryParse(fl.GetProperty("tickSize").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out tick);
-                        }
-                        else if (type == "LOT_SIZE")
-                        {
-                            decimal.TryParse(fl.GetProperty("stepSize").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out step);
-                        }
-                    }
-                }
+                var price = sym.Filters.OfType<PriceFilter>().FirstOrDefault();
+                var lot = sym.Filters.OfType<LotSizeFilter>().FirstOrDefault();
+                if (price != null) tick = price.TickSize;
+                if (lot != null) step = lot.StepSize;
             }
-            catch { }
 
             var res = (tick, step);
             _symbolFilters[symbol] = res;
@@ -412,44 +436,32 @@ namespace BinanceUsdtTicker
             }
             catch { }
 
-            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/positionRisk");
+            var list = await GetPositionRiskV2Async(null);
             var positions = new List<FuturesPosition>();
 
-            try
+            foreach (var el in list)
             {
-                using var doc = JsonDocument.Parse(json);
-                foreach (var el in doc.RootElement.EnumerateArray())
+                var amt = el.PositionAmt;
+                if (amt != 0m)
                 {
-                    decimal.TryParse(el.GetProperty("positionAmt").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var amt);
-                    decimal.TryParse(el.GetProperty("entryPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var entry);
-                    decimal.TryParse(el.GetProperty("unRealizedProfit").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pnl);
-                    decimal.TryParse(el.GetProperty("markPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var mark);
-                    decimal.TryParse(el.GetProperty("liquidationPrice").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var liq);
-                    int.TryParse(el.GetProperty("leverage").GetString(), out var lev);
-                    var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
-                    var mt = el.GetProperty("marginType").GetString() ?? "cross";
+                    var sym = el.Symbol;
+                    var levEff = el.Leverage == 0 ? 1 : el.Leverage;
+                    var margin = wallets.TryGetValue(sym, out var wallet) ? Math.Abs(wallet) : 0m;
 
-                    if (amt != 0m)
+                    positions.Add(new FuturesPosition
                     {
-                        var levEff = lev == 0 ? 1 : lev;
-                        var margin = wallets.TryGetValue(sym, out var wallet) ? Math.Abs(wallet) : 0m;
-
-                        positions.Add(new FuturesPosition
-                        {
-                            Symbol = sym,
-                            PositionAmt = amt,
-                            EntryPrice = entry,
-                            UnrealizedPnl = pnl,
-                            MarkPrice = mark,
-                            LiquidationPrice = liq,
-                            Leverage = levEff,
-                            MarginType = mt,
-                            EntryAmount = margin
-                        });
-                    }
+                        Symbol = sym,
+                        PositionAmt = amt,
+                        EntryPrice = el.EntryPrice,
+                        UnrealizedPnl = el.UnrealizedPnl,
+                        MarkPrice = el.MarkPrice,
+                        LiquidationPrice = el.LiquidationPrice,
+                        Leverage = levEff,
+                        MarginType = el.MarginType,
+                        EntryAmount = margin
+                    });
                 }
             }
-            catch { }
 
             return positions;
         }

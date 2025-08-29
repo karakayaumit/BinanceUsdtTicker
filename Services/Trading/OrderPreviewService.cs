@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -80,10 +76,10 @@ namespace BinanceUsdtTicker.Trading
 
     public class OrderPreviewService
     {
-        private readonly BinanceFuturesRestClient _client;
+        private readonly BinanceApiService _client;
         private readonly SymbolMetaCache _cache = new();
 
-        public OrderPreviewService(BinanceFuturesRestClient client)
+        public OrderPreviewService(BinanceApiService client)
         {
             _client = client;
         }
@@ -124,7 +120,7 @@ namespace BinanceUsdtTicker.Trading
             }
             else
             {
-                var pr = await _client.GetPositionRiskAsync(symbol, ct);
+                var pr = await _client.GetPositionRiskV3Async(symbol, ct);
                 var isoWallet = pr.Sum(x => x.IsolatedWallet);
                 usable = isoWallet * r.WalletPercent;
                 existingAbsNotional = pr.Sum(x => Math.Abs(x.Notional));
@@ -219,83 +215,15 @@ namespace BinanceUsdtTicker.Trading
 
     #endregion
 
-    #region REST Client + Cache + DTOs
+    #region Cache
 
-    public class BinanceFuturesRestClient : BinanceRestClientBase
-    {
-        public BinanceFuturesRestClient(HttpClient http, string apiKey, string apiSecret) : base(http)
-        {
-            if (http.BaseAddress == null)
-                http.BaseAddress = new Uri("https://fapi.binance.com");
-            SetApiCredentials(apiKey, apiSecret);
-        }
-
-        public async Task<decimal> GetLastPriceAsync(string symbol, CancellationToken ct)
-        {
-            var s = await SendAsync(HttpMethod.Get, $"/fapi/v1/ticker/price?symbol={symbol}", ct);
-            using var d = JsonDocument.Parse(s);
-            return d.RootElement.GetProperty("price").GetDecimalString();
-        }
-
-        public async Task<decimal> GetMarkPriceAsync(string symbol, CancellationToken ct)
-        {
-            var s = await SendAsync(HttpMethod.Get, $"/fapi/v1/premiumIndex?symbol={symbol}", ct);
-            using var d = JsonDocument.Parse(s);
-            return d.RootElement.GetProperty("markPrice").GetDecimalString();
-        }
-
-        public async Task<AccountV3> GetAccountV3Async(CancellationToken ct)
-        {
-            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/account", null, ct);
-            return JsonSerializer.Deserialize<AccountV3>(s, JsonOptions) ?? new();
-        }
-
-        public async Task<List<PositionRisk>> GetPositionRiskAsync(string symbol, CancellationToken ct)
-        {
-            var qp = new Dictionary<string, string> { ["symbol"] = symbol };
-            var s = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/positionRisk", qp, ct);
-            return JsonSerializer.Deserialize<List<PositionRisk>>(s, JsonOptions) ?? new();
-        }
-
-        public async Task<decimal> GetAbsNotionalAsync(string symbol, CancellationToken ct)
-        {
-            var list = await GetPositionRiskAsync(symbol, ct);
-            return list.Sum(x => Math.Abs(x.Notional));
-        }
-
-        public async Task<ExchangeInfo> GetExchangeInfoAsync(CancellationToken ct)
-        {
-            var s = await SendAsync(HttpMethod.Get, "/fapi/v1/exchangeInfo", ct);
-            return JsonSerializer.Deserialize<ExchangeInfo>(s, JsonOptions) ?? new();
-        }
-
-        public async Task<List<LeverageBracket>> GetLeverageBracketsAsync(string symbol, CancellationToken ct)
-        {
-            var s = await SendSignedAsync(
-                HttpMethod.Get,
-                "/fapi/v1/leverageBracket",
-                new Dictionary<string, string> { ["symbol"] = symbol },
-                ct);
-            if (s.TrimStart().StartsWith("["))
-                return JsonSerializer.Deserialize<List<LeverageBracket>>(s, JsonOptions) ?? new();
-            var one = JsonSerializer.Deserialize<LeverageBracketSingle>(s, JsonOptions);
-            return one != null ? new List<LeverageBracket> { one } : new();
-        }
-
-        internal static readonly JsonSerializerOptions JsonOptions = new()
-        {
-            PropertyNameCaseInsensitive = true,
-            NumberHandling = JsonNumberHandling.AllowReadingFromString,
-            ReadCommentHandling = JsonCommentHandling.Skip
-        };
-    }
 
     internal sealed class SymbolMetaCache
     {
         private readonly Dictionary<string, SymbolMeta> _map = new(StringComparer.OrdinalIgnoreCase);
         private ExchangeInfo? _ex;
 
-        public async Task<SymbolMeta> GetOrLoadAsync(BinanceFuturesRestClient client, string symbol, CancellationToken ct)
+        public async Task<SymbolMeta> GetOrLoadAsync(BinanceApiService client, string symbol, CancellationToken ct)
         {
             if (_map.TryGetValue(symbol, out var ok)) return ok;
 
@@ -335,124 +263,4 @@ namespace BinanceUsdtTicker.Trading
         }
     }
 
-    public sealed class ExchangeInfo
-    {
-        public List<SymbolInfo> Symbols { get; set; } = new();
-    }
-
-    public sealed class SymbolInfo
-    {
-        public string Symbol { get; set; } = "";
-        public List<IFilter> Filters { get; set; } = new();
-
-        [JsonPropertyName("filters")]
-        public JsonElement RawFilters { get; set; }
-
-        [JsonConstructor]
-        public SymbolInfo() { }
-
-        [OnDeserialized]
-        public void OnDeserializedMethod(StreamingContext context)
-        {
-            if (RawFilters.ValueKind != JsonValueKind.Array) return;
-            foreach (var f in RawFilters.EnumerateArray())
-            {
-                var type = f.GetProperty("filterType").GetString();
-                switch (type)
-                {
-                    case "LOT_SIZE":
-                        Filters.Add(new LotSizeFilter
-                        {
-                            MinQty = f.TryGetDecimal("minQty"),
-                            StepSize = f.TryGetDecimal("stepSize")
-                        });
-                        break;
-                    case "MARKET_LOT_SIZE":
-                        Filters.Add(new MarketLotSizeFilter
-                        {
-                            MinQty = f.TryGetDecimal("minQty"),
-                            StepSize = f.TryGetDecimal("stepSize")
-                        });
-                        break;
-                    case "MIN_NOTIONAL":
-                        Filters.Add(new MinNotionalFilter
-                        {
-                            Notional = f.TryGetDecimal("notional")
-                        });
-                        break;
-                }
-            }
-        }
-    }
-
-    public interface IFilter { }
-    public sealed class LotSizeFilter : IFilter
-    {
-        public decimal MinQty { get; set; }
-        public decimal StepSize { get; set; }
-    }
-    public sealed class MarketLotSizeFilter : IFilter
-    {
-        public decimal MinQty { get; set; }
-        public decimal StepSize { get; set; }
-    }
-    public sealed class MinNotionalFilter : IFilter
-    {
-        public decimal Notional { get; set; }
-    }
-
-    public sealed class AccountV3
-    {
-        [JsonPropertyName("availableBalance")] public decimal AvailableBalance { get; set; }
-    }
-
-    public sealed class PositionRisk
-    {
-        public string Symbol { get; set; } = "";
-        [JsonPropertyName("positionSide")] public string PositionSideRaw { get; set; } = "";
-        [JsonPropertyName("positionAmt")] public decimal PositionAmt { get; set; }
-        [JsonPropertyName("entryPrice")] public decimal EntryPrice { get; set; }
-        [JsonPropertyName("markPrice")] public decimal MarkPrice { get; set; }
-        [JsonPropertyName("unRealizedProfit")] public decimal UnrealizedPnl { get; set; }
-        [JsonPropertyName("notional")] public decimal Notional { get; set; }
-        [JsonPropertyName("isolatedWallet")] public decimal IsolatedWallet { get; set; }
-    }
-
-    public sealed class LeverageBracketSingle : LeverageBracket
-    {
-    }
-
-    public class LeverageBracket
-    {
-        public string Symbol { get; set; } = "";
-        [JsonPropertyName("brackets")] public List<BracketRow> Brackets { get; set; } = new();
-    }
-
-    public sealed class BracketRow
-    {
-        [JsonPropertyName("initialLeverage")] public int InitialLeverage { get; set; }
-        [JsonPropertyName("notionalCap")] public decimal? NotionalCap { get; set; }
-        [JsonPropertyName("maxNotionalValue")] public decimal? MaxNotionalValue { get; set; }
-        [JsonPropertyName("maintMarginRatio")] public decimal MaintMarginRatio { get; set; }
-    }
-
-    #endregion
-
-    #region Json helpers
-    internal static class JsonExt
-    {
-        public static decimal GetDecimalString(this JsonElement el)
-        {
-            var s = el.GetString();
-            return decimal.Parse(s!, CultureInfo.InvariantCulture);
-        }
-
-        public static decimal TryGetDecimal(this JsonElement el, string prop)
-        {
-            if (!el.TryGetProperty(prop, out var p)) return 0m;
-            var s = p.GetString();
-            return string.IsNullOrWhiteSpace(s) ? 0m : decimal.Parse(s, CultureInfo.InvariantCulture);
-        }
-    }
-    #endregion
-}
+#endregion
