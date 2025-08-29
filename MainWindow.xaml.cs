@@ -377,6 +377,8 @@ namespace BinanceUsdtTicker
         {
             await LoadOpenPositionsAsync();
             await LoadOpenOrdersAsync();
+            await LoadOrderHistoryAsync();
+            await LoadTradeHistoryAsync();
         }
 
         private void UpdatePositionPnls()

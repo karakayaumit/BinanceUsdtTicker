@@ -414,10 +414,23 @@ namespace BinanceUsdtTicker
                     int.TryParse(el.GetProperty("leverage").GetString(), out var lev);
                     var sym = el.GetProperty("symbol").GetString() ?? string.Empty;
                     var mt = el.GetProperty("marginType").GetString() ?? "cross";
+
+                    // Some values like initial margin might be provided by the API. If available,
+                    // use it directly to match Binance's displayed entry amount; otherwise fall
+                    // back to a calculation using entry price, quantity and leverage.
+                    decimal initialMargin = 0m;
+                    if (el.TryGetProperty("positionInitialMargin", out var pim))
+                        decimal.TryParse(pim.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out initialMargin);
+                    else if (el.TryGetProperty("initialMargin", out var im))
+                        decimal.TryParse(im.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out initialMargin);
+
                     if (amt != 0m)
                     {
                         var levEff = lev == 0 ? 1 : lev;
-                        var margin = Math.Abs(entry * amt / levEff);
+                        var margin = initialMargin != 0m
+                            ? Math.Abs(initialMargin)
+                            : Math.Abs(entry * amt / levEff);
+
                         positions.Add(new FuturesPosition
                         {
                             Symbol = sym,
