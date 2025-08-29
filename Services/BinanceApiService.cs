@@ -370,7 +370,8 @@ namespace BinanceUsdtTicker
         public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
         {
             var filters = await GetSymbolFiltersAsync(symbol);
-            var adjQty = filters.StepSize > 0 ? Math.Floor(quantity / filters.StepSize) * filters.StepSize : quantity;
+            int qtyPrecision = GetPrecision(filters.StepSize);
+            var adjQty = filters.StepSize > 0 ? Math.Round(quantity, qtyPrecision, MidpointRounding.ToZero) : quantity;
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
@@ -380,7 +381,8 @@ namespace BinanceUsdtTicker
             };
             if (price.HasValue)
             {
-                var adjPrice = filters.TickSize > 0 ? Math.Floor(price.Value / filters.TickSize) * filters.TickSize : price.Value;
+                int pricePrecision = GetPrecision(filters.TickSize);
+                var adjPrice = filters.TickSize > 0 ? Math.Round(price.Value, pricePrecision, MidpointRounding.ToZero) : price.Value;
                 query["price"] = adjPrice.ToString(CultureInfo.InvariantCulture);
             }
             if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
@@ -391,6 +393,13 @@ namespace BinanceUsdtTicker
                 query["positionSide"] = positionSide.ToUpperInvariant();
 
             await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", query);
+        }
+
+        private static int GetPrecision(decimal step)
+        {
+            var s = step.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
+            var idx = s.IndexOf('.');
+            return idx >= 0 ? s.Length - idx - 1 : 0;
         }
 
         /// <summary>
