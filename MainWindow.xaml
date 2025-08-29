@@ -907,11 +907,19 @@
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
                                                                                 <GridViewColumn Header="x" Width="40" DisplayMemberBinding="{Binding Leverage}"/>
-                                                                                <GridViewColumn Header="Marjin" Width="70" DisplayMemberBinding="{Binding MarginType}"/>
-                                                                                <GridViewColumn Header="Kapat" Width="120">
+                                                                                <GridViewColumn Header="Marjin" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding InitialMargin, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Tip" Width="60" DisplayMemberBinding="{Binding MarginType}"/>
+                                                                                <GridViewColumn Header="Kapat" Width="180">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <StackPanel Orientation="Horizontal">
+                                                                                                                <TextBox Width="60" Margin="0,0,4,0" Text="{Binding CloseLimitPrice, UpdateSourceTrigger=PropertyChanged}"/>
                                                                                                                 <Button Content="Limit" Margin="0,0,4,0" Tag="{Binding}" Click="ClosePositionLimit_Click"/>
                                                                                                                 <Button Content="Market" Tag="{Binding}" Click="ClosePositionMarket_Click"/>
                                                                                                         </StackPanel>

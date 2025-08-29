@@ -1,5 +1,4 @@
 using Microsoft.Win32;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1507,6 +1506,7 @@ namespace BinanceUsdtTicker
         private async Task PlaceOrderAsync(bool isBuy)
         {
             var ticker = _selectedTicker;
+            await LoadWalletAsync();
             var usdt = _walletAssets.FirstOrDefault(a => a.Asset.Equals("USDT", StringComparison.OrdinalIgnoreCase));
             if (ticker == null || usdt == null) return;
 
@@ -1566,9 +1566,11 @@ namespace BinanceUsdtTicker
         {
             if (sender is Button btn && btn.Tag is FuturesPosition pos)
             {
-                var input = Interaction.InputBox("Limit fiyatı giriniz", "Limit Kapat", pos.EntryPrice.ToString(CultureInfo.InvariantCulture));
-                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var px) && px > 0m)
-                    await ClosePositionAsync(pos, px);
+                var px = pos.CloseLimitPrice;
+                if (px.HasValue && px.Value > 0m)
+                    await ClosePositionAsync(pos, px.Value);
+                else
+                    MessageBox.Show(this, "Lütfen geçerli bir limit fiyatı giriniz.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -1584,6 +1586,7 @@ namespace BinanceUsdtTicker
                 else
                     await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true);
 
+                pos.CloseLimitPrice = null;
                 await RefreshTradingDataAsync();
             }
             catch (Exception ex)
