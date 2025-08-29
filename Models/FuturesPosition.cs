@@ -20,6 +20,7 @@ namespace BinanceUsdtTicker.Models
                 _positionAmt = value;
                 OnPropertyChanged(nameof(PositionAmt));
                 OnPropertyChanged(nameof(PositionSize));
+                OnPropertyChanged(nameof(SideBrush));
             }
         }
         public decimal EntryPrice { get; set; }
@@ -116,6 +117,12 @@ namespace BinanceUsdtTicker.Models
 
         public Brush PnlBrush =>
             _unrealizedPnl >= 0m ? Brushes.ForestGreen : Brushes.Red;
+
+        /// <summary>
+        /// Pozisyon yönüne göre sembol rengi.
+        /// </summary>
+        public Brush SideBrush =>
+            _positionAmt >= 0m ? Brushes.Green : Brushes.Red;
 
         public string BaseSymbol =>
             Symbol.EndsWith("USDT", StringComparison.OrdinalIgnoreCase)

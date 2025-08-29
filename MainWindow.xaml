@@ -876,7 +876,7 @@
                                                                                 <GridViewColumn Header="Sembol" Width="90">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock>
+                                                                                                        <TextBlock Foreground="{Binding SideBrush}">
                                                                                                                 <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
                                                                                                                 <Run Text="/USDT" Foreground="Gray"/>
                                                                                                         </TextBlock>
