@@ -1541,7 +1541,14 @@ namespace BinanceUsdtTicker
             {
                 await _api.SetMarginTypeAsync(symbol, margin);
                 await _api.SetLeverageAsync(symbol, leverage);
-                await _api.PlaceOrderAsync(symbol, side, isLimit ? "LIMIT" : "MARKET", qty, isLimit ? price : (decimal?)null);
+                await _api.PlaceOrderAsync(
+                    symbol,
+                    side,
+                    isLimit ? "LIMIT" : "MARKET",
+                    qty,
+                    isLimit ? price : (decimal?)null,
+                    false,
+                    isBuy ? "LONG" : "SHORT");
                 await RefreshTradingDataAsync();
             }
             catch (Exception ex)
@@ -1573,10 +1580,11 @@ namespace BinanceUsdtTicker
             if (qty <= 0m) return;
             try
             {
+                var posSide = pos.PositionAmt > 0 ? "LONG" : "SHORT";
                 if (limitPrice.HasValue)
-                    await _api.PlaceOrderAsync(pos.Symbol, side, "LIMIT", qty, limitPrice.Value, true);
+                    await _api.PlaceOrderAsync(pos.Symbol, side, "LIMIT", qty, limitPrice.Value, true, posSide);
                 else
-                    await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true);
+                    await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true, posSide);
 
                 await RefreshTradingDataAsync();
             }
