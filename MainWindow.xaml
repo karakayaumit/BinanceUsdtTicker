@@ -69,6 +69,7 @@
                         <Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
                         <Setter Property="BorderThickness" Value="0,0,1,1"/>
                         <Setter Property="FontWeight"  Value="SemiBold"/>
+                        <Setter Property="FontFamily" Value="Segoe UI Symbol, Segoe UI Emoji"/>
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                         <Setter Property="Padding" Value="6,3"/>
                         <Style.Triggers>
@@ -414,6 +415,7 @@
                       CanUserSortColumns="True"
                       CanUserReorderColumns="True"
                       HeadersVisibility="Column"
+                      materialDesign:DataGridAssist.ColumnHeaderHeight="32"
                       GridLinesVisibility="None"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0"
                       SelectionChanged="Grid_SelectionChanged">
@@ -479,7 +481,7 @@
                                               IsChecked="{Binding IsFavorite, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               Click="FavoriteToggle_Click"
                                               Cursor="Hand">
-									<TextBlock x:Name="StarIcon" Text="☆" FontSize="16" Foreground="#AAAAAA"/>
+                                                                        <TextBlock x:Name="StarIcon" Text="☆" FontSize="16" Foreground="#AAAAAA" FontFamily="Segoe UI Symbol, Segoe UI Emoji"/>
 								</ToggleButton>
 								<DataTemplate.Triggers>
 									<DataTrigger Binding="{Binding IsFavorite}" Value="True">
@@ -499,7 +501,7 @@
                                                         <DataTemplate>
                                                                 <Button Style="{StaticResource ChartButtonStyle}"
                                             Click="ChartButton_Click" Cursor="Hand">
-                                                                        <TextBlock Text="📈" FontSize="16" Foreground="{DynamicResource SelectionBg}"/>
+                                                                        <TextBlock Text="📈" FontSize="16" Foreground="{DynamicResource SelectionBg}" FontFamily="Segoe UI Emoji, Segoe UI Symbol"/>
                                                                 </Button>
                                                         </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
