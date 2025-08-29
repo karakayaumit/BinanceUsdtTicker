@@ -329,7 +329,7 @@ namespace BinanceUsdtTicker
             catch { }
         }
 
-        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false)
+        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
         {
             var query = new Dictionary<string, string>
             {
@@ -344,6 +344,8 @@ namespace BinanceUsdtTicker
                 query["timeInForce"] = "GTC";
             if (reduceOnly)
                 query["reduceOnly"] = "true";
+            if (!string.IsNullOrEmpty(positionSide))
+                query["positionSide"] = positionSide.ToUpperInvariant();
 
             await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", query);
         }
