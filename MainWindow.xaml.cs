@@ -385,7 +385,8 @@ namespace BinanceUsdtTicker
             {
                 if (_rowBySymbol.TryGetValue(pos.Symbol, out var row))
                 {
-                    pos.UnrealizedPnl = (row.Price - pos.EntryPrice) * pos.PositionAmt;
+                    pos.MarkPrice = row.Price;
+                    pos.UnrealizedPnl = (pos.MarkPrice - pos.EntryPrice) * pos.PositionAmt;
                 }
             }
         }

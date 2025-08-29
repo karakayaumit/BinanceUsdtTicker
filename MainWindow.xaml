@@ -897,12 +897,23 @@
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="PNL" Width="80">
+                                                                                <GridViewColumn Header="Mark/Liq" Width="140">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}"
-                                                       TextAlignment="Right"
-                                                       Foreground="{Binding PnlBrush}"/>
+                                                                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                                                                <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}"/>
+                                                                                                                <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" Margin="4,0,0,0"/>
+                                                                                                        </StackPanel>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="PNL" Width="120">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                                                                <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" Foreground="{Binding PnlBrush}"/>
+                                                                                                                <TextBlock Text="{Binding RoiPercent, StringFormat={}{0:#,0.##}%}" Foreground="{Binding PnlBrush}" Margin="4,0,0,0"/>
+                                                                                                        </StackPanel>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
