@@ -398,7 +398,7 @@ namespace BinanceUsdtTicker
         /// </summary>
         public async Task<IList<FuturesPosition>> GetOpenPositionsAsync()
         {
-            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v3/positionRisk");
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/positionRisk");
             var positions = new List<FuturesPosition>();
 
             try
