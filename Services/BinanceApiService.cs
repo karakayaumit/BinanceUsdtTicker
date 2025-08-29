@@ -331,7 +331,7 @@ namespace BinanceUsdtTicker
             catch { }
         }
 
-        private async Task<(decimal TickSize, decimal StepSize)> GetSymbolFiltersAsync(string symbol)
+        public async Task<(decimal TickSize, decimal StepSize)> GetSymbolFiltersAsync(string symbol)
         {
             if (_symbolFilters.TryGetValue(symbol, out var f))
                 return f;
