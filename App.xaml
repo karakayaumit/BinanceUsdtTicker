@@ -5,11 +5,15 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<!-- Styles first (uses DynamicResource), then default theme -->
+                                <!-- MahApps.Metro styles -->
+                                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+                                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.DataGrid.xaml"/>
+
+                                <!-- Styles first (uses DynamicResource), then default theme -->
                                 <ResourceDictionary Source="Themes/Styles.Toolbar.xaml"/>
                                 <ResourceDictionary Source="Themes/Styles.Base.xaml"/>
                                 <ResourceDictionary Source="Themes/Light.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</Application.Resources>
+                        </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+        </Application.Resources>
 </Application>
