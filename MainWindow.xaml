@@ -870,7 +870,7 @@
                                 <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
                                         <TabControl Margin="0,6,0,0">
                                                 <TabItem Header="Açık Pozisyonlar">
-                                                        <ListView x:Name="PositionsList">
+                                                        <ListView x:Name="PositionsList" HorizontalContentAlignment="Stretch">
                                                                 <ListView.View>
                                                                         <GridView>
                                                                                 <GridViewColumn Header="Sembol" Width="90">
@@ -897,13 +897,17 @@
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Mark/Liq" Width="140">
+                                                                                <GridViewColumn Header="Mark" Width="80">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                                                                                <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}"/>
-                                                                                                                <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" Margin="4,0,0,0"/>
-                                                                                                        </StackPanel>
+                                                                                                        <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Liq" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
