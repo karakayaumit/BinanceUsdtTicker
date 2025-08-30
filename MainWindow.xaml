@@ -402,7 +402,7 @@
                                 <!-- Futures panel expanded for better usability -->
                                 <ColumnDefinition Width="300"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="260"/>
                                 <ColumnDefinition Width="260"/>
                         </Grid.ColumnDefinitions>
 
@@ -707,6 +707,28 @@
                                 </StackPanel>
                         </GroupBox>
 
+                        <!-- NEWS -->
+                        <GroupBox Grid.Row="0" Grid.Column="2" Header="News" Margin="0,0,8,0"
+                                  Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                  VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
+                            <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
+                                      Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
+                                        <GridViewColumn Header="Zaman" Width="120" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" />
+                                        <GridViewColumn Header="Başlık" Width="200">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </GroupBox>
+
                         <!-- TOP MOVERS -->
                         <TabControl Grid.Row="0" Grid.Column="3" Margin="0,0,8,0">
                             <TabItem Header="Top Movers">
@@ -835,25 +857,6 @@
                                                 </ListView.View>
                                         </ListView>
                                 </Grid>
-                                </Border>
-                            </TabItem>
-                            <TabItem Header="News">
-                                <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
-                                    <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
-                                                <GridViewColumn Header="Zaman" Width="120" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" />
-                                                <GridViewColumn Header="Başlık" Width="200">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
                                 </Border>
                             </TabItem>
                         </TabControl>
