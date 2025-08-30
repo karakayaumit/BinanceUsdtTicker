@@ -29,8 +29,7 @@ public partial class App : Application
         _newsHub = new FreeNewsHubService(new FreeNewsOptions
         {
             PollInterval = TimeSpan.FromSeconds(5),
-            CryptoPanicToken = string.Empty,
-            RssBaseUrl = "http://localhost:5000"
+            CryptoPanicToken = string.Empty
         });
         _newsHub.NewsReceived += OnNewsReceived;
         await _newsHub.StartAsync();
