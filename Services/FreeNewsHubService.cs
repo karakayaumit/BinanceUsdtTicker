@@ -86,7 +86,9 @@ namespace BinanceUsdtTicker
             try
             {
                 var html = await _httpClient.GetStringAsync("https://announcements.bybit.com/en-US/?category=new-listing");
-                var rx = new Regex("<a[^>]+href=\"(?<link>/en-US/article/[^"]+)\"[^>]*>(?<title>[^<]+)</a>.*?<time[^>]+datetime=\"(?<time>[^"]+)\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                var rx = new Regex(
+                    @"<a[^>]+href=""(?<link>/en-US/article/[^""]+)""[^>]*>(?<title>[^<]+)</a>.*?<time[^>]+datetime=""(?<time>[^""]+)""",
+                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 foreach (Match m in rx.Matches(html))
                 {
                     var link = "https://announcements.bybit.com" + m.Groups["link"].Value;
@@ -108,7 +110,9 @@ namespace BinanceUsdtTicker
             try
             {
                 var html = await _httpClient.GetStringAsync("https://www.kucoin.com/news/categories/listing");
-                var rx = new Regex("<a[^>]+href=\"(?<link>/news/[^"]+)\"[^>]*>(?<title>[^<]+)</a>.*?<time[^>]*>(?<time>[^<]+)</time>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                var rx = new Regex(
+                    @"<a[^>]+href=""(?<link>/news/[^""]+)""[^>]*>(?<title>[^<]+)</a>.*?<time[^>]*>(?<time>[^<]+)</time>",
+                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 foreach (Match m in rx.Matches(html))
                 {
                     var link = "https://www.kucoin.com" + m.Groups["link"].Value;
@@ -130,7 +134,9 @@ namespace BinanceUsdtTicker
             try
             {
                 var html = await _httpClient.GetStringAsync("https://www.okx.com/announcements/category/listing");
-                var rx = new Regex("<a[^>]+href=\"(?<link>[^"]+)\"[^>]*class=\"[^\"]*announcement-item[^\"]*\"[^>]*>\\s*<div[^>]*class=\"[^\"]*title[^\"]*\">(?<title>[^<]+)</div>\\s*<div[^>]*class=\"[^\"]*time[^\"]*\">(?<time>[^<]+)</div>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                var rx = new Regex(
+                    @"<a[^>]+href=""(?<link>[^""]+)""[^>]*class=""[^""]*announcement-item[^""]*""[^>]*>\s*<div[^>]*class=""[^""]*title[^""]*"">(?<title>[^<]+)</div>\s*<div[^>]*class=""[^""]*time[^""]*"">(?<time>[^<]+)</div>",
+                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 foreach (Match m in rx.Matches(html))
                 {
                     var link = "https://www.okx.com" + m.Groups["link"].Value;
