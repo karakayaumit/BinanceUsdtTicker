@@ -717,6 +717,11 @@
                                 <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged">
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                                <Setter Property="VerticalContentAlignment" Value="Top" />
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
                                         <ListView.View>
                                             <GridView>
                                                 <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
