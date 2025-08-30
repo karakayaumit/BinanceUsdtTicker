@@ -52,9 +52,9 @@ namespace BinanceUsdtTicker
                             NewsReceived?.Invoke(this, item);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // ignore
+                    Console.Error.WriteLine($"Error while fetching news: {ex}");
                 }
 
                 try
@@ -102,7 +102,10 @@ namespace BinanceUsdtTicker
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Bybit fetch error: {ex}");
+            }
             return list;
         }
 
@@ -126,7 +129,10 @@ namespace BinanceUsdtTicker
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"KuCoin fetch error: {ex}");
+            }
             return list;
         }
 
@@ -150,7 +156,10 @@ namespace BinanceUsdtTicker
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"OKX fetch error: {ex}");
+            }
             return list;
         }
 
@@ -175,7 +184,10 @@ namespace BinanceUsdtTicker
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"CryptoPanic fetch error: {ex}");
+            }
             return list;
         }
 
