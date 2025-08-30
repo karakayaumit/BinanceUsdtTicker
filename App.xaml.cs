@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace BinanceUsdtTicker;
 
@@ -7,9 +9,14 @@ public partial class App : Application
 {
     private FreeNewsHubService? _newsHub;
 
-    protected override async void OnStartup(StartupEventArgs e)
+    protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        Dispatcher.InvokeAsync(StartNewsHubAsync, DispatcherPriority.ApplicationIdle);
+    }
+
+    private async Task StartNewsHubAsync()
+    {
         _newsHub = new FreeNewsHubService(new FreeNewsOptions
         {
             PollInterval = TimeSpan.FromSeconds(5),
