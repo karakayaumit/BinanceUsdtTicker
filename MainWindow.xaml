@@ -710,8 +710,8 @@
                         <!-- TOP MOVERS -->
                         <TabControl Grid.Row="0" Grid.Column="3" Margin="0,0,8,0">
                             <TabItem Header="Top Movers">
-                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
-                                <Grid>
+                                <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
+                                    <Grid>
                                         <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
