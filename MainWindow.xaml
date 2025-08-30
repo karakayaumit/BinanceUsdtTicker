@@ -65,7 +65,7 @@
                 <!-- DataGrid başlığı -->
                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                         <Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
-                        <Setter Property="Foreground"  Value="{DynamicResource HeaderFg}"/>
+                        <Setter Property="Foreground"  Value="Black"/>
                         <Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
                         <Setter Property="BorderThickness" Value="0,0,1,1"/>
                         <Setter Property="FontWeight"  Value="SemiBold"/>
@@ -84,9 +84,9 @@
 
 		<!-- GridView başlığı -->
 		<Style TargetType="{x:Type GridViewColumnHeader}">
-			<Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
-			<Setter Property="Foreground"  Value="{DynamicResource HeaderFg}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
+                        <Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
+                        <Setter Property="Foreground"  Value="Black"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
 			<Setter Property="BorderThickness" Value="0,0,1,1"/>
 			<Setter Property="FontWeight"  Value="SemiBold"/>
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
