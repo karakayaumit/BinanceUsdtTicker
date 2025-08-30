@@ -406,10 +406,12 @@
                                 <ColumnDefinition Width="260"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- FİYAT TABLOSU -->
-                        <DataGrid x:Name="Grid"
+                        <!-- COIN TABLOSU -->
+                        <GroupBox Grid.Row="0" Grid.Column="1" Header="Coin" Margin="0,0,8,0"
+                                  Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                  BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch">
+                                <DataGrid x:Name="Grid"
                       Style="{DynamicResource MaterialDesignDataGrid}"
-                      Grid.Row="0" Grid.Column="1"
                       AutoGenerateColumns="False"
                       EnableRowVirtualization="True"
                       IsReadOnly="True"
@@ -417,7 +419,7 @@
                       CanUserReorderColumns="True"
                       HeadersVisibility="Column"
                       GridLinesVisibility="None"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       SelectionChanged="Grid_SelectionChanged">
 
                                 <DataGrid.ColumnHeaderStyle>
@@ -624,12 +626,13 @@
                                         Width="0.8*" MinWidth="80"
                                         Binding="{Binding LastUpdateLocal}"/>
 				</DataGrid.Columns>
-			</DataGrid>
+                                  </DataGrid>
+                        </GroupBox>
 
                         <!-- FUTURES INFO -->
-                        <GroupBox Grid.Row="0" Grid.Column="0" Header="Futures" Margin="0,0,8,0"
-                      Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                      VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
+                        <GroupBox Grid.Row="0" Grid.Column="0" Header="Future" Margin="0,0,8,0"
+                        Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                        VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
                                 <StackPanel Margin="4">
                                         <TextBlock x:Name="FuturesSymbolText" FontWeight="Bold" Margin="0,0,0,8"/>
                                         <Grid Margin="0,0,0,8">
@@ -707,14 +710,13 @@
                                 </StackPanel>
                         </GroupBox>
 
-                        <!-- NEWS & TOP MOVERS -->
-                        <TabControl Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,8,0">
-                            <TabItem Header="News">
-                                <Border Background="{DynamicResource SurfaceAlt}"
-                                        BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
-                                    <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                              Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged">
+                        <!-- NEWS -->
+                        <GroupBox Grid.Row="0" Grid.Column="2" Header="News" Margin="0,0,8,0"
+                                  Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                  BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch">
+                                <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged">
                                         <ListView.View>
                                             <GridView>
                                                 <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
@@ -728,12 +730,14 @@
                                                 </GridViewColumn>
                                             </GridView>
                                         </ListView.View>
-                                    </ListView>
-                                </Border>
-                            </TabItem>
-                            <TabItem Header="Top Movers">
-                                <Border Background="{DynamicResource SurfaceAlt}" TextElement.Foreground="{DynamicResource OnSurface}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
-                                    <Grid>
+                                </ListView>
+                        </GroupBox>
+
+                        <!-- TOP MOVERS -->
+                        <GroupBox Grid.Row="0" Grid.Column="3" Header="Top Movers"
+                                  Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                  BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch">
+                                <Grid>
                                         <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
@@ -857,9 +861,7 @@
                                                 </ListView.View>
                                         </ListView>
                                 </Grid>
-                                </Border>
-                            </TabItem>
-                        </TabControl>
+                        </GroupBox>
 
                         <!-- ALARM VE CÜZDAN -->
                         <Grid Grid.Row="1" Grid.ColumnSpan="4">
