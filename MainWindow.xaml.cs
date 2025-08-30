@@ -184,22 +184,13 @@ namespace BinanceUsdtTicker
 
         public void AddNewsItem(NewsItem item)
         {
-            // Sadece coin listesinde yer alan sembolleri göster
-            var validSymbols = item.Symbols.Where(s => _rowBySymbol.ContainsKey(s)).ToList();
-            if (validSymbols.Count == 0)
-                return;
-
-            // Semboller filtrelenmişse, haberi yeni liste ile oluştur
-            if (validSymbols.Count != item.Symbols.Count)
-            {
-                item = new NewsItem(item.Id, item.Source, item.Timestamp, item.Title, item.Body, item.Link, item.Type, validSymbols);
-            }
-
             Dispatcher.Invoke(() =>
             {
                 if (_newsItems.Any(n => n.Id == item.Id))
                     return;
+
                 _newsItems.Insert(0, item);
+
                 if (_newsItems.Count > 100)
                     _newsItems.RemoveAt(_newsItems.Count - 1);
             });
