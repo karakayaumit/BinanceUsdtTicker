@@ -184,6 +184,9 @@ namespace BinanceUsdtTicker
 
         public void AddNewsItem(NewsItem item)
         {
+            if (item.Symbols.Count == 0)
+                return;
+
             Dispatcher.Invoke(() =>
             {
                 if (_newsItems.Any(n => n.Id == item.Id))
