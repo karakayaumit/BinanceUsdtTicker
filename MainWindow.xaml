@@ -7,7 +7,7 @@
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
         Background="{DynamicResource Surface}"
-        Foreground="{DynamicResource OnSurface}">
+       >
 
 	<!-- ========== RESOURCES ========== -->
         <Window.Resources>
@@ -710,10 +710,10 @@
                         <!-- NEWS & TOP MOVERS -->
                         <TabControl Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,8,0">
                             <TabItem Header="News">
-                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                <Border Background="{DynamicResource SurfaceAlt}"
                                         BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
-                                    <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
-                                              Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                                               Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged">
                                         <ListView.View>
                                             <GridView>
@@ -732,7 +732,7 @@
                                 </Border>
                             </TabItem>
                             <TabItem Header="Top Movers">
-                                <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
+                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
@@ -1109,7 +1109,7 @@
                                 <Expander Grid.Column="2" IsExpanded="True" Padding="6,4">
                                         <Expander.Header>
                                                 <DockPanel LastChildFill="False">
-                                                        <TextBlock Foreground="{DynamicResource OnSurface}"
+                                                        <TextBlock
                                    Text="{Binding ElementName=AlertList, Path=Items.Count, StringFormat=Alarm Geçmişi ({0})}"
                                    FontWeight="Bold" VerticalAlignment="Center"/>
                                                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
