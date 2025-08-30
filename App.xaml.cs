@@ -27,7 +27,10 @@ public partial class App : Application
     {
         await UpdateUsdtSymbolsFileAsync();
 
-        var settings = MainWindow.LoadDefaultUiSettings();
+        // Use the fully qualified type name to avoid resolving to the
+        // Application.MainWindow property which is of type Window and
+        // does not expose LoadDefaultUiSettings().
+        var settings = global::BinanceUsdtTicker.MainWindow.LoadDefaultUiSettings();
         _newsOptions.PollInterval = TimeSpan.FromSeconds(5);
         _newsOptions.CryptoPanicToken = string.Empty;
         _newsOptions.RssBaseUrl = settings.BaseUrl;
