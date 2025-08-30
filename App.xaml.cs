@@ -21,8 +21,19 @@ public partial class App : Application
 
     private void OnNewsReceived(object? sender, NewsItem item)
     {
-        if (Current.MainWindow is MainWindow mw)
-            mw.AddNewsItem(item);
+        if (Current.Dispatcher.CheckAccess())
+        {
+            if (Current.MainWindow is MainWindow mw)
+                mw.AddNewsItem(item);
+        }
+        else
+        {
+            _ = Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (Current.MainWindow is MainWindow mw)
+                    mw.AddNewsItem(item);
+            });
+        }
     }
 
     protected override async void OnExit(ExitEventArgs e)
