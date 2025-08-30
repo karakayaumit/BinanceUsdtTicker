@@ -135,16 +135,18 @@ namespace BinanceUsdtTicker
             var list = new List<NewsItem>();
             try
             {
-                var html = await _httpClient.GetStringAsync("https://www.kucoin.com/news/categories/listing");
-                var rx = new Regex(
-                    @"<a[^>]+href=""(?<link>/news/[^""]+)""[^>]*>(?<title>[^<]+)</a>.*?<time[^>]*>(?<time>[^<]+)</time>",
-                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                foreach (Match m in rx.Matches(html))
+                var url = "https://api.kucoin.com/api/v3/announcements?annType=new-listings&lang=en_US&pageSize=20&currentPage=1";
+                var json = await _httpClient.GetStringAsync(url);
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("data", out var data) &&
+                    data.TryGetProperty("items", out var items))
                 {
-                    var link = "https://www.kucoin.com" + m.Groups["link"].Value;
-                    var title = HtmlDecode(m.Groups["title"].Value.Trim());
-                    if (DateTime.TryParse(m.Groups["time"].Value, out var ts))
+                    foreach (var it in items.EnumerateArray())
                     {
+                        var link = it.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() ?? string.Empty : string.Empty;
+                        var title = HtmlDecode(it.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? string.Empty : string.Empty);
+                        var tsMs = it.TryGetProperty("cTime", out var pTime) ? pTime.GetInt64() : 0L;
+                        var ts = tsMs > 0 ? DateTimeOffset.FromUnixTimeMilliseconds(tsMs).UtcDateTime : DateTime.UtcNow;
                         var type = Classify(title);
                         list.Add(new NewsItem(id: $"kucoin::{link}", source: "kucoin", timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
                     }
