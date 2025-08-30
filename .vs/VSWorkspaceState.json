@@ -1,13 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bin",
-    "\\bin\\Debug",
-    "\\bin\\Release",
-    "\\bin\\Release\\net8.0-windows",
-    "\\Models",
+    "\\Converters",
+    "\\Services\\Trading",
+    "\\Themes",
+    "\\ViewModels",
+    "\\ViewModels\\Trading",
+    "\\Views",
+    "\\Views\\Trading",
     "\\Windows"
   ],
-  "SelectedNode": "\\Enums.cs",
+  "SelectedNode": "\\Windows",
   "PreviewInSolutionExplorer": false
 }
