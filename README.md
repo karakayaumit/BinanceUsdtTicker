@@ -10,5 +10,23 @@ Bu uygulama, Binance **USDT futures** borsasındaki aktif paritelerin anlık fiy
 1. **.NET 8 SDK** kurulu olmalı.  
 2. Repo’yu klonla veya indir:  
    ```bash
-   git clone https://github.com/<kullanici-adi>/BinanceUsdtTicker.git
-   cd BinanceUsdtTicker
+    git clone https://github.com/<kullanici-adi>/BinanceUsdtTicker.git
+    cd BinanceUsdtTicker
+   ```
+
+## RSS New Listings Feeds
+
+This repository includes a minimal API script (`KuCoinNewListingsRss.cs`) that aggregates
+new listing announcements from multiple exchanges and exposes them as RSS feeds.
+
+Run the script with the .NET CLI:
+
+```bash
+dotnet run KuCoinNewListingsRss.cs
+```
+
+Then access the feeds:
+
+- http://localhost:5000/rss/kucoin-new
+- http://localhost:5000/rss/bybit-new
+- http://localhost:5000/rss/okx-new
