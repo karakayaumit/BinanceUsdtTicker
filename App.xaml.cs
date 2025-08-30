@@ -15,8 +15,8 @@ public partial class App : Application
             PollInterval = TimeSpan.FromSeconds(5),
             CryptoPanicToken = string.Empty
         });
-        await _newsHub.StartAsync();
         _newsHub.NewsReceived += OnNewsReceived;
+        await _newsHub.StartAsync();
     }
 
     private void OnNewsReceived(object? sender, NewsItem item)
