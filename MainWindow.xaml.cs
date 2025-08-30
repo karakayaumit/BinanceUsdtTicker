@@ -290,7 +290,7 @@ namespace BinanceUsdtTicker
             ApplyCustomColors();
         }
 
-        private async void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var win = new SettingsWindow(_ui) { Owner = this };
             if (win.ShowDialog() == true)
