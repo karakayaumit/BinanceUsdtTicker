@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BinanceUsdtTicker
 {
@@ -40,9 +40,10 @@ namespace BinanceUsdtTicker
                 try
                 {
                     var items = new List<NewsItem>();
-                    items.AddRange(await FetchBybitAsync());
-                    items.AddRange(await FetchKuCoinAsync());
-                    items.AddRange(await FetchOkxAsync());
+                    var baseUrl = _options.RssBaseUrl.TrimEnd('/');
+                    items.AddRange(await FetchRssAsync($"{baseUrl}/rss/bybit-new", "bybit"));
+                    items.AddRange(await FetchRssAsync($"{baseUrl}/rss/kucoin-new", "kucoin"));
+                    items.AddRange(await FetchRssAsync($"{baseUrl}/rss/okx-new", "okx"));
                     if (!string.IsNullOrEmpty(_options.CryptoPanicToken))
                         items.AddRange(await FetchCryptoPanicAsync(_options.CryptoPanicToken));
 
@@ -82,106 +83,28 @@ namespace BinanceUsdtTicker
             _httpClient.Dispose();
         }
 
-        private async Task<IList<NewsItem>> FetchBybitAsync()
+        private async Task<IList<NewsItem>> FetchRssAsync(string url, string source)
         {
             var list = new List<NewsItem>();
             try
             {
-                var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&type=new_crypto&limit=20";
-                var json = await _httpClient.GetStringAsync(url);
-                using var doc = JsonDocument.Parse(json);
-                if (doc.RootElement.TryGetProperty("result", out var result) &&
-                    result.TryGetProperty("list", out var arr))
+                using var stream = await _httpClient.GetStreamAsync(url);
+                var doc = XDocument.Load(stream);
+                foreach (var item in doc.Descendants("item"))
                 {
-                    foreach (var el in arr.EnumerateArray())
-                    {
-                        var link = el.GetProperty("url").GetString() ?? string.Empty;
-                        var title = HtmlDecode(el.GetProperty("title").GetString() ?? string.Empty);
-
-                        long tsMillis = 0;
-                        if (el.TryGetProperty("publishTime", out var publishTime))
-                        {
-                            if (publishTime.ValueKind == JsonValueKind.Number)
-                                tsMillis = publishTime.GetInt64();
-                            else if (publishTime.ValueKind == JsonValueKind.String && long.TryParse(publishTime.GetString(), out var v))
-                                tsMillis = v;
-                        }
-                        else if (el.TryGetProperty("dateTimestamp", out var dateTimestamp))
-                        {
-                            if (dateTimestamp.ValueKind == JsonValueKind.Number)
-                                tsMillis = dateTimestamp.GetInt64();
-                            else if (dateTimestamp.ValueKind == JsonValueKind.String && long.TryParse(dateTimestamp.GetString(), out var v))
-                                tsMillis = v;
-                        }
-
-                        var ts = tsMillis > 0
-                            ? DateTimeOffset.FromUnixTimeMilliseconds(tsMillis).UtcDateTime
-                            : DateTime.UtcNow;
-
-                        var type = Classify(title);
-                        list.Add(new NewsItem(id: $"bybit::{link}", source: "bybit", timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
-                    }
+                    var link = item.Element("link")?.Value ?? string.Empty;
+                    var title = HtmlDecode(item.Element("title")?.Value ?? string.Empty);
+                    var pubDate = item.Element("pubDate")?.Value;
+                    var ts = DateTime.UtcNow;
+                    if (DateTime.TryParse(pubDate, out var dt))
+                        ts = dt.ToUniversalTime();
+                    var type = Classify(title);
+                    list.Add(new NewsItem(id: $"{source}::{link}", source: source, timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Bybit fetch error: {ex}");
-            }
-            return list;
-        }
-
-        private async Task<IList<NewsItem>> FetchKuCoinAsync()
-        {
-            var list = new List<NewsItem>();
-            try
-            {
-                var url = "https://api.kucoin.com/api/v3/announcements?annType=new-listings&lang=en_US&pageSize=20&currentPage=1";
-                var json = await _httpClient.GetStringAsync(url);
-                using var doc = JsonDocument.Parse(json);
-                if (doc.RootElement.TryGetProperty("data", out var data) &&
-                    data.TryGetProperty("items", out var items))
-                {
-                    foreach (var it in items.EnumerateArray())
-                    {
-                        var link = it.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() ?? string.Empty : string.Empty;
-                        var title = HtmlDecode(it.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? string.Empty : string.Empty);
-                        var tsMs = it.TryGetProperty("cTime", out var pTime) ? pTime.GetInt64() : 0L;
-                        var ts = tsMs > 0 ? DateTimeOffset.FromUnixTimeMilliseconds(tsMs).UtcDateTime : DateTime.UtcNow;
-                        var type = Classify(title);
-                        list.Add(new NewsItem(id: $"kucoin::{link}", source: "kucoin", timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"KuCoin fetch error: {ex}");
-            }
-            return list;
-        }
-
-        private async Task<IList<NewsItem>> FetchOkxAsync()
-        {
-            var list = new List<NewsItem>();
-            try
-            {
-                var html = await _httpClient.GetStringAsync("https://www.okx.com/announcements/category/listing");
-                var rx = new Regex(
-                    @"<a[^>]+href=""(?<link>[^""]+)""[^>]*class=""[^""]*announcement-item[^""]*""[^>]*>\s*<div[^>]*class=""[^""]*title[^""]*"">(?<title>[^<]+)</div>\s*<div[^>]*class=""[^""]*time[^""]*"">(?<time>[^<]+)</div>",
-                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                foreach (Match m in rx.Matches(html))
-                {
-                    var link = "https://www.okx.com" + m.Groups["link"].Value;
-                    var title = HtmlDecode(m.Groups["title"].Value.Trim());
-                    if (DateTime.TryParse(m.Groups["time"].Value, out var ts))
-                    {
-                        var type = Classify(title);
-                        list.Add(new NewsItem(id: $"okx::{link}", source: "okx", timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"OKX fetch error: {ex}");
+                Console.Error.WriteLine($"{source} RSS fetch error: {ex}");
             }
             return list;
         }
