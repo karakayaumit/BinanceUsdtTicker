@@ -19,7 +19,6 @@ using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
-using BinanceUsdtTicker.Services;
 
 namespace BinanceUsdtTicker
 {
