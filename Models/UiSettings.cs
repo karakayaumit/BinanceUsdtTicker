@@ -95,7 +95,9 @@ namespace BinanceUsdtTicker.Models
             set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
         }
 
-        private string _baseUrl = "http://localhost:5000";
+        // Base address for optional news feeds.
+        // When left empty, the application skips querying the service.
+        private string _baseUrl = string.Empty;
         public string BaseUrl
         {
             get => _baseUrl;
