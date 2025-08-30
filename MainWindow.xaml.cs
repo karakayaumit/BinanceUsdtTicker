@@ -19,6 +19,7 @@ using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
+using BinanceUsdtTicker.Services;
 
 namespace BinanceUsdtTicker
 {
@@ -27,6 +28,7 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<TickerRow> _rows = new();
         private readonly BinanceFuturesService _service = new();
         private readonly BinanceApiService _api = new();
+        private TreeTokyoNewsService? _treeNews;
         private readonly Dictionary<string, TickerRow> _rowBySymbol = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly ObservableCollection<PriceAlert> _alerts = new();
@@ -144,6 +146,8 @@ namespace BinanceUsdtTicker
 
             LoadUiSettingsSafe();
             _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
+            if (!string.IsNullOrWhiteSpace(_ui.TreeNewsApiKey))
+                _treeNews = new TreeTokyoNewsService(new TreeNewsOptions { ApiKey = _ui.TreeNewsApiKey });
             ApplyTheme(_themeFromString(_ui.Theme));
             ApplyCustomColors();
             ApplyFilterFromString(_ui.FilterMode);
@@ -157,6 +161,8 @@ namespace BinanceUsdtTicker
                 await RefreshAccountDataAsync();
                 await LoadOrderHistoryAsync();
                 await LoadTradeHistoryAsync();
+                if (_treeNews != null)
+                    await _treeNews.StartAsync();
             };
 
             _refreshTimer.Interval = TimeSpan.FromSeconds(5);
@@ -177,6 +183,8 @@ namespace BinanceUsdtTicker
                 _notifyIcon?.Dispose();
                 _refreshTimer.Stop();
                 _costTimer.Stop();
+                if (_treeNews != null)
+                    await _treeNews.DisposeAsync();
             };
         }
 
@@ -290,13 +298,23 @@ namespace BinanceUsdtTicker
             ApplyCustomColors();
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private async void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var win = new SettingsWindow(_ui) { Owner = this };
             if (win.ShowDialog() == true)
             {
                 ApplyCustomColors();
                 _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
+                if (_treeNews != null)
+                {
+                    await _treeNews.DisposeAsync();
+                    _treeNews = null;
+                }
+                if (!string.IsNullOrWhiteSpace(_ui.TreeNewsApiKey))
+                {
+                    _treeNews = new TreeTokyoNewsService(new TreeNewsOptions { ApiKey = _ui.TreeNewsApiKey });
+                    await _treeNews.StartAsync();
+                }
                 SaveUiSettingsFromUi();
             }
         }
