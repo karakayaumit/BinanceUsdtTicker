@@ -25,5 +25,6 @@ namespace BinanceUsdtTicker
         public string Link { get; }
         public NewsType Type { get; }
         public IReadOnlyList<string> Symbols { get; }
+        public string SymbolsDisplay => string.Join(", ", Symbols);
     }
 }
