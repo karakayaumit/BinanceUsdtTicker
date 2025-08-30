@@ -416,7 +416,6 @@
                       CanUserSortColumns="True"
                       CanUserReorderColumns="True"
                       HeadersVisibility="Column"
-                      ColumnHeaderHeight="Auto"
                       GridLinesVisibility="None"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,8,0"
                       SelectionChanged="Grid_SelectionChanged">
