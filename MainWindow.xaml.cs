@@ -1177,6 +1177,9 @@ namespace BinanceUsdtTicker
         private void AlertList_Loaded(object sender, RoutedEventArgs e) => AdjustAlertMsgColumnWidth();
         private void AlertList_SizeChanged(object sender, SizeChangedEventArgs e) => AdjustAlertMsgColumnWidth();
 
+        private void NewsList_Loaded(object sender, RoutedEventArgs e) => AdjustNewsTitleColumnWidth();
+        private void NewsList_SizeChanged(object sender, SizeChangedEventArgs e) => AdjustNewsTitleColumnWidth();
+
         private void AdjustAlertMsgColumnWidth()
         {
             var alertList = Q<ListView>("AlertList");
@@ -1206,6 +1209,36 @@ namespace BinanceUsdtTicker
 
             double newWidth = Math.Max(120, total - fixedSum - padding - scroll);
             msgCol.Width = newWidth;
+        }
+
+        private void AdjustNewsTitleColumnWidth()
+        {
+            var newsList = Q<ListView>("NewsList");
+            if (newsList?.View is not GridView gv) return;
+
+            GridViewColumn? titleCol = gv.Columns.FirstOrDefault(c =>
+                string.Equals(c.Header?.ToString(), "Başlık", StringComparison.OrdinalIgnoreCase));
+            if (titleCol == null) return;
+
+            double fixedSum = 0;
+            foreach (var col in gv.Columns)
+            {
+                if (ReferenceEquals(col, titleCol)) continue;
+                var w = col.Width;
+                if (double.IsNaN(w) || w <= 0) w = 100;
+                fixedSum += w;
+            }
+
+            double total = newsList.ActualWidth;
+            double padding = 35;
+
+            double scroll = 0;
+            var sv = FindDescendant<ScrollViewer>(newsList);
+            if (sv != null && sv.ComputedVerticalScrollBarVisibility == Visibility.Visible)
+                scroll = SystemParameters.VerticalScrollBarWidth;
+
+            double newWidth = Math.Max(100, total - fixedSum - padding - scroll);
+            titleCol.Width = newWidth;
         }
 
         private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
