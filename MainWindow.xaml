@@ -711,9 +711,20 @@
                         <GroupBox Grid.Row="0" Grid.Column="2" Header="News" Margin="0,0,8,0"
                       Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                       VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
-                                <Grid>
-                                        <TextBlock Text="News feed coming soon." HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Grid>
+                                <ListView x:Name="NewsList"
+                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              VirtualizingStackPanel.IsVirtualizing="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                        <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                        <StackPanel Margin="0,2">
+                                                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{Binding Symbols}" FontSize="11" Foreground="Gray"/>
+                                                        </StackPanel>
+                                                </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                </ListView>
                         </GroupBox>
 
                         <!-- TOP MOVERS -->

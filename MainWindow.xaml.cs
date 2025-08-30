@@ -38,7 +38,9 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<FuturesOrder> _orders = new();
         private readonly ObservableCollection<FuturesOrder> _orderHistory = new();
         private readonly ObservableCollection<FuturesTrade> _tradeHistory = new();
+        private readonly ObservableCollection<TreeNewsItem> _news = new();
         private const int MaxAlertLog = 500;
+        private const int MaxNews = 100;
 
         private readonly HashSet<string> _favoriteSymbols = new(StringComparer.OrdinalIgnoreCase);
 
@@ -129,6 +131,15 @@ namespace BinanceUsdtTicker
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
 
+            var newsList = FindName("NewsList") as ListView;
+            if (newsList != null)
+            {
+                newsList.ItemsSource = _news;
+                newsList.Height = screenHeight;
+                newsList.MinHeight = screenHeight;
+                newsList.MaxHeight = screenHeight;
+            }
+
             // show most recent orders/trades first
             var orderView = CollectionViewSource.GetDefaultView(_orderHistory);
             orderView.SortDescriptions.Clear();
@@ -147,7 +158,10 @@ namespace BinanceUsdtTicker
             LoadUiSettingsSafe();
             _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
             if (!string.IsNullOrWhiteSpace(_ui.TreeNewsApiKey))
-                _treeNews = new TreeTokyoNewsService(new TreeNewsOptions { ApiKey = _ui.TreeNewsApiKey });
+            {
+                _treeNews = new TreeTokyoNewsService(new TreeNewsOptions { ApiKey = _ui.TreeNewsApiKey, UiDispatcher = Dispatcher });
+                _treeNews.NewsReceived += TreeNews_NewsReceived;
+            }
             ApplyTheme(_themeFromString(_ui.Theme));
             ApplyCustomColors();
             ApplyFilterFromString(_ui.FilterMode);
@@ -184,7 +198,10 @@ namespace BinanceUsdtTicker
                 _refreshTimer.Stop();
                 _costTimer.Stop();
                 if (_treeNews != null)
+                {
+                    _treeNews.NewsReceived -= TreeNews_NewsReceived;
                     await _treeNews.DisposeAsync();
+                }
             };
         }
 
@@ -307,12 +324,15 @@ namespace BinanceUsdtTicker
                 _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
                 if (_treeNews != null)
                 {
+                    _treeNews.NewsReceived -= TreeNews_NewsReceived;
                     await _treeNews.DisposeAsync();
                     _treeNews = null;
                 }
+                _news.Clear();
                 if (!string.IsNullOrWhiteSpace(_ui.TreeNewsApiKey))
                 {
-                    _treeNews = new TreeTokyoNewsService(new TreeNewsOptions { ApiKey = _ui.TreeNewsApiKey });
+                    _treeNews = new TreeTokyoNewsService(new TreeNewsOptions { ApiKey = _ui.TreeNewsApiKey, UiDispatcher = Dispatcher });
+                    _treeNews.NewsReceived += TreeNews_NewsReceived;
                     await _treeNews.StartAsync();
                 }
                 SaveUiSettingsFromUi();
@@ -1651,6 +1671,21 @@ namespace BinanceUsdtTicker
             {
                 MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void TreeNews_NewsReceived(object? sender, TreeNewsEventArgs e)
+        {
+            var title = e.Message.Title ?? string.Empty;
+            var symbols = string.Join(", ", e.Symbols);
+            _news.Insert(0, new TreeNewsItem { Title = title, Symbols = symbols });
+            if (_news.Count > MaxNews)
+                _news.RemoveAt(_news.Count - 1);
+        }
+
+        private sealed class TreeNewsItem
+        {
+            public string Title { get; set; } = string.Empty;
+            public string Symbols { get; set; } = string.Empty;
         }
 
         private static int GetPrecision(decimal step)
