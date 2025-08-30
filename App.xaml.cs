@@ -61,21 +61,34 @@ public partial class App : Application
 
     private void OnNewsReceived(object? sender, NewsItem item)
     {
-        if (!_usdtSymbols.Overlaps(item.Symbols))
-            return;
+        foreach (var sym in item.Symbols)
+        {
+            if (!_usdtSymbols.Contains(sym))
+                continue;
 
-        if (Current.Dispatcher.CheckAccess())
-        {
-            if (Current.MainWindow is MainWindow mw)
-                mw.AddNewsItem(item);
-        }
-        else
-        {
-            _ = Current.Dispatcher.InvokeAsync(() =>
+            var singleItem = new NewsItem(
+                id: item.Id + "::" + sym,
+                source: item.Source,
+                timestamp: item.Timestamp,
+                title: item.Title,
+                body: item.Body,
+                link: item.Link,
+                type: item.Type,
+                symbols: new[] { sym });
+
+            if (Current.Dispatcher.CheckAccess())
             {
                 if (Current.MainWindow is MainWindow mw)
-                    mw.AddNewsItem(item);
-            });
+                    mw.AddNewsItem(singleItem);
+            }
+            else
+            {
+                _ = Current.Dispatcher.InvokeAsync(() =>
+                {
+                    if (Current.MainWindow is MainWindow mw)
+                        mw.AddNewsItem(singleItem);
+                });
+            }
         }
     }
 
