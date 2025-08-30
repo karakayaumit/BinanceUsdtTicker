@@ -707,31 +707,30 @@
                                 </StackPanel>
                         </GroupBox>
 
-                        <!-- NEWS -->
-                        <GroupBox Grid.Row="0" Grid.Column="2" Header="News" Margin="0,0,8,0"
-                                  Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                                  VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
-                            <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
-                                      Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                      Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged">
-                                <ListView.View>
-                                    <GridView>
-                                        <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
-                                        <GridViewColumn Header="Zaman" Width="120" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" />
-                                        <GridViewColumn Header="Başlık">
-                                            <GridViewColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
-                                                </DataTemplate>
-                                            </GridViewColumn.CellTemplate>
-                                        </GridViewColumn>
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
-                        </GroupBox>
-
-                        <!-- TOP MOVERS -->
-                        <TabControl Grid.Row="0" Grid.Column="3" Margin="0,0,8,0">
+                        <!-- NEWS & TOP MOVERS -->
+                        <TabControl Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,8,0">
+                            <TabItem Header="News">
+                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                        BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
+                                    <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
+                                              Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                              Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
+                                                <GridViewColumn Header="Zaman" Width="120" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" />
+                                                <GridViewColumn Header="Başlık">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Border>
+                            </TabItem>
                             <TabItem Header="Top Movers">
                                 <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
                                     <Grid>
@@ -804,7 +803,7 @@
                                                 </ListView.View>
                                         </ListView>
 
-					<TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,6,0,4"/>
+                                        <TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,6,0,4"/>
                                         <ListView Grid.Row="4" x:Name="TopLosersList"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
