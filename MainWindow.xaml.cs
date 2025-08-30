@@ -36,6 +36,7 @@ namespace BinanceUsdtTicker
         private readonly ObservableCollection<FuturesOrder> _orders = new();
         private readonly ObservableCollection<FuturesOrder> _orderHistory = new();
         private readonly ObservableCollection<FuturesTrade> _tradeHistory = new();
+        private readonly ObservableCollection<NewsItem> _newsItems = new();
         private const int MaxAlertLog = 500;
 
         private readonly HashSet<string> _favoriteSymbols = new(StringComparer.OrdinalIgnoreCase);
@@ -126,6 +127,7 @@ namespace BinanceUsdtTicker
             SetupList("PositionsList", _positions);
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
+            SetupList("NewsList", _newsItems);
 
             // show most recent orders/trades first
             var orderView = CollectionViewSource.GetDefaultView(_orderHistory);
@@ -178,6 +180,18 @@ namespace BinanceUsdtTicker
                 _refreshTimer.Stop();
                 _costTimer.Stop();
             };
+        }
+
+        public void AddNewsItem(NewsItem item)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (_newsItems.Any(n => n.Id == item.Id))
+                    return;
+                _newsItems.Insert(0, item);
+                if (_newsItems.Count > 100)
+                    _newsItems.RemoveAt(_newsItems.Count - 1);
+            });
         }
 
         // ---------- küçük yardımcılar ----------
