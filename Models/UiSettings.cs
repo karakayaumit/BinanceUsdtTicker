@@ -95,6 +95,13 @@ namespace BinanceUsdtTicker.Models
             set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
         }
 
+        private string _baseUrl = "http://localhost:5000";
+        public string BaseUrl
+        {
+            get => _baseUrl;
+            set { if (_baseUrl != value) { _baseUrl = value; OnPropertyChanged(); } }
+        }
+
         private string _binanceApiKey = string.Empty;
         public string BinanceApiKey
         {

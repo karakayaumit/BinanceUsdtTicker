@@ -314,6 +314,8 @@ namespace BinanceUsdtTicker
                 ApplyCustomColors();
                 _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
                 SaveUiSettingsFromUi();
+                if (Application.Current is App app)
+                    app.UpdateNewsBaseUrl(_ui.BaseUrl);
             }
         }
 

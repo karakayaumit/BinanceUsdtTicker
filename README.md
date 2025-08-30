@@ -30,3 +30,8 @@ Then access the feeds:
 - http://localhost:5000/rss/kucoin-new
 - http://localhost:5000/rss/bybit-new
 - http://localhost:5000/rss/okx-new
+
+To consume these feeds in the main application, set the **Base URL** under
+the **System Settings** tab in the settings window. This value populates
+`FreeNewsOptions.RssBaseUrl`. When left empty, the app skips querying the RSS
+endpoints and no connection attempts are made.

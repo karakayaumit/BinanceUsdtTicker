@@ -11,6 +11,7 @@ namespace BinanceUsdtTicker;
 public partial class App : Application
 {
     private FreeNewsHubService? _newsHub;
+    private readonly FreeNewsOptions _newsOptions = new();
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
     private static readonly string SymbolsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -26,14 +27,19 @@ public partial class App : Application
     {
         await UpdateUsdtSymbolsFileAsync();
 
-        _newsHub = new FreeNewsHubService(new FreeNewsOptions
-        {
-            PollInterval = TimeSpan.FromSeconds(5),
-            CryptoPanicToken = string.Empty,
-            RssBaseUrl = "http://localhost:5000"
-        });
+        var settings = MainWindow.LoadDefaultUiSettings();
+        _newsOptions.PollInterval = TimeSpan.FromSeconds(5);
+        _newsOptions.CryptoPanicToken = string.Empty;
+        _newsOptions.RssBaseUrl = settings.BaseUrl;
+
+        _newsHub = new FreeNewsHubService(_newsOptions);
         _newsHub.NewsReceived += OnNewsReceived;
         await _newsHub.StartAsync();
+    }
+
+    internal void UpdateNewsBaseUrl(string? baseUrl)
+    {
+        _newsOptions.RssBaseUrl = baseUrl;
     }
 
     private async Task UpdateUsdtSymbolsFileAsync()
