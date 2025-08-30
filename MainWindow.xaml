@@ -838,7 +838,7 @@
                                 </Border>
                             </TabItem>
                             <TabItem Header="News">
-                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
+                                <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
                                     <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                         <ListView.View>
                                             <GridView>
