@@ -21,7 +21,8 @@ public partial class App : Application
 
     private void OnNewsReceived(object? sender, NewsItem item)
     {
-        // TODO: handle incoming news items (e.g., update UI or log)
+        if (Current.MainWindow is MainWindow mw)
+            mw.AddNewsItem(item);
     }
 
     protected override async void OnExit(ExitEventArgs e)

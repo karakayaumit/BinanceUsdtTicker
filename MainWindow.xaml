@@ -708,10 +708,10 @@
                         </GroupBox>
 
                         <!-- TOP MOVERS -->
-                        <GroupBox Grid.Row="0" Grid.Column="3" Header="Top Movers" Margin="0,0,8,0"
-                      Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                      VerticalAlignment="Stretch" BorderBrush="{DynamicResource Divider}">
-				<Grid>
+                        <TabControl Grid.Row="0" Grid.Column="3" Margin="0,0,8,0">
+                            <TabItem Header="Top Movers">
+                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
+                                <Grid>
                                         <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
@@ -834,8 +834,29 @@
                                                         </GridView>
                                                 </ListView.View>
                                         </ListView>
-				</Grid>
-			</GroupBox>
+                                </Grid>
+                                </Border>
+                            </TabItem>
+                            <TabItem Header="News">
+                                <Border Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" BorderBrush="{DynamicResource Divider}" BorderThickness="1" VerticalAlignment="Stretch">
+                                    <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
+                                                <GridViewColumn Header="Zaman" Width="120" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" />
+                                                <GridViewColumn Header="Başlık" Width="200">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Border>
+                            </TabItem>
+                        </TabControl>
 
                         <!-- ALARM VE CÜZDAN -->
                         <Grid Grid.Row="1" Grid.ColumnSpan="4">
