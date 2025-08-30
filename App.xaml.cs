@@ -33,6 +33,7 @@ public partial class App : Application
         _newsOptions.RssBaseUrl = settings.BaseUrl;
 
         _newsHub = new FreeNewsHubService(_newsOptions);
+
         _newsHub.NewsReceived += OnNewsReceived;
         await _newsHub.StartAsync();
     }
