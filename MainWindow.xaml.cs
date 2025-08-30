@@ -1214,7 +1214,15 @@ namespace BinanceUsdtTicker
         private void AdjustNewsTitleColumnWidth()
         {
             var newsList = Q<ListView>("NewsList");
-            if (newsList?.View is not GridView gv) return;
+            if (newsList == null) return;
+
+            // Increase the News section height so more items are visible
+            double screenHeight = SystemParameters.PrimaryScreenHeight / 3;
+            newsList.Height = screenHeight;
+            newsList.MinHeight = screenHeight;
+            newsList.MaxHeight = screenHeight;
+
+            if (newsList.View is not GridView gv) return;
 
             GridViewColumn? titleCol = gv.Columns.FirstOrDefault(c =>
                 string.Equals(c.Header?.ToString(), "Başlık", StringComparison.OrdinalIgnoreCase));
