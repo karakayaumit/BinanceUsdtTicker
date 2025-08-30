@@ -724,9 +724,10 @@
                                         </ListView.ItemContainerStyle>
                                         <ListView.View>
                                             <GridView>
-                                                <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
-                                                <GridViewColumn Header="Zaman" Width="120" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" />
-                                                <GridViewColumn Header="Başlık">
+                                            <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
+                                            <GridViewColumn Header="Sembol" Width="80" DisplayMemberBinding="{Binding SymbolsDisplay}" />
+                                            <GridViewColumn Header="Zaman" Width="170" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                            <GridViewColumn Header="Başlık">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
