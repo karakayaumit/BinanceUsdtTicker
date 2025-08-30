@@ -226,8 +226,28 @@ namespace BinanceUsdtTicker
             return NewsType.General;
         }
 
-        private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDT\b", RegexOptions.Compiled);
+        private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
+        private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
+
         private static IReadOnlyList<string> ExtractSymbols(string text)
-            => UsdtSym.Matches(text).Select(x => x.Groups[1].Value + "USDT").Distinct().ToList();
+        {
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (Match m in UsdtSym.Matches(text))
+                set.Add(m.Groups[1].Value + "USDT");
+
+            foreach (Match m in ParenSym.Matches(text))
+            {
+                var sym = m.Groups[1].Value;
+                if (sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
+                    set.Add(sym);
+                else if (sym.EndsWith("USDTM", StringComparison.OrdinalIgnoreCase))
+                    set.Add(sym.Substring(0, sym.Length - 1));
+                else
+                    set.Add(sym + "USDT");
+            }
+
+            return set.ToList();
+        }
     }
 }
