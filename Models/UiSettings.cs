@@ -108,13 +108,5 @@ namespace BinanceUsdtTicker.Models
             get => _binanceApiSecret;
             set { if (_binanceApiSecret != value) { _binanceApiSecret = value; OnPropertyChanged(); } }
         }
-
-        private string _treeNewsApiKey = string.Empty;
-        public string TreeNewsApiKey
-        {
-            get => _treeNewsApiKey;
-            set { if (_treeNewsApiKey != value) { _treeNewsApiKey = value; OnPropertyChanged(); } }
-        }
-
     }
 }

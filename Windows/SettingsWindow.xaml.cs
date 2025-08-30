@@ -29,8 +29,7 @@ namespace BinanceUsdtTicker
                 MarginMode = settings.MarginMode,
                 WindowsNotification = settings.WindowsNotification,
                 BinanceApiKey = settings.BinanceApiKey,
-                BinanceApiSecret = settings.BinanceApiSecret,
-                TreeNewsApiKey = settings.TreeNewsApiKey
+                BinanceApiSecret = settings.BinanceApiSecret
             };
             DataContext = _work;
         }
@@ -133,7 +132,6 @@ namespace BinanceUsdtTicker
             _settings.WindowsNotification = _work.WindowsNotification;
             _settings.BinanceApiKey = _work.BinanceApiKey;
             _settings.BinanceApiSecret = _work.BinanceApiSecret;
-            _settings.TreeNewsApiKey = _work.TreeNewsApiKey;
             DialogResult = true;
         }
     }
