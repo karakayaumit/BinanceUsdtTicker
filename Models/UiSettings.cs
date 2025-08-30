@@ -95,8 +95,6 @@ namespace BinanceUsdtTicker.Models
             set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
         }
 
-        // Base address for optional news feeds.
-        // When left empty, the application skips querying the service.
         private string _baseUrl = string.Empty;
         public string BaseUrl
         {
