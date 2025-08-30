@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -22,6 +23,7 @@ namespace BinanceUsdtTicker
         public FreeNewsHubService(FreeNewsOptions options)
         {
             _options = options;
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; BinanceUsdtTicker)");
         }
 
         public Task StartAsync()
