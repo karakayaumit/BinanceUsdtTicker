@@ -95,7 +95,7 @@ namespace BinanceUsdtTicker.Models
             set { if (_windowsNotification != value) { _windowsNotification = value; OnPropertyChanged(); } }
         }
 
-        private string _baseUrl = "http://localhost:5000";
+        private string _baseUrl = string.Empty;
         public string BaseUrl
         {
             get => _baseUrl;
