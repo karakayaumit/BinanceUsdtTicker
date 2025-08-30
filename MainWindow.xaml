@@ -402,7 +402,7 @@
                                 <!-- Futures panel expanded for better usability -->
                                 <ColumnDefinition Width="300"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="260"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="260"/>
                         </Grid.ColumnDefinitions>
 
