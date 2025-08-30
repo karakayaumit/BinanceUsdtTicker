@@ -87,16 +87,37 @@ namespace BinanceUsdtTicker
             var list = new List<NewsItem>();
             try
             {
-                var html = await _httpClient.GetStringAsync("https://announcements.bybit.com/en-US/?category=new-listing");
-                var rx = new Regex(
-                    @"<a[^>]+href=""(?<link>/en-US/article/[^""]+)""[^>]*>(?<title>[^<]+)</a>.*?<time[^>]+datetime=""(?<time>[^""]+)""",
-                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                foreach (Match m in rx.Matches(html))
+                var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&type=new_crypto&limit=20";
+                var json = await _httpClient.GetStringAsync(url);
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("result", out var result) &&
+                    result.TryGetProperty("list", out var arr))
                 {
-                    var link = "https://announcements.bybit.com" + m.Groups["link"].Value;
-                    var title = HtmlDecode(m.Groups["title"].Value.Trim());
-                    if (DateTime.TryParse(m.Groups["time"].Value, out var ts))
+                    foreach (var el in arr.EnumerateArray())
                     {
+                        var link = el.GetProperty("url").GetString() ?? string.Empty;
+                        var title = HtmlDecode(el.GetProperty("title").GetString() ?? string.Empty);
+
+                        long tsMillis = 0;
+                        if (el.TryGetProperty("publishTime", out var publishTime))
+                        {
+                            if (publishTime.ValueKind == JsonValueKind.Number)
+                                tsMillis = publishTime.GetInt64();
+                            else if (publishTime.ValueKind == JsonValueKind.String && long.TryParse(publishTime.GetString(), out var v))
+                                tsMillis = v;
+                        }
+                        else if (el.TryGetProperty("dateTimestamp", out var dateTimestamp))
+                        {
+                            if (dateTimestamp.ValueKind == JsonValueKind.Number)
+                                tsMillis = dateTimestamp.GetInt64();
+                            else if (dateTimestamp.ValueKind == JsonValueKind.String && long.TryParse(dateTimestamp.GetString(), out var v))
+                                tsMillis = v;
+                        }
+
+                        var ts = tsMillis > 0
+                            ? DateTimeOffset.FromUnixTimeMilliseconds(tsMillis).UtcDateTime
+                            : DateTime.UtcNow;
+
                         var type = Classify(title);
                         list.Add(new NewsItem(id: $"bybit::{link}", source: "bybit", timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
                     }
