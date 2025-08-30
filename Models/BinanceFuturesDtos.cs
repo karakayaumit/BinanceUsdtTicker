@@ -14,6 +14,7 @@ public sealed class ExchangeInfo
 public sealed class SymbolInfo
 {
     public string Symbol { get; set; } = string.Empty;
+    [JsonIgnore]
     public List<IFilter> Filters { get; set; } = new();
 
     [JsonPropertyName("filters")]

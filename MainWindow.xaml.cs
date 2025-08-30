@@ -1445,7 +1445,7 @@ namespace BinanceUsdtTicker
 
             var priceBox = Q<TextBox>("LimitPriceTextBox");
             if (priceBox != null)
-                priceBox.Text = _selectedTicker.Price.ToString("0.########", CultureInfo.InvariantCulture);
+                priceBox.Text = _selectedTicker.Price.ToString("0.########", CultureInfo.CurrentCulture);
         }
 
         private void UpdatePriceAndSize()
@@ -1538,7 +1538,7 @@ namespace BinanceUsdtTicker
             if (tab != null && tab.SelectedIndex == 0)
             {
                 var priceBox = Q<TextBox>("LimitPriceTextBox");
-                if (priceBox != null && decimal.TryParse(priceBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out var userPx) && userPx > 0m)
+                if (priceBox != null && TryParseDecimal(priceBox.Text, out var userPx) && userPx > 0m)
                     orderPrice = userPx;
             }
 
@@ -1587,7 +1587,7 @@ namespace BinanceUsdtTicker
             if (isLimit)
             {
                 priceBox = Q<TextBox>("LimitPriceTextBox");
-                if (priceBox != null && decimal.TryParse(priceBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out var px) && px > 0m)
+                if (priceBox != null && TryParseDecimal(priceBox.Text, out var px) && px > 0m)
                     price = px;
             }
 
@@ -1597,7 +1597,7 @@ namespace BinanceUsdtTicker
             {
                 price = AdjustToStep(price, filters.TickSize);
                 if (isLimit && priceBox != null)
-                    priceBox.Text = price.ToString($"F{pricePrecision}", CultureInfo.InvariantCulture);
+                    priceBox.Text = price.ToString($"F{pricePrecision}", CultureInfo.CurrentCulture);
             }
 
             var sizeSlider = tab?.SelectedIndex == 0 ? Q<Slider>("LimitSizeSlider") : Q<Slider>("MarketSizeSlider");
@@ -1680,6 +1680,12 @@ namespace BinanceUsdtTicker
             {
                 MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private static bool TryParseDecimal(string text, out decimal value)
+        {
+            return decimal.TryParse(text, NumberStyles.Any, CultureInfo.CurrentCulture, out value)
+                || decimal.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
         }
 
         private static int GetPrecision(decimal step)
