@@ -28,6 +28,7 @@ namespace BinanceUsdtTicker
                 ControlColor = settings.ControlColor,
                 MarginMode = settings.MarginMode,
                 WindowsNotification = settings.WindowsNotification,
+                BaseUrl = settings.BaseUrl,
                 BinanceApiKey = settings.BinanceApiKey,
                 BinanceApiSecret = settings.BinanceApiSecret
             };
@@ -94,6 +95,7 @@ namespace BinanceUsdtTicker
             _work.DividerColor = def.DividerColor;
             _work.ControlColor = def.ControlColor;
             _work.WindowsNotification = def.WindowsNotification;
+            _work.BaseUrl = def.BaseUrl;
         }
 
         private static string? PickColor(string current)
@@ -130,6 +132,7 @@ namespace BinanceUsdtTicker
             _settings.ControlColor = _work.ControlColor;
             _settings.MarginMode = _work.MarginMode;
             _settings.WindowsNotification = _work.WindowsNotification;
+            _settings.BaseUrl = _work.BaseUrl;
             _settings.BinanceApiKey = _work.BinanceApiKey;
             _settings.BinanceApiSecret = _work.BinanceApiSecret;
             DialogResult = true;

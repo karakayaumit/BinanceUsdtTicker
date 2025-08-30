@@ -100,7 +100,12 @@
 
         <TabControl Grid.Row="0" TabStripPlacement="Left">
             <TabItem Header="Sistem Ayarları">
-                <TextBlock Margin="10" Text="Sistem ayarları burada yer alacaktır."/>
+                <StackPanel Margin="10">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Base URL:" Width="120" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding BaseUrl}" Width="300"/>
+                    </StackPanel>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Ticaret Tercihi">
                 <StackPanel Margin="10">
