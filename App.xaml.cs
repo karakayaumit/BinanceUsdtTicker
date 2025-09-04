@@ -5,6 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
 
 namespace BinanceUsdtTicker;
 
@@ -13,6 +17,7 @@ public partial class App : Application
     private FreeNewsHubService? _newsHub;
     private readonly FreeNewsOptions _newsOptions = new();
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
+    private WebApplication? _listingApp;
     private static readonly string SymbolsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "BinanceUsdtTicker", "usdt_symbols.txt");
@@ -21,6 +26,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
         Dispatcher.InvokeAsync(StartNewsHubAsync, DispatcherPriority.ApplicationIdle);
+        Dispatcher.InvokeAsync(StartListingListenerAsync, DispatcherPriority.ApplicationIdle);
     }
 
     private async Task StartNewsHubAsync()
@@ -39,6 +45,38 @@ public partial class App : Application
 
         _newsHub.NewsReceived += OnNewsReceived;
         await _newsHub.StartAsync();
+    }
+
+    private async Task StartListingListenerAsync()
+    {
+        var builder = WebApplication.CreateBuilder(Array.Empty<string>());
+        builder.Logging.ClearProviders();
+        builder.WebHost.UseUrls("http://localhost:5005");
+        var app = builder.Build();
+
+        app.MapPost("/news", async (HttpContext ctx) =>
+        {
+            var payload = await ctx.Request.ReadFromJsonAsync<ListingNotification>();
+            if (payload != null)
+            {
+                var item = new NewsItem(
+                    id: payload.Id,
+                    source: payload.Source,
+                    timestamp: DateTime.UtcNow,
+                    title: payload.Title,
+                    body: null,
+                    link: payload.Url ?? string.Empty,
+                    type: NewsType.Listing,
+                    symbols: payload.Symbols ?? Array.Empty<string>());
+
+                if (Current.MainWindow is MainWindow mw)
+                    mw.AddNewsItem(item);
+            }
+            return Results.Ok();
+        });
+
+        _listingApp = app;
+        await app.StartAsync();
     }
 
     internal void UpdateNewsBaseUrl(string? baseUrl)
@@ -107,6 +145,10 @@ public partial class App : Application
     {
         if (_newsHub != null)
             await _newsHub.DisposeAsync();
+        if (_listingApp != null)
+            await _listingApp.StopAsync();
         base.OnExit(e);
     }
+
+    private record ListingNotification(string Id, string Source, string Title, string? Url, string[]? Symbols);
 }
