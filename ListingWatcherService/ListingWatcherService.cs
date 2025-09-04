@@ -1,5 +1,8 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using System.Net.Http.Json;
+using System.Text.RegularExpressions;
+using System.Linq;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -13,6 +16,9 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly ILogger<ListingWatcherService> _logger;
     private readonly HttpClient _http;
     private readonly ConcurrentDictionary<string, byte> _seen = new();
+    private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
+    private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
+    private readonly Uri _notifyUri = new("http://localhost:5005/news");
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger)
     {
@@ -70,6 +76,7 @@ public sealed class ListingWatcherService : BackgroundService
                 var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
+                await NotifyAsync("bybit", id, title, urlItem);
             }
         }
     }
@@ -91,6 +98,7 @@ public sealed class ListingWatcherService : BackgroundService
                 var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
+                await NotifyAsync("kucoin", id, title, urlItem);
             }
         }
     }
@@ -112,7 +120,41 @@ public sealed class ListingWatcherService : BackgroundService
                 var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
+                await NotifyAsync("okx", id, title, urlItem);
             }
         }
     }
+
+    private async Task NotifyAsync(string source, string id, string title, string? url)
+    {
+        try
+        {
+            var payload = new ListingNotification(id, source, title, url, ExtractSymbols(title));
+            await _http.PostAsJsonAsync(_notifyUri, payload);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Notification failed");
+        }
+    }
+
+    private static IReadOnlyList<string> ExtractSymbols(string text)
+    {
+        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (Match m in UsdtSym.Matches(text))
+            set.Add(m.Groups[1].Value + "USDT");
+        foreach (Match m in ParenSym.Matches(text))
+        {
+            var sym = m.Groups[1].Value;
+            if (sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
+                set.Add(sym);
+            else if (sym.EndsWith("USDTM", StringComparison.OrdinalIgnoreCase))
+                set.Add(sym.Substring(0, sym.Length - 1));
+            else
+                set.Add(sym + "USDT");
+        }
+        return set.ToList();
+    }
+
+    private record ListingNotification(string Id, string Source, string Title, string? Url, IReadOnlyList<string> Symbols);
 }
