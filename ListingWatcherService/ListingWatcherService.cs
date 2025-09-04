@@ -18,11 +18,16 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly ConcurrentDictionary<string, byte> _seen = new();
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
-    private readonly Uri _notifyUri = new("http://localhost:5005/news");
+    private readonly Uri _notifyUri;
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger)
     {
         _logger = logger;
+
+        var notifyUrl = Environment.GetEnvironmentVariable("NEWS_NOTIFY_URL")
+            ?? "http://localhost:5005/news";
+        _notifyUri = new Uri(notifyUrl);
+
         _http = new HttpClient(new HttpClientHandler
         {
             AutomaticDecompression = System.Net.DecompressionMethods.All
@@ -31,6 +36,7 @@ public sealed class ListingWatcherService : BackgroundService
             Timeout = TimeSpan.FromSeconds(10)
         };
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
+        _logger.LogInformation("Sending notifications to {NotifyUrl}", _notifyUri);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

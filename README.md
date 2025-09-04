@@ -35,3 +35,25 @@ To consume these feeds in the main application, set `FreeNewsOptions.RssBaseUrl`
 to the base address of the running script. This setting is empty by default, so
 the app skips querying the RSS endpoints and no connection attempts are made
 until you provide a valid URL in the settings window.
+
+## Listing Watcher Windows Service
+
+The `ListingWatcherService` project polls several exchange announcement APIs
+and sends new listings to the main application via HTTP. By default the service
+posts updates to `http://localhost:5005/news`, which is where the desktop app
+listens for incoming items.  When running the service on another machine, set
+the destination with the `NEWS_NOTIFY_URL` environment variable:
+
+```bash
+set NEWS_NOTIFY_URL=http://app-host:5005/news   # Windows
+export NEWS_NOTIFY_URL=http://app-host:5005/news # Linux/macOS
+```
+
+You can run the service as a console app for testing:
+
+```bash
+cd ListingWatcherService
+dotnet run
+```
+
+Install it as a Windows service with `sc create` or other tooling as needed.
