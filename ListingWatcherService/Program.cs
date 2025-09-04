@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BinanceUsdtTicker;
 
 Host.CreateDefaultBuilder(args)
     .UseWindowsService()
