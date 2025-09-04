@@ -67,7 +67,8 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task PollBybitAsync(CancellationToken ct)
     {
-        var url = "https://api.bybit.com/v5/announcement/index?locale=en-US&category=listing&pageSize=20&page=1";
+        var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&tag=listing&limit=20&page=1";
+
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
         resp.EnsureSuccessStatusCode();
 
