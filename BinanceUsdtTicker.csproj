@@ -6,6 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Exclude nested projects from being compiled into this project -->
+    <DefaultItemExcludes>ListingWatcherService\**;$(DefaultItemExcludes)</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +15,13 @@
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.1.4" />
+  </ItemGroup>
+
+  <!-- Prevent the worker service project from being compiled into the WPF application -->
+  <ItemGroup>
+    <Compile Remove="ListingWatcherService\**" />
+    <None Remove="ListingWatcherService\**" />
+    <EmbeddedResource Remove="ListingWatcherService\**" />
   </ItemGroup>
 
   <ItemGroup>
