@@ -39,24 +39,9 @@ value from the settings window if your service runs elsewhere.
 ## Listing Watcher Windows Service
 
 The `ListingWatcherService` project polls several exchange announcement APIs
-and sends new listings to the main application via HTTP. By default the service
-posts updates to `http://localhost:5005/news`, which is where the desktop app
-listens for incoming items.  When running the service on another machine, set
-the destination with the `NEWS_NOTIFY_URL` environment variable:
-
-```bash
-set NEWS_NOTIFY_URL=http://app-host:5005/news   # Windows
-export NEWS_NOTIFY_URL=http://app-host:5005/news # Linux/macOS
-```
-
-If the desktop application itself needs to accept connections from other
-machines, configure its listener address with `NEWS_LISTEN_URL` before
-launching the app. For example, to listen on all interfaces:
-
-```bash
-set NEWS_LISTEN_URL=http://0.0.0.0:5005   # Windows
-export NEWS_LISTEN_URL=http://0.0.0.0:5005 # Linux/macOS
-```
+and writes new listings directly to a SQL database. Configure the database
+connection string with the `BINANCE_DB_CONNECTION` environment variable;
+otherwise a localdb instance named `BinanceUsdtTicker` is used.
 
 You can run the service as a console app for testing:
 

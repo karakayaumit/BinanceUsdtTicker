@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
-using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Security.Cryptography;
@@ -9,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.SqlClient;
 
-namespace BinanceUsdtTicker;
+namespace ListingWatcher;
 
 /// <summary>
 /// Background worker that polls exchange listing APIs and logs new items.
@@ -21,16 +20,11 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly ConcurrentDictionary<string, byte> _seen = new();
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
-    private readonly Uri _notifyUri;
     private readonly string _connectionString;
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger)
     {
         _logger = logger;
-
-        var notifyUrl = Environment.GetEnvironmentVariable("NEWS_NOTIFY_URL")
-            ?? "http://localhost:5005/news";
-        _notifyUri = new Uri(notifyUrl);
 
         _http = new HttpClient(new HttpClientHandler
         {
@@ -40,8 +34,6 @@ public sealed class ListingWatcherService : BackgroundService
             Timeout = TimeSpan.FromSeconds(10)
         };
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
-        _logger.LogInformation("Sending notifications to {NotifyUrl}", _notifyUri);
-
         _connectionString =
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
             "Server=(localdb)\\MSSQLLocalDB;Database=BinanceUsdtTicker;Trusted_Connection=True;";
@@ -105,7 +97,7 @@ public sealed class ListingWatcherService : BackgroundService
                     ? pUrl.GetString()
                     : el.TryGetProperty("link", out var pLink) ? pLink.GetString() : null;
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-                await NotifyAsync("bybit", id, title, urlItem);
+                await ProcessListingAsync("bybit", id, title, urlItem);
             }
         }
     }
@@ -127,7 +119,7 @@ public sealed class ListingWatcherService : BackgroundService
                 var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
-                await NotifyAsync("kucoin", id, title, urlItem);
+                await ProcessListingAsync("kucoin", id, title, urlItem);
             }
         }
     }
@@ -153,26 +145,17 @@ public sealed class ListingWatcherService : BackgroundService
                     var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                     var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
                     _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
-                    await NotifyAsync("okx", id, title, urlItem);
+                    await ProcessListingAsync("okx", id, title, urlItem);
                 }
             }
         }
     }
 
-    private async Task NotifyAsync(string source, string id, string title, string? url)
+    private async Task ProcessListingAsync(string source, string id, string title, string? url)
     {
         var symbols = ExtractSymbols(title);
         var normalizedId = NormalizeId(id);
         await SaveListingAsync(source, normalizedId, title, url, symbols);
-        try
-        {
-            var payload = new ListingNotification(normalizedId, source, title, url, symbols);
-            await _http.PostAsJsonAsync(_notifyUri, payload);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Notification failed");
-        }
     }
 
     private static IReadOnlyList<string> ExtractSymbols(string text)
@@ -261,5 +244,4 @@ END";
         }
     }
 
-    private record ListingNotification(string Id, string Source, string Title, string? Url, IReadOnlyList<string> Symbols);
 }
