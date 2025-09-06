@@ -1,3 +1,5 @@
-2025/08/30-21:23:25.985 17a0 Reusing MANIFEST C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUsdtTicker.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2025/08/30-21:23:25.993 17a0 Recovering log #29
-2025/08/30-21:23:25.994 17a0 Reusing old log C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUsdtTicker.exe.WebView2\EBWebView\Default\Local Storage\leveldb/000029.log 
+2025/09/05-01:11:14.094 2e7c Reusing MANIFEST C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUsdtTicker.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2025/09/05-01:11:14.098 2e7c Recovering log #29
+2025/09/05-01:11:14.099 2e7c Level-0 table #32: started
+2025/09/05-01:11:14.102 2e7c Level-0 table #32: 27519 bytes OK
+2025/09/05-01:11:14.107 2e7c Delete type=0 #29
