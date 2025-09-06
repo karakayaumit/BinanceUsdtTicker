@@ -80,28 +80,32 @@ MapRssEndpoint(
     "/rss/okx-new",
     defaultLang: "en-US",
     channelTitle: "OKX – New Listings (Unofficial RSS)",
-    channelLink: "https://www.okx.com/announcements?type=listing",
+    channelLink: "https://www.okx.com/support/announcements?annType=announcements-new-listings",
     generator: "OkxNewListingsRSS/1.0",
     descFactory: lang => $"New Listings announcements via OKX API (lang={lang})",
     fetch: async (ctx, lang, pageSize, page) =>
     {
-        var url = $"https://www.okx.com/api/v5/public/announcements?lang={Uri.EscapeDataString(lang)}&category=listing&pageSize={pageSize}&page={page}";
+        var url = $"https://www.okx.com/api/v5/support/announcements?annType=announcements-new-listings&page={page}";
         using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ctx.RequestAborted);
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ctx.RequestAborted);
         using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ctx.RequestAborted);
-        var items = doc.RootElement.GetProperty("data");
+        var data = doc.RootElement.GetProperty("data");
 
         var list = new List<FeedItem>();
-        foreach (var it in items.EnumerateArray())
+        foreach (var section in data.EnumerateArray())
         {
-            var id = it.TryGetProperty("id", out var pId) ? pId.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
-            var title = it.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-            var desc = it.TryGetProperty("content", out var pDesc) ? pDesc.GetString() : null;
-            var urlItem = it.TryGetProperty("url", out var pUrl) ? pUrl.GetString() : null;
-            var cTimeMs = it.TryGetProperty("publishTime", out var pTime) && long.TryParse(pTime.GetString(), out var t) ? t : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            list.Add(new FeedItem(id, title, desc, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs)));
+            if (!section.TryGetProperty("details", out var details))
+                continue;
+            foreach (var it in details.EnumerateArray())
+            {
+                var id = it.TryGetProperty("url", out var pUrl) ? pUrl.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
+                var title = it.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
+                var urlItem = it.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
+                var cTimeMs = it.TryGetProperty("pTime", out var pTime) && long.TryParse(pTime.GetString(), out var t) ? t : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                list.Add(new FeedItem(id, title, null, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs)));
+            }
         }
         return list;
     });
