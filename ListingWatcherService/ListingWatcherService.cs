@@ -212,7 +212,7 @@ BEGIN
         Title NVARCHAR(MAX) NOT NULL,
         Url NVARCHAR(2048) NULL,
         Symbols NVARCHAR(200) NULL,
-        CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+        CreatedAt DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Turkey Standard Time')
     )
 END";
             await create.ExecuteNonQueryAsync(ct);
