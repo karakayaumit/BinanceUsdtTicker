@@ -43,7 +43,7 @@ namespace BinanceUsdtTicker
                     var baseUrl = _options.RssBaseUrl?.TrimEnd('/');
                     if (!string.IsNullOrEmpty(baseUrl))
                     {
-                        items.AddRange(await FetchRssAsync($"{baseUrl}/rss/bybit-new", "bybit"));
+                            items.AddRange(await FetchRssAsync($"{baseUrl}/rss/bybit-new", "bybit"));
                         items.AddRange(await FetchRssAsync($"{baseUrl}/rss/kucoin-new", "kucoin"));
                         items.AddRange(await FetchRssAsync($"{baseUrl}/rss/okx-new", "okx"));
                     }

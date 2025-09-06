@@ -1,15 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Converters",
-    "\\Services\\Trading",
-    "\\Themes",
-    "\\ViewModels",
-    "\\ViewModels\\Trading",
-    "\\Views",
-    "\\Views\\Trading",
-    "\\Windows"
+    "\\ListingWatcherService"
   ],
-  "SelectedNode": "\\Windows",
-  "PreviewInSolutionExplorer": false
+  "PreviewInSolutionExplorer": true
 }
