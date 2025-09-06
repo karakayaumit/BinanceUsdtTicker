@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
@@ -24,6 +25,8 @@ MapRssEndpoint(
     {
         var url = $"https://api.kucoin.com/api/v3/announcements?annType=new-listings&lang={Uri.EscapeDataString(lang)}&pageSize={pageSize}&currentPage={page}";
         using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ctx.RequestAborted);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+            return new List<FeedItem>();
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ctx.RequestAborted);
@@ -57,6 +60,8 @@ MapRssEndpoint(
         // we only fetch the first page with the requested limit.
         var url = $"https://api.bybit.com/v5/announcements/index?locale={Uri.EscapeDataString(lang)}&type=new_crypto&limit={pageSize}";
         using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ctx.RequestAborted);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+            return new List<FeedItem>();
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ctx.RequestAborted);
@@ -87,6 +92,8 @@ MapRssEndpoint(
     {
         var url = $"https://www.okx.com/api/v5/support/announcements?annType=announcements-new-listings&page={page}";
         using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ctx.RequestAborted);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+            return new List<FeedItem>();
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ctx.RequestAborted);
