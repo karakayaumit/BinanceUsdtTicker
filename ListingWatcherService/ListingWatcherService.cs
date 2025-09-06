@@ -66,6 +66,14 @@ public sealed class ListingWatcherService : BackgroundService
             {
                 _logger.LogError(ex, "Polling failed");
             }
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(3), ct);
+            }
+            catch (OperationCanceledException)
+            {
+                // Ignore cancellation to allow graceful shutdown
+            }
         }
     }
 
