@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace BinanceUsdtTicker;
 
@@ -60,7 +61,16 @@ public partial class App : Application
 
         app.MapPost("/news", async (HttpContext ctx) =>
         {
-            var payload = await ctx.Request.ReadFromJsonAsync<ListingNotification>();
+            ListingNotification? payload;
+            try
+            {
+                payload = await ctx.Request.ReadFromJsonAsync<ListingNotification>();
+            }
+            catch (JsonException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+
             if (payload != null)
             {
                 var item = new NewsItem(
