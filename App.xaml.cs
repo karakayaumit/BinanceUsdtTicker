@@ -16,10 +16,12 @@ namespace BinanceUsdtTicker;
 
 public partial class App : Application
 {
-    private FreeNewsHubService? _newsHub;
-    private readonly FreeNewsOptions _newsOptions = new();
+    private NewsDbService? _newsHub;
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
     private WebApplication? _listingApp;
+    private readonly string _connectionString =
+        Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
+        "Server=KARAKAYA-MSI\\KARAKAYADB;Database=BinanceUsdtTicker;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
     private static readonly string SymbolsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "BinanceUsdtTicker", "usdt_symbols.txt");
@@ -35,17 +37,7 @@ public partial class App : Application
     {
         await UpdateUsdtSymbolsFileAsync();
 
-        // Use the fully qualified type name to avoid resolving to the
-        // Application.MainWindow property which is of type Window and
-        // does not expose LoadDefaultUiSettings().
-        var settings = global::BinanceUsdtTicker.MainWindow.LoadDefaultUiSettings();
-        _newsOptions.PollInterval = TimeSpan.FromSeconds(5);
-        _newsOptions.RssBaseUrl = string.IsNullOrWhiteSpace(settings.BaseUrl)
-            ? "http://localhost:5005"
-            : settings.BaseUrl;
-
-        _newsHub = new FreeNewsHubService(_newsOptions);
-
+        _newsHub = new NewsDbService(_connectionString, TimeSpan.FromSeconds(5));
         _newsHub.NewsReceived += OnNewsReceived;
         await _newsHub.StartAsync();
     }
@@ -96,7 +88,7 @@ public partial class App : Application
 
     internal void UpdateNewsBaseUrl(string? baseUrl)
     {
-        _newsOptions.RssBaseUrl = baseUrl;
+        // no-op: DB-backed news does not use a base URL
     }
 
     private async Task UpdateUsdtSymbolsFileAsync()
