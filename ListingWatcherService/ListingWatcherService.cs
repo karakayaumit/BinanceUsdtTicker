@@ -174,11 +174,23 @@ public sealed class ListingWatcherService : BackgroundService
 
             var stableId = urlItem ?? rawId;
             _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-            // Bybit exposes the announcement timestamp as "dateTimestamp"
-            var cTimeMs = el.TryGetProperty("dateTimestamp", out var pTime) && long.TryParse(pTime.GetString(), out var t)
-                ? t
-                : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            await ProcessListingAsync("bybit", stableId, title, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs), ct);
+            // Bybit exposes the announcement timestamp as "dateTimestamp" which may
+            // be a number or a string depending on the API version.
+            var cTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (el.TryGetProperty("dateTimestamp", out var pTime))
+            {
+                if (pTime.ValueKind == JsonValueKind.Number && pTime.TryGetInt64(out var tNum))
+                {
+                    cTimeMs = tNum;
+                }
+                else if (pTime.ValueKind == JsonValueKind.String && long.TryParse(pTime.GetString(), out var tStr))
+                {
+                    cTimeMs = tStr;
+                }
+            }
+
+            await ProcessListingAsync("bybit", stableId, title, urlItem,
+                DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs), ct);
         }
     }
 

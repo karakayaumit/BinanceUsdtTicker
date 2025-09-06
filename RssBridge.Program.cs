@@ -162,9 +162,31 @@ public static class RssBridgeProgram
         // The new announcements API exposes description/link/dateTimestamp fields.
         var desc = it.TryGetProperty("description", out var pDesc) ? pDesc.GetString() : null;
         var url = it.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
-        var ts = it.TryGetProperty("dateTimestamp", out var pTs) && long.TryParse(pTs.GetString(), out var t)
-            ? DateTimeOffset.FromUnixTimeMilliseconds(t)
-            : DateTimeOffset.UtcNow;
+
+        // "dateTimestamp" may be returned either as a number or a string. Handle
+        // both representations to avoid runtime exceptions when Bybit changes the
+        // field type.
+        DateTimeOffset ts;
+        if (it.TryGetProperty("dateTimestamp", out var pTs))
+        {
+            if (pTs.ValueKind == JsonValueKind.Number && pTs.TryGetInt64(out var tNum))
+            {
+                ts = DateTimeOffset.FromUnixTimeMilliseconds(tNum);
+            }
+            else if (pTs.ValueKind == JsonValueKind.String && long.TryParse(pTs.GetString(), out var tStr))
+            {
+                ts = DateTimeOffset.FromUnixTimeMilliseconds(tStr);
+            }
+            else
+            {
+                ts = DateTimeOffset.UtcNow;
+            }
+        }
+        else
+        {
+            ts = DateTimeOffset.UtcNow;
+        }
+
         return new FeedItem(id, title, desc, url, ts);
     }
 
