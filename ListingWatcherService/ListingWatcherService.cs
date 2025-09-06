@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Net;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.SqlClient;
@@ -77,6 +78,11 @@ public sealed class ListingWatcherService : BackgroundService
         var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&type=new_crypto&limit=20";
 
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+        {
+            _logger.LogWarning("Forbidden when polling Bybit: {Url}", url);
+            return;
+        }
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ct);
@@ -118,6 +124,11 @@ public sealed class ListingWatcherService : BackgroundService
 
         var url = $"https://cryptopanic.com/api/v1/posts/?auth_token={token}&public=true";
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+        {
+            _logger.LogWarning("Forbidden when polling CryptoPanic: {Url}", url);
+            return;
+        }
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ct);
@@ -143,6 +154,11 @@ public sealed class ListingWatcherService : BackgroundService
     {
         var url = "https://api.kucoin.com/api/v3/announcements?annType=new-listings&lang=en_US&pageSize=20&currentPage=1";
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+        {
+            _logger.LogWarning("Forbidden when polling KuCoin: {Url}", url);
+            return;
+        }
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ct);
@@ -165,6 +181,11 @@ public sealed class ListingWatcherService : BackgroundService
     {
         var url = "https://www.okx.com/api/v5/support/announcements?annType=announcements-new-listings&page=1";
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        if (resp.StatusCode == HttpStatusCode.Forbidden)
+        {
+            _logger.LogWarning("Forbidden when polling OKX: {Url}", url);
+            return;
+        }
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ct);

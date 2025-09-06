@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -56,6 +57,11 @@ namespace BinanceUsdtTicker
             using var response = await _http.SendAsync(request, ct);
             var content = await response.Content.ReadAsStringAsync(ct);
 
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return content;
+            }
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException(
@@ -71,6 +77,9 @@ namespace BinanceUsdtTicker
         protected async Task<string> SendAsync(HttpMethod method, string endpoint, CancellationToken ct = default)
         {
             using var response = await _http.SendAsync(new HttpRequestMessage(method, endpoint), ct);
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+                return await response.Content.ReadAsStringAsync(ct);
+
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync(ct);
         }
