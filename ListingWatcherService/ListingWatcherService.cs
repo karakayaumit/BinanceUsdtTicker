@@ -3,6 +3,8 @@ using System.Text.Json;
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.SqlClient;
@@ -160,10 +162,11 @@ public sealed class ListingWatcherService : BackgroundService
     private async Task NotifyAsync(string source, string id, string title, string? url)
     {
         var symbols = ExtractSymbols(title);
-        await SaveListingAsync(source, id, title, url, symbols);
+        var normalizedId = NormalizeId(id);
+        await SaveListingAsync(source, normalizedId, title, url, symbols);
         try
         {
-            var payload = new ListingNotification(id, source, title, url, symbols);
+            var payload = new ListingNotification(normalizedId, source, title, url, symbols);
             await _http.PostAsJsonAsync(_notifyUri, payload);
         }
         catch (Exception ex)
@@ -188,6 +191,14 @@ public sealed class ListingWatcherService : BackgroundService
                 set.Add(sym + "USDT");
         }
         return set.ToList();
+    }
+
+    private static string NormalizeId(string id)
+    {
+        if (id.Length <= 100)
+            return id;
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(id));
+        return Convert.ToHexString(hash).ToLowerInvariant();
     }
 
     private async Task EnsureDatabaseAsync(CancellationToken ct)
