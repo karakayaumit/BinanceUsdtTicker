@@ -230,7 +230,10 @@ END";
             await using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
             var cmd = conn.CreateCommand();
-            cmd.CommandText = @"INSERT INTO dbo.News (Id, Source, Title, Url, Symbols) VALUES (@Id, @Source, @Title, @Url, @Symbols)";
+            cmd.CommandText = @"
+                IF NOT EXISTS (SELECT 1 FROM dbo.News WHERE Id = @Id)
+                    INSERT INTO dbo.News (Id, Source, Title, Url, Symbols)
+                    VALUES (@Id, @Source, @Title, @Url, @Symbols);";
             cmd.Parameters.AddWithValue("@Id", id);
             cmd.Parameters.AddWithValue("@Source", source);
             cmd.Parameters.AddWithValue("@Title", title);
