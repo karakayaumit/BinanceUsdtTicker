@@ -75,7 +75,7 @@ public static class RssBridgeProgram
                         if (root.TryGetProperty("result", out var result) && result.TryGetProperty("list", out var list))
                         {
                             ctx.Response.ContentType = "application/rss+xml; charset=utf-8";
-                            await WriteRss(ctx.Response.Body, "Bybit – New Crypto", "https://announcements.bybit.com/en/?category=new_crypto&page=1", list, MapBybit);
+                            await WriteRss(ctx.Response.Body, "Bybit – New Crypto", "https://announcements.bybit.com/en-US/?type=new_crypto", list, MapBybit);
                             return Results.Empty;
                         }
                         return Results.Problem(title: "Bybit JSON unexpected", statusCode: 502);
@@ -159,9 +159,10 @@ public static class RssBridgeProgram
     {
         var id = it.TryGetProperty("id", out var pId) ? pId.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
         var title = it.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-        var desc = it.TryGetProperty("content", out var pDesc) ? pDesc.GetString() : null;
-        var url = it.TryGetProperty("url", out var pUrl) ? pUrl.GetString() : null;
-        var ts = it.TryGetProperty("dateTimestamp", out var pTs) && long.TryParse(pTs.GetString(), out var t)
+        // The new announcements API exposes description/link/createdAt fields.
+        var desc = it.TryGetProperty("description", out var pDesc) ? pDesc.GetString() : null;
+        var url = it.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
+        var ts = it.TryGetProperty("createdAt", out var pTs) && long.TryParse(pTs.GetString(), out var t)
             ? DateTimeOffset.FromUnixTimeMilliseconds(t)
             : DateTimeOffset.UtcNow;
         return new FeedItem(id, title, desc, url, ts);

@@ -47,12 +47,15 @@ MapRssEndpoint(
     "/rss/bybit-new",
     defaultLang: "en-US",
     channelTitle: "Bybit – New Listings (Unofficial RSS)",
-    channelLink: "https://announcement.bybit.com/en-US/?category=Listing",
+    channelLink: "https://announcements.bybit.com/en-US/?type=new_crypto",
     generator: "BybitNewListingsRSS/1.0",
     descFactory: lang => $"New Listings announcements via Bybit API (lang={lang})",
     fetch: async (ctx, lang, pageSize, page) =>
     {
-        var url = $"https://api.bybit.com/v5/public/announcements?locale={Uri.EscapeDataString(lang)}&category=listing&pageSize={pageSize}&page={page}";
+        // Bybit exposes new listings via the announcements index endpoint
+        // with type=new_crypto. The API is cursor based, but for simplicity
+        // we only fetch the first page with the requested limit.
+        var url = $"https://api.bybit.com/v5/announcements/index?locale={Uri.EscapeDataString(lang)}&type=new_crypto&limit={pageSize}";
         using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ctx.RequestAborted);
         resp.EnsureSuccessStatusCode();
 
