@@ -154,5 +154,5 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    private record ListingNotification(string Id, string Source, string Title, string? Url, string[]? Symbols);
+    public record ListingNotification(string Id, string Source, string Title, string? Url, string[]? Symbols);
 }
