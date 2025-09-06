@@ -227,7 +227,6 @@ END";
         {
             _logger.LogError(ex, "Database setup failed");
         }
-        await cmd.ExecuteNonQueryAsync(ct);
     }
 
     private async Task SaveListingAsync(string source, string id, string title, string? url, IReadOnlyList<string> symbols)
