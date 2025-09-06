@@ -59,7 +59,8 @@ public sealed class ListingWatcherService : BackgroundService
 
             try
             {
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+                // Check news sources frequently.
+                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
             }
             catch (TaskCanceledException)
             {
