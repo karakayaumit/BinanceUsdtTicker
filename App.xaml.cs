@@ -52,7 +52,10 @@ public partial class App : Application
     {
         var builder = WebApplication.CreateBuilder(Array.Empty<string>());
         builder.Logging.ClearProviders();
-        builder.WebHost.UseUrls("http://localhost:5005");
+
+        var listenUrl = Environment.GetEnvironmentVariable("NEWS_LISTEN_URL")
+            ?? "http://localhost:5005";
+        builder.WebHost.UseUrls(listenUrl);
         var app = builder.Build();
 
         app.MapPost("/news", async (HttpContext ctx) =>

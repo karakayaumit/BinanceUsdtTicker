@@ -49,6 +49,15 @@ set NEWS_NOTIFY_URL=http://app-host:5005/news   # Windows
 export NEWS_NOTIFY_URL=http://app-host:5005/news # Linux/macOS
 ```
 
+If the desktop application itself needs to accept connections from other
+machines, configure its listener address with `NEWS_LISTEN_URL` before
+launching the app. For example, to listen on all interfaces:
+
+```bash
+set NEWS_LISTEN_URL=http://0.0.0.0:5005   # Windows
+export NEWS_LISTEN_URL=http://0.0.0.0:5005 # Linux/macOS
+```
+
 You can run the service as a console app for testing:
 
 ```bash
