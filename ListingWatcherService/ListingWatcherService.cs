@@ -43,7 +43,8 @@ public sealed class ListingWatcherService : BackgroundService
     {
         await EnsureDatabaseAsync(stoppingToken);
 
-        while (!stoppingToken.IsCancellationRequested)
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             try
             {
@@ -55,15 +56,6 @@ public sealed class ListingWatcherService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Polling failed");
-            }
-
-            try
-            {
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
-            }
-            catch (TaskCanceledException)
-            {
-                break;
             }
         }
     }
