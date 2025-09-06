@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace ListingWatcher;
@@ -71,7 +72,7 @@ public sealed class ListingWatcherService : BackgroundService
                 {
                     try
                     {
-                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols);
+                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols, item.CreatedAt);
                     }
                     catch (SqlException ex) when (ex.Number is 2627 or 2601)
                     {
@@ -171,7 +172,10 @@ public sealed class ListingWatcherService : BackgroundService
 
             var stableId = urlItem ?? rawId;
             _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-            await ProcessListingAsync("bybit", stableId, title, urlItem, ct);
+            var cTimeMs = el.TryGetProperty("createdAt", out var pTime) && long.TryParse(pTime.GetString(), out var t)
+                ? t
+                : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            await ProcessListingAsync("bybit", stableId, title, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs), ct);
         }
     }
 
@@ -197,7 +201,8 @@ public sealed class ListingWatcherService : BackgroundService
             var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
             var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
             _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
-            await ProcessListingAsync("kucoin", id, title, urlItem, ct);
+            var cTimeMs = el.TryGetProperty("cTime", out var pTime) ? pTime.GetInt64() : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            await ProcessListingAsync("kucoin", id, title, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs), ct);
 
         }
     }
@@ -227,16 +232,19 @@ public sealed class ListingWatcherService : BackgroundService
                 var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("okx", id, title, urlItem, ct);
+                var cTimeMs = el.TryGetProperty("pTime", out var pTime) && long.TryParse(pTime.GetString(), out var t)
+                    ? t
+                    : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                await ProcessListingAsync("okx", id, title, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs), ct);
             }
         }
     }
 
-    private Task ProcessListingAsync(string source, string id, string title, string? url, CancellationToken ct)
+    private Task ProcessListingAsync(string source, string id, string title, string? url, DateTimeOffset createdAt, CancellationToken ct)
     {
         var symbols = ExtractSymbols(title);
         var normalizedId = NormalizeId(id);
-        var item = new ListingItem(source, normalizedId, title, url, symbols);
+        var item = new ListingItem(source, normalizedId, title, url, symbols, createdAt);
         return _queue.Writer.WriteAsync(item, ct).AsTask();
     }
 
@@ -305,7 +313,7 @@ END";
         }
     }
 
-    private async Task SaveListingAsync(string source, string id, string title, string? url, IReadOnlyList<string> symbols)
+    private async Task SaveListingAsync(string source, string id, string title, string? url, IReadOnlyList<string> symbols, DateTimeOffset createdAt)
     {
         try
         {
@@ -314,8 +322,8 @@ END";
             var cmd = conn.CreateCommand();
             cmd.CommandText = @"
                SET NOCOUNT ON;
-INSERT INTO dbo.News (Id, Source, Title, Url, Symbols)
-SELECT @Id, @Source, @Title, @Url, @Symbols
+INSERT INTO dbo.News (Id, Source, Title, Url, Symbols, CreatedAt)
+SELECT @Id, @Source, @Title, @Url, @Symbols, @CreatedAt
 WHERE NOT EXISTS (
     SELECT 1
     FROM dbo.News WITH (UPDLOCK, HOLDLOCK)
@@ -326,6 +334,7 @@ WHERE NOT EXISTS (
             cmd.Parameters.AddWithValue("@Title", title);
             cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Symbols", string.Join(',', symbols));
+            cmd.Parameters.Add("@CreatedAt", SqlDbType.DateTimeOffset).Value = createdAt;
             await cmd.ExecuteNonQueryAsync();
         }
         catch (Exception ex)
@@ -334,6 +343,6 @@ WHERE NOT EXISTS (
         }
     }
 
-    private record ListingItem(string Source, string Id, string Title, string? Url, IReadOnlyList<string> Symbols);
+    private record ListingItem(string Source, string Id, string Title, string? Url, IReadOnlyList<string> Symbols, DateTimeOffset CreatedAt);
 
 }
