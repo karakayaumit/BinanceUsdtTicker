@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Data.SqlClient;
 
 namespace BinanceUsdtTicker;
 
@@ -19,6 +20,7 @@ public sealed class ListingWatcherService : BackgroundService
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
     private readonly Uri _notifyUri;
+    private readonly string _connectionString;
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger)
     {
@@ -37,10 +39,16 @@ public sealed class ListingWatcherService : BackgroundService
         };
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
         _logger.LogInformation("Sending notifications to {NotifyUrl}", _notifyUri);
+
+        _connectionString =
+            Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
+            "Server=(localdb)\\MSSQLLocalDB;Database=BinanceUsdtTicker;Trusted_Connection=True;";
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await EnsureTableAsync(stoppingToken);
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -151,9 +159,11 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task NotifyAsync(string source, string id, string title, string? url)
     {
+        var symbols = ExtractSymbols(title);
+        await SaveListingAsync(source, id, title, url, symbols);
         try
         {
-            var payload = new ListingNotification(id, source, title, url, ExtractSymbols(title));
+            var payload = new ListingNotification(id, source, title, url, symbols);
             await _http.PostAsJsonAsync(_notifyUri, payload);
         }
         catch (Exception ex)
@@ -178,6 +188,46 @@ public sealed class ListingWatcherService : BackgroundService
                 set.Add(sym + "USDT");
         }
         return set.ToList();
+    }
+
+    private async Task EnsureTableAsync(CancellationToken ct)
+    {
+        await using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync(ct);
+        var cmd = conn.CreateCommand();
+        cmd.CommandText = @"IF OBJECT_ID('dbo.News', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.News (
+        Id NVARCHAR(100) PRIMARY KEY,
+        Source NVARCHAR(50) NOT NULL,
+        Title NVARCHAR(MAX) NOT NULL,
+        Url NVARCHAR(2048) NULL,
+        Symbols NVARCHAR(200) NULL,
+        CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+    )
+END";
+        await cmd.ExecuteNonQueryAsync(ct);
+    }
+
+    private async Task SaveListingAsync(string source, string id, string title, string? url, IReadOnlyList<string> symbols)
+    {
+        try
+        {
+            await using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = @"INSERT INTO dbo.News (Id, Source, Title, Url, Symbols) VALUES (@Id, @Source, @Title, @Url, @Symbols)";
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@Source", source);
+            cmd.Parameters.AddWithValue("@Title", title);
+            cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Symbols", string.Join(',', symbols));
+            await cmd.ExecuteNonQueryAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "DB insert failed");
+        }
     }
 
     private record ListingNotification(string Id, string Source, string Title, string? Url, IReadOnlyList<string> Symbols);
