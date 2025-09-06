@@ -50,6 +50,7 @@ public sealed class ListingWatcherService : BackgroundService
                 await PollBybitAsync(stoppingToken);
                 await PollKucoinAsync(stoppingToken);
                 await PollOkxAsync(stoppingToken);
+                await PollCryptoPanicAsync(stoppingToken);
             }
             catch (Exception ex)
             {
@@ -104,6 +105,35 @@ public sealed class ListingWatcherService : BackgroundService
             {
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
                 await ProcessListingAsync("bybit", stableId, title, urlItem);
+            }
+        }
+    }
+
+    private async Task PollCryptoPanicAsync(CancellationToken ct)
+    {
+        var token = Environment.GetEnvironmentVariable("CRYPTO_PANIC_TOKEN");
+        if (string.IsNullOrWhiteSpace(token))
+            return;
+
+        var url = $"https://cryptopanic.com/api/v1/posts/?auth_token={token}&public=true";
+        using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        resp.EnsureSuccessStatusCode();
+
+        using var stream = await resp.Content.ReadAsStreamAsync(ct);
+        using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ct);
+        if (!doc.RootElement.TryGetProperty("results", out var results))
+            return;
+
+        foreach (var el in results.EnumerateArray())
+        {
+            var id = el.TryGetProperty("id", out var pId) ? pId.GetInt32().ToString() : Guid.NewGuid().ToString("n");
+            var stableId = "cp-" + id;
+            if (_seen.TryAdd(stableId, 0))
+            {
+                var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
+                var urlItem = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() : null;
+                _logger.LogInformation("CryptoPanic news: {Title} {Url}", title, urlItem);
+                await ProcessListingAsync("cryptopanic", stableId, title, urlItem);
             }
         }
     }
