@@ -75,10 +75,20 @@ MapRssEndpoint(
             var title = it.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
             var desc = it.TryGetProperty("description", out var pDesc) ? pDesc.GetString() : null;
             var urlItem = it.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
-            // Bybit provides announcement timestamps in the "dateTimestamp" field
-            var cTimeMs = it.TryGetProperty("dateTimestamp", out var pTime) && long.TryParse(pTime.GetString(), out var t)
-                ? t
-                : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            // Bybit provides announcement timestamps in the "dateTimestamp" field,
+            // but the field may be delivered either as a number or a string.
+            var cTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (it.TryGetProperty("dateTimestamp", out var pTime))
+            {
+                if (pTime.ValueKind == JsonValueKind.Number && pTime.TryGetInt64(out var tNum))
+                {
+                    cTimeMs = tNum;
+                }
+                else if (pTime.ValueKind == JsonValueKind.String && long.TryParse(pTime.GetString(), out var tStr))
+                {
+                    cTimeMs = tStr;
+                }
+            }
             list.Add(new FeedItem(id, title, desc, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs)));
         }
         return list;
