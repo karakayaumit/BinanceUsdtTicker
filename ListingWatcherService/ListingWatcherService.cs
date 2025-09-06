@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Linq;
@@ -19,7 +19,7 @@ public sealed class ListingWatcherService : BackgroundService
 {
     private readonly ILogger<ListingWatcherService> _logger;
     private readonly HttpClient _http;
-    private readonly ConcurrentDictionary<string, byte> _seen = new();
+    //private readonly ConcurrentDictionary<string, byte> _seen = new();
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
     private readonly string _connectionString;
@@ -59,44 +59,76 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task SaveWorkerAsync(CancellationToken ct)
     {
+        var reader = _queue.Reader;
+        _logger.LogInformation("save worker started");
+
+
         try
         {
-            var reader = _queue.Reader;
             while (await reader.WaitToReadAsync(ct))
             {
                 while (reader.TryRead(out var item))
                 {
-                    await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols);
+                    try
+                    {
+                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols);
+                    }
+                    catch (SqlException ex) when (ex.Number is 2627 or 2601)
+                    {
+                        // duplicate → atla
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "save failed for {Source}/{Id}", item.Source, item.Id);
+                    }
                 }
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
-            // graceful shutdown
+            // normal kapanış
+        }
+        finally
+        {
+            _logger.LogInformation("save worker stopped");
         }
     }
 
     private async Task RunPollingLoop(string name, Func<CancellationToken, Task> poll, CancellationToken ct)
     {
-        while (!ct.IsCancellationRequested)
-        {
-            try
-            {
-                await poll(ct);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "{Name} polling failed", name);
-            }
+        // 5 saniyelik sabit periyot. PeriodicTimer drift'i azaltır
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        _logger.LogInformation("{Name} loop started (5s)", name);
 
-            try
+
+        try
+        {
+            while (await timer.WaitForNextTickAsync(ct))
             {
-                await Task.Delay(TimeSpan.FromSeconds(3), ct);
+                try
+                {
+                    _logger.LogDebug("tick {Name} {Time}", name, DateTimeOffset.Now);
+                    await poll(ct); // Bybit/KuCoin/OKX tek tur çalışır
+                }
+                catch (OperationCanceledException) when (ct.IsCancellationRequested)
+                {
+                    // Host durdurdu, çıkıyoruz
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    // Her türlü hata loglanır, döngü devam eder
+                    _logger.LogError(ex, "{Name} polling failed", name);
+                }
             }
-            catch (OperationCanceledException)
-            {
-                // Ignore cancellation to allow graceful shutdown
-            }
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            // normal kapanış
+        }
+        finally
+        {
+            _logger.LogInformation("{Name} loop stopped", name);
         }
     }
 
@@ -138,11 +170,8 @@ public sealed class ListingWatcherService : BackgroundService
                 : el.TryGetProperty("link", out var pLink) ? pLink.GetString() : null;
 
             var stableId = urlItem ?? rawId;
-            if (_seen.TryAdd(stableId, 0))
-            {
-                _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("bybit", stableId, title, urlItem, ct);
-            }
+            _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
+            await ProcessListingAsync("bybit", stableId, title, urlItem, ct);
         }
     }
 
@@ -163,13 +192,13 @@ public sealed class ListingWatcherService : BackgroundService
         foreach (var el in items.EnumerateArray())
         {
             var id = el.TryGetProperty("annId", out var pId) ? pId.GetInt64().ToString() : Guid.NewGuid().ToString("n");
-            if (_seen.TryAdd(id, 0))
-            {
-                var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-                var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
-                _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("kucoin", id, title, urlItem, ct);
-            }
+           
+
+            var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
+            var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
+            _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
+            await ProcessListingAsync("kucoin", id, title, urlItem, ct);
+
         }
     }
 
@@ -194,13 +223,11 @@ public sealed class ListingWatcherService : BackgroundService
             foreach (var el in details.EnumerateArray())
             {
                 var id = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
-                if (_seen.TryAdd(id, 0))
-                {
-                    var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-                    var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
-                    _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
-                    await ProcessListingAsync("okx", id, title, urlItem, ct);
-                }
+               
+                var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
+                var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
+                _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
+                await ProcessListingAsync("okx", id, title, urlItem, ct);
             }
         }
     }
@@ -286,9 +313,14 @@ END";
             await conn.OpenAsync();
             var cmd = conn.CreateCommand();
             cmd.CommandText = @"
-                IF NOT EXISTS (SELECT 1 FROM dbo.News WHERE Id = @Id)
-                    INSERT INTO dbo.News (Id, Source, Title, Url, Symbols)
-                    VALUES (@Id, @Source, @Title, @Url, @Symbols);";
+               SET NOCOUNT ON;
+INSERT INTO dbo.News (Id, Source, Title, Url, Symbols)
+SELECT @Id, @Source, @Title, @Url, @Symbols
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM dbo.News WITH (UPDLOCK, HOLDLOCK)
+    WHERE Id = @Id
+);";
             cmd.Parameters.AddWithValue("@Id", id);
             cmd.Parameters.AddWithValue("@Source", source);
             cmd.Parameters.AddWithValue("@Title", title);

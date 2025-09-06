@@ -3,7 +3,17 @@ using Microsoft.Extensions.Hosting;
 using ListingWatcher;
 using System;
 
-var builder = Host.CreateDefaultBuilder(args);
+var builder = Host.CreateDefaultBuilder(args)
+.UseWindowsService()
+.ConfigureServices(services =>
+{
+    services.AddHostedService<ListingWatcherService>();
+})
+.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddEventLog(o => o.SourceName = "ListingWatcherService");
+});
 
 if (OperatingSystem.IsWindows())
 {
@@ -16,3 +26,5 @@ builder.ConfigureServices(services =>
     })
     .Build()
     .Run();
+
+await builder.Build().RunAsync();
