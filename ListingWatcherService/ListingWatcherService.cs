@@ -48,8 +48,7 @@ public sealed class ListingWatcherService : BackgroundService
         {
             RunPollLoop(PollBybitAsync, stoppingToken),
             RunPollLoop(PollKucoinAsync, stoppingToken),
-            RunPollLoop(PollOkxAsync, stoppingToken),
-            RunPollLoop(PollCryptoPanicAsync, stoppingToken)
+            RunPollLoop(PollOkxAsync, stoppingToken)
         };
 
         await Task.WhenAll(tasks);
@@ -112,40 +111,6 @@ public sealed class ListingWatcherService : BackgroundService
             {
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
                 await ProcessListingAsync("bybit", stableId, title, urlItem);
-            }
-        }
-    }
-
-    private async Task PollCryptoPanicAsync(CancellationToken ct)
-    {
-        var token = Environment.GetEnvironmentVariable("CRYPTO_PANIC_TOKEN");
-        if (string.IsNullOrWhiteSpace(token))
-            return;
-
-        var url = $"https://cryptopanic.com/api/v1/posts/?auth_token={token}&public=true";
-        using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
-        if (resp.StatusCode == HttpStatusCode.Forbidden)
-        {
-            _logger.LogWarning("Forbidden when polling CryptoPanic: {Url}", url);
-            return;
-        }
-        resp.EnsureSuccessStatusCode();
-
-        using var stream = await resp.Content.ReadAsStreamAsync(ct);
-        using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ct);
-        if (!doc.RootElement.TryGetProperty("results", out var results))
-            return;
-
-        foreach (var el in results.EnumerateArray())
-        {
-            var id = el.TryGetProperty("id", out var pId) ? pId.GetInt32().ToString() : Guid.NewGuid().ToString("n");
-            var stableId = "cp-" + id;
-            if (_seen.TryAdd(stableId, 0))
-            {
-                var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-                var urlItem = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() : null;
-                _logger.LogInformation("CryptoPanic news: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("cryptopanic", stableId, title, urlItem);
             }
         }
     }
