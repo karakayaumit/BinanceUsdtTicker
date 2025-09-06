@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Linq;
@@ -23,6 +24,7 @@ public sealed class ListingWatcherService : BackgroundService
     //private readonly ConcurrentDictionary<string, byte> _seen = new();
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
+    private static readonly TimeZoneInfo TurkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
     private readonly string _connectionString;
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
 
@@ -335,7 +337,8 @@ WHERE NOT EXISTS (
             cmd.Parameters.AddWithValue("@Title", title);
             cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Symbols", string.Join(',', symbols));
-            cmd.Parameters.Add("@CreatedAt", SqlDbType.DateTimeOffset).Value = createdAt;
+            var localCreatedAt = TimeZoneInfo.ConvertTime(createdAt, TurkeyTimeZone);
+            cmd.Parameters.Add("@CreatedAt", SqlDbType.DateTimeOffset).Value = localCreatedAt;
             await cmd.ExecuteNonQueryAsync();
         }
         catch (Exception ex)
