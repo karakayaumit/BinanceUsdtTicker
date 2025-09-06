@@ -75,7 +75,10 @@ MapRssEndpoint(
             var title = it.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
             var desc = it.TryGetProperty("description", out var pDesc) ? pDesc.GetString() : null;
             var urlItem = it.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
-            var cTimeMs = it.TryGetProperty("createdAt", out var pTime) && long.TryParse(pTime.GetString(), out var t) ? t : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            // Bybit provides announcement timestamps in the "dateTimestamp" field
+            var cTimeMs = it.TryGetProperty("dateTimestamp", out var pTime) && long.TryParse(pTime.GetString(), out var t)
+                ? t
+                : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             list.Add(new FeedItem(id, title, desc, urlItem, DateTimeOffset.FromUnixTimeMilliseconds(cTimeMs)));
         }
         return list;
