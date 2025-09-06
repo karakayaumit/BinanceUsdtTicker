@@ -19,6 +19,7 @@ using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
+using Microsoft.Data.SqlClient;
 
 namespace BinanceUsdtTicker
 {
@@ -159,6 +160,7 @@ namespace BinanceUsdtTicker
                 await RefreshAccountDataAsync();
                 await LoadOrderHistoryAsync();
                 await LoadTradeHistoryAsync();
+                await LoadNewsFromDatabaseAsync();
             };
 
             _refreshTimer.Interval = TimeSpan.FromSeconds(5);
@@ -194,6 +196,44 @@ namespace BinanceUsdtTicker
                 if (_newsItems.Count > 100)
                     _newsItems.RemoveAt(_newsItems.Count - 1);
             });
+        }
+
+        private async Task LoadNewsFromDatabaseAsync()
+        {
+            var connectionString =
+                Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
+                "Server=KARAKAYA-MSI\\KARAKAYADB;Database=BinanceUsdtTicker;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
+            try
+            {
+                await using var conn = new SqlConnection(connectionString);
+                await conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = @"SELECT TOP 100 Id, Source, Title, Url, Symbols, CreatedAt FROM dbo.News ORDER BY CreatedAt DESC";
+                await using var reader = await cmd.ExecuteReaderAsync();
+                var items = new List<NewsItem>();
+                while (await reader.ReadAsync())
+                {
+                    var id = reader.GetString(0);
+                    var source = reader.GetString(1);
+                    var title = reader.GetString(2);
+                    var url = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
+                    var symbolsStr = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
+                    var created = reader.GetDateTimeOffset(5);
+                    var symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    items.Add(new NewsItem(id, source, created.UtcDateTime, title, null, url, NewsType.Listing, symbols));
+                }
+
+                Dispatcher.Invoke(() =>
+                {
+                    _newsItems.Clear();
+                    foreach (var item in items)
+                        _newsItems.Add(item);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Failed to load news from DB: {ex}");
+            }
         }
 
         // ---------- küçük yardımcılar ----------
