@@ -8,7 +8,7 @@ using System.Net;
 using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 
 namespace ListingWatcher;
 
