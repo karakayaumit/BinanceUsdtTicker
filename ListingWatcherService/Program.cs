@@ -1,18 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ListingWatcher;
-using System;
 
-var builder = Host.CreateDefaultBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
-if (OperatingSystem.IsWindows())
-{
-    builder.UseWindowsService();
-}
+builder.Services.AddWindowsService(o => o.ServiceName = "Binance Watcher");
 
-builder.ConfigureServices(services =>
-    {
-        services.AddHostedService<ListingWatcherService>();
-    })
-    .Build()
-    .Run();
+builder.Logging.ClearProviders();
+builder.Logging.AddEventLog(o => o.SourceName = "ListingWatcherService");
+
+builder.Services.AddHostedService<ListingWatcherService>();
+
+await builder.Build().RunAsync();

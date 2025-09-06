@@ -2,8 +2,6 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Net;
 using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
@@ -19,7 +17,7 @@ public sealed class ListingWatcherService : BackgroundService
 {
     private readonly ILogger<ListingWatcherService> _logger;
     private readonly HttpClient _http;
-    private readonly ConcurrentDictionary<string, byte> _seen = new();
+    private readonly ConcurrentDictionary<(string Source, string ExternalId), byte> _seen = new();
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
     private readonly string _connectionString;
@@ -66,7 +64,7 @@ public sealed class ListingWatcherService : BackgroundService
             {
                 while (reader.TryRead(out var item))
                 {
-                    await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols);
+                    await SaveListingAsync(item.Source, item.ExternalId, item.Title, item.Url, item.Symbols);
                 }
             }
         }
@@ -138,10 +136,11 @@ public sealed class ListingWatcherService : BackgroundService
                 : el.TryGetProperty("link", out var pLink) ? pLink.GetString() : null;
 
             var stableId = urlItem ?? rawId;
-            if (_seen.TryAdd(stableId, 0))
+            if (_seen.TryAdd(("bybit", stableId), 0))
             {
-                _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("bybit", stableId, title, urlItem, ct);
+                var urlNonNull = urlItem ?? string.Empty;
+                _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlNonNull);
+                await ProcessListingAsync("bybit", stableId, title, urlNonNull, ct);
             }
         }
     }
@@ -163,12 +162,13 @@ public sealed class ListingWatcherService : BackgroundService
         foreach (var el in items.EnumerateArray())
         {
             var id = el.TryGetProperty("annId", out var pId) ? pId.GetInt64().ToString() : Guid.NewGuid().ToString("n");
-            if (_seen.TryAdd(id, 0))
+            if (_seen.TryAdd(("kucoin", id), 0))
             {
                 var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
-                _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("kucoin", id, title, urlItem, ct);
+                var urlNonNull = urlItem ?? string.Empty;
+                _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlNonNull);
+                await ProcessListingAsync("kucoin", id, title, urlNonNull, ct);
             }
         }
     }
@@ -194,22 +194,22 @@ public sealed class ListingWatcherService : BackgroundService
             foreach (var el in details.EnumerateArray())
             {
                 var id = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
-                if (_seen.TryAdd(id, 0))
+                if (_seen.TryAdd(("okx", id), 0))
                 {
                     var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                     var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
-                    _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
-                    await ProcessListingAsync("okx", id, title, urlItem, ct);
+                    var urlNonNull = urlItem ?? string.Empty;
+                    _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlNonNull);
+                    await ProcessListingAsync("okx", id, title, urlNonNull, ct);
                 }
             }
         }
     }
 
-    private Task ProcessListingAsync(string source, string id, string title, string? url, CancellationToken ct)
+    private Task ProcessListingAsync(string source, string externalId, string title, string url, CancellationToken ct)
     {
         var symbols = ExtractSymbols(title);
-        var normalizedId = NormalizeId(id);
-        var item = new ListingItem(source, normalizedId, title, url, symbols);
+        var item = new ListingItem(source, externalId, title, url, symbols);
         return _queue.Writer.WriteAsync(item, ct).AsTask();
     }
 
@@ -229,14 +229,6 @@ public sealed class ListingWatcherService : BackgroundService
                 set.Add(sym + "USDT");
         }
         return set.ToList();
-    }
-
-    private static string NormalizeId(string id)
-    {
-        if (id.Length <= 100)
-            return id;
-        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(id));
-        return Convert.ToHexString(hash).ToLowerInvariant();
     }
 
     private async Task EnsureDatabaseAsync(CancellationToken ct)
@@ -262,13 +254,15 @@ public sealed class ListingWatcherService : BackgroundService
             create.CommandText = @"IF OBJECT_ID('dbo.News', 'U') IS NULL
 BEGIN
     CREATE TABLE dbo.News (
-        Id NVARCHAR(100) PRIMARY KEY,
-        Source NVARCHAR(50) NOT NULL,
-        Title NVARCHAR(MAX) NOT NULL,
-        Url NVARCHAR(2048) NULL,
-        Symbols NVARCHAR(200) NULL,
-        CreatedAt DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Turkey Standard Time')
-    )
+        NewsId BIGINT IDENTITY(1,1) PRIMARY KEY,
+        Source NVARCHAR(16) NOT NULL,
+        ExternalId NVARCHAR(256) NOT NULL,
+        Title NVARCHAR(512) NOT NULL,
+        Url NVARCHAR(1024) NOT NULL,
+        Symbols NVARCHAR(256) NULL,
+        CreatedAtUtc DATETIME2(0) NOT NULL CONSTRAINT DF_News_CreatedAtUtc DEFAULT SYSUTCDATETIME()
+    );
+    CREATE UNIQUE INDEX UX_News_Source_ExternalId ON dbo.News(Source, ExternalId);
 END";
             await create.ExecuteNonQueryAsync(ct);
         }
@@ -278,7 +272,7 @@ END";
         }
     }
 
-    private async Task SaveListingAsync(string source, string id, string title, string? url, IReadOnlyList<string> symbols)
+    private async Task SaveListingAsync(string source, string externalId, string title, string url, IReadOnlyList<string> symbols)
     {
         try
         {
@@ -286,13 +280,13 @@ END";
             await conn.OpenAsync();
             var cmd = conn.CreateCommand();
             cmd.CommandText = @"
-                IF NOT EXISTS (SELECT 1 FROM dbo.News WHERE Id = @Id)
-                    INSERT INTO dbo.News (Id, Source, Title, Url, Symbols)
-                    VALUES (@Id, @Source, @Title, @Url, @Symbols);";
-            cmd.Parameters.AddWithValue("@Id", id);
+                IF NOT EXISTS (SELECT 1 FROM dbo.News WHERE Source = @Source AND ExternalId = @ExternalId)
+                    INSERT INTO dbo.News (Source, ExternalId, Title, Url, Symbols)
+                    VALUES (@Source, @ExternalId, @Title, @Url, @Symbols);";
             cmd.Parameters.AddWithValue("@Source", source);
+            cmd.Parameters.AddWithValue("@ExternalId", externalId);
             cmd.Parameters.AddWithValue("@Title", title);
-            cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Url", url);
             cmd.Parameters.AddWithValue("@Symbols", string.Join(',', symbols));
             await cmd.ExecuteNonQueryAsync();
         }
@@ -302,6 +296,6 @@ END";
         }
     }
 
-    private record ListingItem(string Source, string Id, string Title, string? Url, IReadOnlyList<string> Symbols);
+    private record ListingItem(string Source, string ExternalId, string Title, string Url, IReadOnlyList<string> Symbols);
 
 }
