@@ -47,7 +47,7 @@ public sealed class ListingWatcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await EnsureTableAsync(stoppingToken);
+        await EnsureDatabaseAsync(stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -190,12 +190,27 @@ public sealed class ListingWatcherService : BackgroundService
         return set.ToList();
     }
 
-    private async Task EnsureTableAsync(CancellationToken ct)
+    private async Task EnsureDatabaseAsync(CancellationToken ct)
     {
-        await using var conn = new SqlConnection(_connectionString);
-        await conn.OpenAsync(ct);
-        var cmd = conn.CreateCommand();
-        cmd.CommandText = @"IF OBJECT_ID('dbo.News', 'U') IS NULL
+        try
+        {
+            var builder = new SqlConnectionStringBuilder(_connectionString);
+            var dbName = builder.InitialCatalog;
+            builder.InitialCatalog = "master";
+
+            await using (var master = new SqlConnection(builder.ConnectionString))
+            {
+                await master.OpenAsync(ct);
+                var cmd = master.CreateCommand();
+                cmd.CommandText = "IF DB_ID(@db) IS NULL CREATE DATABASE [" + dbName + "]";
+                cmd.Parameters.AddWithValue("@db", dbName);
+                await cmd.ExecuteNonQueryAsync(ct);
+            }
+
+            await using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync(ct);
+            var create = conn.CreateCommand();
+            create.CommandText = @"IF OBJECT_ID('dbo.News', 'U') IS NULL
 BEGIN
     CREATE TABLE dbo.News (
         Id NVARCHAR(100) PRIMARY KEY,
@@ -206,6 +221,12 @@ BEGIN
         CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
     )
 END";
+            await create.ExecuteNonQueryAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Database setup failed");
+        }
         await cmd.ExecuteNonQueryAsync(ct);
     }
 
