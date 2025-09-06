@@ -36,7 +36,7 @@ public sealed class ListingWatcherService : BackgroundService
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
         _connectionString =
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
-            "Server=(localdb)\\MSSQLLocalDB;Database=BinanceUsdtTicker;Trusted_Connection=True;";
+            "Server=KARAKAYA-MSI\\KARAKAYADB;Database=KARAKAYADB;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
