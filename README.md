@@ -42,7 +42,9 @@ The `ListingWatcherService` project polls several exchange announcement APIs
 and writes new listings directly to a SQL database. Configure the database
 connection string with the `BINANCE_DB_CONNECTION` environment variable;
 otherwise it connects to `KARAKAYA-MSI\\KARAKAYADB` using the SQL login
-`sa` with password `Lhya!812`.
+`sa` with password `Lhya!812`. If you also set `CRYPTO_PANIC_TOKEN` the
+service will poll CryptoPanic for general news and store those items in the
+same table.
 
 You can run the service as a console app for testing:
 
