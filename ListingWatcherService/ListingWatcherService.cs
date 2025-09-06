@@ -83,21 +83,27 @@ public sealed class ListingWatcherService : BackgroundService
         foreach (var el in items.EnumerateArray())
         {
             // ID is exposed as either "id" or "announcementId" depending on
-            // the API version. Handle both to stay compatible.
-            var id = el.TryGetProperty("id", out var pId)
+            // the API version. Handle both to stay compatible. However, Bybit
+            // has been observed to return different ids for the same
+            // announcement. Use the URL when available as a stable identifier
+            // to avoid inserting duplicate rows.
+            var rawId = el.TryGetProperty("id", out var pId)
                 ? (pId.ValueKind == JsonValueKind.String ? pId.GetString() : pId.GetRawText()) ?? Guid.NewGuid().ToString("n")
                 : el.TryGetProperty("announcementId", out var pAnnId)
                     ? (pAnnId.ValueKind == JsonValueKind.String ? pAnnId.GetString() : pAnnId.GetRawText()) ?? Guid.NewGuid().ToString("n")
                     : Guid.NewGuid().ToString("n");
-            if (_seen.TryAdd(id, 0))
+
+            var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
+            // In newer responses the URL field may be named either "url" or "link".
+            var urlItem = el.TryGetProperty("url", out var pUrl)
+                ? pUrl.GetString()
+                : el.TryGetProperty("link", out var pLink) ? pLink.GetString() : null;
+
+            var stableId = urlItem ?? rawId;
+            if (_seen.TryAdd(stableId, 0))
             {
-                var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-                // In newer responses the URL field may be named either "url" or "link".
-                var urlItem = el.TryGetProperty("url", out var pUrl)
-                    ? pUrl.GetString()
-                    : el.TryGetProperty("link", out var pLink) ? pLink.GetString() : null;
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("bybit", id, title, urlItem);
+                await ProcessListingAsync("bybit", stableId, title, urlItem);
             }
         }
     }
