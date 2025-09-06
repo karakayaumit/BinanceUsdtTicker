@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,8 +46,6 @@ namespace BinanceUsdtTicker
                         items.AddRange(await FetchRssAsync($"{baseUrl}/rss/kucoin-new", "kucoin"));
                         items.AddRange(await FetchRssAsync($"{baseUrl}/rss/okx-new", "okx"));
                     }
-                    if (!string.IsNullOrEmpty(_options.CryptoPanicToken))
-                        items.AddRange(await FetchCryptoPanicAsync(_options.CryptoPanicToken));
 
                     foreach (var item in items)
                     {
@@ -108,34 +105,6 @@ namespace BinanceUsdtTicker
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"{source} RSS fetch error: {ex}");
-            }
-            return list;
-        }
-
-        private async Task<IList<NewsItem>> FetchCryptoPanicAsync(string token)
-        {
-            var list = new List<NewsItem>();
-            try
-            {
-                var url = $"https://cryptopanic.com/api/v1/posts/?auth_token={token}&public=true";
-                var json = await _httpClient.GetStringAsync(url);
-                using var doc = JsonDocument.Parse(json);
-                if (doc.RootElement.TryGetProperty("results", out var results))
-                {
-                    foreach (var el in results.EnumerateArray())
-                    {
-                        var id = el.GetProperty("id").GetInt32();
-                        var title = el.GetProperty("title").GetString() ?? string.Empty;
-                        var link = el.GetProperty("url").GetString() ?? string.Empty;
-                        var publishedAt = el.GetProperty("published_at").GetDateTime();
-                        var type = Classify(title);
-                        list.Add(new NewsItem(id: $"cp::{id}", source: "cryptopanic", timestamp: publishedAt, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"CryptoPanic fetch error: {ex}");
             }
             return list;
         }

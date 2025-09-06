@@ -40,7 +40,6 @@ public partial class App : Application
         // does not expose LoadDefaultUiSettings().
         var settings = global::BinanceUsdtTicker.MainWindow.LoadDefaultUiSettings();
         _newsOptions.PollInterval = TimeSpan.FromSeconds(5);
-        _newsOptions.CryptoPanicToken = string.Empty;
         _newsOptions.RssBaseUrl = string.IsNullOrWhiteSpace(settings.BaseUrl)
             ? "http://localhost:5005"
             : settings.BaseUrl;
