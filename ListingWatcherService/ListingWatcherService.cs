@@ -67,7 +67,9 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task PollBybitAsync(CancellationToken ct)
     {
-        var url = "https://api.bybit.com/v5/public/announcements?locale=en-US&category=listing&pageSize=20&page=1";
+        // Bybit changed the listings endpoint to /v5/announcements/index.
+        // The previous /v5/public/announcements path now returns 404.
+        var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&tag=listing&limit=20&page=1";
 
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
         resp.EnsureSuccessStatusCode();
@@ -77,11 +79,20 @@ public sealed class ListingWatcherService : BackgroundService
         var items = doc.RootElement.GetProperty("result").GetProperty("list");
         foreach (var el in items.EnumerateArray())
         {
-            var id = el.TryGetProperty("id", out var pId) ? pId.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
+            // ID is exposed as either "id" or "announcementId" depending on
+            // the API version. Handle both to stay compatible.
+            var id = el.TryGetProperty("id", out var pId)
+                ? (pId.ValueKind == JsonValueKind.String ? pId.GetString() : pId.GetRawText()) ?? Guid.NewGuid().ToString("n")
+                : el.TryGetProperty("announcementId", out var pAnnId)
+                    ? (pAnnId.ValueKind == JsonValueKind.String ? pAnnId.GetString() : pAnnId.GetRawText()) ?? Guid.NewGuid().ToString("n")
+                    : Guid.NewGuid().ToString("n");
             if (_seen.TryAdd(id, 0))
             {
                 var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-                var urlItem = el.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
+                // In newer responses the URL field may be named either "url" or "link".
+                var urlItem = el.TryGetProperty("url", out var pUrl)
+                    ? pUrl.GetString()
+                    : el.TryGetProperty("link", out var pLink) ? pLink.GetString() : null;
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
                 await NotifyAsync("bybit", id, title, urlItem);
             }
