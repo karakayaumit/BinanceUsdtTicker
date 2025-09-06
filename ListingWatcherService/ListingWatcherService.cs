@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Net;
+using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.SqlClient;
@@ -22,6 +23,7 @@ public sealed class ListingWatcherService : BackgroundService
     private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
     private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
     private readonly string _connectionString;
+    private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger)
     {
@@ -48,10 +50,30 @@ public sealed class ListingWatcherService : BackgroundService
         {
             RunPollingLoop("bybit", PollBybitAsync, stoppingToken),
             RunPollingLoop("kucoin", PollKucoinAsync, stoppingToken),
-            RunPollingLoop("okx", PollOkxAsync, stoppingToken)
+            RunPollingLoop("okx", PollOkxAsync, stoppingToken),
+            SaveWorkerAsync(stoppingToken)
         };
 
         await Task.WhenAll(tasks);
+    }
+
+    private async Task SaveWorkerAsync(CancellationToken ct)
+    {
+        try
+        {
+            var reader = _queue.Reader;
+            while (await reader.WaitToReadAsync(ct))
+            {
+                while (reader.TryRead(out var item))
+                {
+                    await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols);
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // graceful shutdown
+        }
     }
 
     private async Task RunPollingLoop(string name, Func<CancellationToken, Task> poll, CancellationToken ct)
@@ -119,7 +141,7 @@ public sealed class ListingWatcherService : BackgroundService
             if (_seen.TryAdd(stableId, 0))
             {
                 _logger.LogInformation("Bybit new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("bybit", stableId, title, urlItem);
+                await ProcessListingAsync("bybit", stableId, title, urlItem, ct);
             }
         }
     }
@@ -146,7 +168,7 @@ public sealed class ListingWatcherService : BackgroundService
                 var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("KuCoin new listing: {Title} {Url}", title, urlItem);
-                await ProcessListingAsync("kucoin", id, title, urlItem);
+                await ProcessListingAsync("kucoin", id, title, urlItem, ct);
             }
         }
     }
@@ -177,17 +199,18 @@ public sealed class ListingWatcherService : BackgroundService
                     var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                     var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
                     _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
-                    await ProcessListingAsync("okx", id, title, urlItem);
+                    await ProcessListingAsync("okx", id, title, urlItem, ct);
                 }
             }
         }
     }
 
-    private async Task ProcessListingAsync(string source, string id, string title, string? url)
+    private Task ProcessListingAsync(string source, string id, string title, string? url, CancellationToken ct)
     {
         var symbols = ExtractSymbols(title);
         var normalizedId = NormalizeId(id);
-        await SaveListingAsync(source, normalizedId, title, url, symbols);
+        var item = new ListingItem(source, normalizedId, title, url, symbols);
+        return _queue.Writer.WriteAsync(item, ct).AsTask();
     }
 
     private static IReadOnlyList<string> ExtractSymbols(string text)
@@ -278,5 +301,7 @@ END";
             _logger.LogError(ex, "DB insert failed");
         }
     }
+
+    private record ListingItem(string Source, string Id, string Title, string? Url, IReadOnlyList<string> Symbols);
 
 }
