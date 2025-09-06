@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace BinanceUsdtTicker
 {
@@ -49,7 +51,7 @@ namespace BinanceUsdtTicker
                         var url = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
                         var symbolsStr = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
                         var created = reader.GetDateTimeOffset(5);
-                        var symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        IReadOnlyList<string> symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
                         var item = new NewsItem(id: id, source: source, timestamp: created.UtcDateTime, title: title, body: null, link: url, type: NewsType.Listing, symbols: symbols);
                         NewsReceived?.Invoke(this, item);
                         if (created > _lastTimestamp)
