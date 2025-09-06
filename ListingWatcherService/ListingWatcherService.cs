@@ -68,8 +68,9 @@ public sealed class ListingWatcherService : BackgroundService
     private async Task PollBybitAsync(CancellationToken ct)
     {
         // Bybit changed the listings endpoint to /v5/announcements/index.
-        // The previous /v5/public/announcements path now returns 404.
-        var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&tag=listing&limit=20&page=1";
+        // Use type=new_crypto to retrieve recent listing announcements.
+        // The API is cursor based, so we simply request the first page.
+        var url = "https://api.bybit.com/v5/announcements/index?locale=en-US&type=new_crypto&limit=20";
 
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
         resp.EnsureSuccessStatusCode();
