@@ -44,23 +44,32 @@ public sealed class ListingWatcherService : BackgroundService
     {
         await EnsureDatabaseAsync(stoppingToken);
 
-        while (!stoppingToken.IsCancellationRequested)
+        var tasks = new[]
+        {
+            RunPollingLoop("bybit", PollBybitAsync, stoppingToken),
+            RunPollingLoop("kucoin", PollKucoinAsync, stoppingToken),
+            RunPollingLoop("okx", PollOkxAsync, stoppingToken)
+        };
+
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task RunPollingLoop(string name, Func<CancellationToken, Task> poll, CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
         {
             try
             {
-                await Task.WhenAll(
-                    PollBybitAsync(stoppingToken),
-                    PollKucoinAsync(stoppingToken),
-                    PollOkxAsync(stoppingToken));
+                await poll(ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Polling failed");
+                _logger.LogError(ex, "{Name} polling failed", name);
             }
 
             try
             {
-                await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(3), ct);
             }
             catch (OperationCanceledException)
             {
