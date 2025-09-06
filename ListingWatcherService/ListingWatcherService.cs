@@ -124,22 +124,27 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task PollOkxAsync(CancellationToken ct)
     {
-        var url = "https://www.okx.com/api/v5/public/announcements?lang=en-US&category=listing&pageSize=20&page=1";
+        var url = "https://www.okx.com/api/v5/support/announcements?annType=announcements-new-listings&page=1";
         using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
         resp.EnsureSuccessStatusCode();
 
         using var stream = await resp.Content.ReadAsStreamAsync(ct);
         using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ct);
-        var items = doc.RootElement.GetProperty("data");
-        foreach (var el in items.EnumerateArray())
+        var data = doc.RootElement.GetProperty("data");
+        foreach (var section in data.EnumerateArray())
         {
-            var id = el.TryGetProperty("id", out var pId) ? pId.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
-            if (_seen.TryAdd(id, 0))
+            if (!section.TryGetProperty("details", out var details))
+                continue;
+            foreach (var el in details.EnumerateArray())
             {
-                var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-                var urlItem = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() : null;
-                _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
-                await NotifyAsync("okx", id, title, urlItem);
+                var id = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
+                if (_seen.TryAdd(id, 0))
+                {
+                    var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
+                    var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
+                    _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
+                    await NotifyAsync("okx", id, title, urlItem);
+                }
             }
         }
     }
