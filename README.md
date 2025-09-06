@@ -32,9 +32,9 @@ Then access the feeds:
 - http://localhost:5000/rss/okx-new
 
 To consume these feeds in the main application, set `FreeNewsOptions.RssBaseUrl`
-to the base address of the running script. This setting is empty by default, so
-the app skips querying the RSS endpoints and no connection attempts are made
-until you provide a valid URL in the settings window.
+to the base address of the running script. The desktop app now defaults to
+`http://localhost:5005`, matching the feed script's default port. Adjust this
+value from the settings window if your service runs elsewhere.
 
 ## Listing Watcher Windows Service
 
