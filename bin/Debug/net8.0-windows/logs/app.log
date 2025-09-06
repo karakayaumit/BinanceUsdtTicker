@@ -12053,3 +12053,17 @@ Object name: 'System.Net.WebSockets.ClientWebSocket'.
 2025-09-06 15:54:21 ConnectLoop error: The operation was canceled.
 2025-09-06 15:54:21 WS closed
 2025-09-06 15:54:21 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-06 16:16:10 StartAsync
+2025-09-06 16:16:10 StopAsync
+2025-09-06 16:16:10 Monitor: state Connecting gap -1
+2025-09-06 16:16:10 WS state Connecting attempt 0
+2025-09-06 16:16:11 WS connected
+2025-09-06 16:21:16 StartAsync
+2025-09-06 16:21:16 StopAsync
+2025-09-06 16:21:16 Monitor: state Connecting gap -1
+2025-09-06 16:21:17 WS state Connecting attempt 0
+2025-09-06 16:21:17 WS connected
+2025-09-06 16:24:44 StopAsync
+2025-09-06 16:24:44 ConnectLoop error: The operation was canceled.
+2025-09-06 16:24:44 WS closed
+2025-09-06 16:24:44 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
