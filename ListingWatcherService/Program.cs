@@ -1,10 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ListingWatcher;
+using System;
 
-Host.CreateDefaultBuilder(args)
-    .UseWindowsService()
-    .ConfigureServices(services =>
+var builder = Host.CreateDefaultBuilder(args);
+
+if (OperatingSystem.IsWindows())
+{
+    builder.UseWindowsService();
+}
+
+builder.ConfigureServices(services =>
     {
         services.AddHostedService<ListingWatcherService>();
     })
