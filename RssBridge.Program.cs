@@ -159,10 +159,10 @@ public static class RssBridgeProgram
     {
         var id = it.TryGetProperty("id", out var pId) ? pId.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
         var title = it.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
-        // The new announcements API exposes description/link/createdAt fields.
+        // The new announcements API exposes description/link/dateTimestamp fields.
         var desc = it.TryGetProperty("description", out var pDesc) ? pDesc.GetString() : null;
         var url = it.TryGetProperty("link", out var pUrl) ? pUrl.GetString() : null;
-        var ts = it.TryGetProperty("createdAt", out var pTs) && long.TryParse(pTs.GetString(), out var t)
+        var ts = it.TryGetProperty("dateTimestamp", out var pTs) && long.TryParse(pTs.GetString(), out var t)
             ? DateTimeOffset.FromUnixTimeMilliseconds(t)
             : DateTimeOffset.UtcNow;
         return new FeedItem(id, title, desc, url, ts);
