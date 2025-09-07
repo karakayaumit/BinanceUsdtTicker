@@ -744,7 +744,8 @@
                                                         <!-- Source information with logo -->
                                                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,4">
                                                             <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}"
-                                                                   Margin="0,0,6,0"/>
+                                                                   Margin="0,0,6,0"
+                                                                   Height="20"/>
                                                             <TextBlock Text="{Binding Source}" FontWeight="Bold">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
