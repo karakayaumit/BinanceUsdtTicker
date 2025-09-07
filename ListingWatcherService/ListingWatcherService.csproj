@@ -17,4 +17,9 @@
   <ItemGroup>
     <Compile Include="..\Services\SymbolExtractor.cs" Link="SymbolExtractor.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

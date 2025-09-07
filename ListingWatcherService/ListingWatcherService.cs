@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Net.Http.Headers;
@@ -33,7 +34,10 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly string? _translatorKey;
     private readonly string? _translatorRegion;
 
-    public ListingWatcherService(ILogger<ListingWatcherService> logger, ISymbolExtractor symbolExtractor)
+    public ListingWatcherService(
+        ILogger<ListingWatcherService> logger,
+        ISymbolExtractor symbolExtractor,
+        IConfiguration configuration)
     {
         _logger = logger;
         _symbolExtractor = symbolExtractor;
@@ -46,7 +50,8 @@ public sealed class ListingWatcherService : BackgroundService
             Timeout = TimeSpan.FromSeconds(10)
         };
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
-        _connectionString =
+
+        _connectionString = configuration.GetConnectionString("Listings") ??
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
 
         _translatorKey = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
