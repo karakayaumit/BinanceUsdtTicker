@@ -108,7 +108,7 @@ public sealed class ListingWatcherService : BackgroundService
                 {
                     try
                     {
-                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbols, item.CreatedAt);
+                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbol, item.CreatedAt);
                     }
                     catch (SqlException ex) when (ex.Number is 2627 or 2601)
                     {
@@ -289,16 +289,19 @@ public sealed class ListingWatcherService : BackgroundService
         }
     }
 
-    private Task ProcessListingAsync(string source, string id, string title, string? url, DateTimeOffset createdAt, CancellationToken ct)
+    private async Task ProcessListingAsync(string source, string id, string title, string? url, DateTimeOffset createdAt, CancellationToken ct)
     {
         var symbols = ExtractSymbols(title)
             .Where(s => _binanceSymbols.Contains(s))
             .ToList();
         if (symbols.Count == 0)
-            return Task.CompletedTask;
+            return;
         var normalizedId = NormalizeId(id);
-        var item = new ListingItem(source, normalizedId, title, url, symbols, createdAt);
-        return _queue.Writer.WriteAsync(item, ct).AsTask();
+        foreach (var sym in symbols)
+        {
+            var item = new ListingItem(source, normalizedId + ":" + sym, title, url, sym, createdAt);
+            await _queue.Writer.WriteAsync(item, ct);
+        }
     }
 
     private static IReadOnlyList<string> ExtractSymbols(string text)
@@ -376,7 +379,7 @@ END";
         }
     }
 
-    private async Task SaveListingAsync(string source, string id, string title, string? url, IReadOnlyList<string> symbols, DateTimeOffset createdAt)
+    private async Task SaveListingAsync(string source, string id, string title, string? url, string symbol, DateTimeOffset createdAt)
     {
         try
         {
@@ -396,7 +399,7 @@ WHERE NOT EXISTS (
             cmd.Parameters.AddWithValue("@Source", source);
             cmd.Parameters.AddWithValue("@Title", title);
             cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Symbols", string.Join(',', symbols));
+            cmd.Parameters.AddWithValue("@Symbols", symbol);
             var localCreatedAt = TimeZoneInfo.ConvertTime(createdAt, TurkeyTimeZone);
             cmd.Parameters.Add("@CreatedAt", SqlDbType.DateTimeOffset).Value = localCreatedAt;
             await cmd.ExecuteNonQueryAsync();
@@ -407,6 +410,6 @@ WHERE NOT EXISTS (
         }
     }
 
-    private record ListingItem(string Source, string Id, string Title, string? Url, IReadOnlyList<string> Symbols, DateTimeOffset CreatedAt);
+    private record ListingItem(string Source, string Id, string Title, string? Url, string Symbol, DateTimeOffset CreatedAt);
 
 }
