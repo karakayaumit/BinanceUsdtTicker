@@ -27,6 +27,7 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
     private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
     private readonly ISymbolExtractor _symbolExtractor;
+    private readonly AzureTranslator? _translator;
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger, ISymbolExtractor symbolExtractor)
     {
@@ -43,6 +44,13 @@ public sealed class ListingWatcherService : BackgroundService
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
         _connectionString =
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
+
+        var azureKey = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
+        if (!string.IsNullOrEmpty(azureKey))
+        {
+            var azureRegion = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
+            _translator = new AzureTranslator(azureKey, azureRegion);
+        }
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -106,7 +114,20 @@ public sealed class ListingWatcherService : BackgroundService
                 {
                     try
                     {
-                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbol, item.CreatedAt);
+                        var title = item.Title;
+                        if (_translator is not null)
+                        {
+                            try
+                            {
+                                title = await _translator.TranslateAsync(title, "tr");
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "translation failed for {Source}/{Id}", item.Source, item.Id);
+                            }
+                        }
+
+                        await SaveListingAsync(item.Source, item.Id, title, item.Url, item.Symbol, item.CreatedAt);
                     }
                     catch (SqlException ex) when (ex.Number is 2627 or 2601)
                     {
