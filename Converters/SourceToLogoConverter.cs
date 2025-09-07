@@ -81,10 +81,15 @@ namespace BinanceUsdtTicker
         {
             const int size = 64;
             var dv = new DrawingVisual();
+
+            // Predefine commonly reused values to avoid "variable does not exist"
+            // compiler errors when rendering the logo text.
+            var background = Brushes.Black;
+            var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+            var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
+
             using (var ctx = dv.RenderOpen())
             {
-                ctx.DrawRectangle(new SolidColorBrush(background), null, new Rect(0, 0, size, size));
-
                 var ft = new FormattedText("OKX", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
                 var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
                 ctx.DrawText(ft, p);
