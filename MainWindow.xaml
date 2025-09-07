@@ -752,7 +752,7 @@
                                                         <TextBlock TextWrapping="Wrap">
                                                             <Run Text="{Binding Timestamp, Mode=OneWay, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
                                                             <Run Text=" "/>
-                                                            <Run Text="{Binding Title}"/>
+                                                            <Run Text="{Binding Title, Mode=OneWay}"/>
                                                         </TextBlock>
 
                                                         <!-- Symbols with action buttons -->
