@@ -440,9 +440,10 @@ namespace BinanceUsdtTicker
 
         private async Task RefreshAccountDataAsync()
         {
-            await LoadWalletAsync();
-            await LoadOpenPositionsAsync();
-            await LoadOpenOrdersAsync();
+            await Task.WhenAll(
+                LoadWalletAsync(),
+                LoadOpenPositionsAsync(),
+                LoadOpenOrdersAsync());
         }
 
         private async void RefreshTimer_Tick(object? sender, EventArgs e)
@@ -1594,7 +1595,6 @@ namespace BinanceUsdtTicker
         private async Task PlaceOrderAsync(bool isBuy)
         {
             var ticker = _selectedTicker;
-            await LoadWalletAsync();
             var usdt = _walletAssets.FirstOrDefault(a => a.Asset.Equals("USDT", StringComparison.OrdinalIgnoreCase));
             if (ticker == null || usdt == null) return;
 
@@ -1646,8 +1646,9 @@ namespace BinanceUsdtTicker
 
             try
             {
-                await _api.SetMarginTypeAsync(symbol, margin);
-                await _api.SetLeverageAsync(symbol, leverage);
+                var marginTask = _api.SetMarginTypeAsync(symbol, margin);
+                var leverageTask = _api.SetLeverageAsync(symbol, leverage);
+                await Task.WhenAll(marginTask, leverageTask);
                 await _api.PlaceOrderAsync(
                     symbol,
                     side,
@@ -1655,7 +1656,7 @@ namespace BinanceUsdtTicker
                     qty,
                     isLimit ? price : (decimal?)null,
                     false);
-                await RefreshTradingDataAsync();
+                _ = RefreshTradingDataAsync();
             }
             catch (Exception ex)
             {
@@ -1694,7 +1695,7 @@ namespace BinanceUsdtTicker
                     await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true);
 
                 pos.CloseLimitPrice = null;
-                await RefreshTradingDataAsync();
+                _ = RefreshTradingDataAsync();
             }
             catch (Exception ex)
             {
@@ -1723,11 +1724,12 @@ namespace BinanceUsdtTicker
 
         private async Task RefreshTradingDataAsync()
         {
-            await LoadWalletAsync();
-            await LoadOpenPositionsAsync();
-            await LoadOpenOrdersAsync();
-            await LoadOrderHistoryAsync();
-            await LoadTradeHistoryAsync();
+            await Task.WhenAll(
+                LoadWalletAsync(),
+                LoadOpenPositionsAsync(),
+                LoadOpenOrdersAsync(),
+                LoadOrderHistoryAsync(),
+                LoadTradeHistoryAsync());
         }
 
     }
