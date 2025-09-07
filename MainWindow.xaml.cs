@@ -205,8 +205,9 @@ namespace BinanceUsdtTicker
         private async Task LoadNewsFromDatabaseAsync()
         {
             var connectionString =
-                Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
-                "Server=KARAKAYA-MSI\\KARAKAYADB;Database=BinanceUsdtTicker;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
+                Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
+            if (string.IsNullOrEmpty(connectionString))
+                return;
             try
             {
                 await using var conn = new SqlConnection(connectionString);
