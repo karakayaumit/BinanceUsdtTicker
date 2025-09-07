@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -29,7 +30,7 @@ namespace BinanceUsdtTicker
                 text,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
-                new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal),
+                new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal),
                 16,
                 new SolidColorBrush(foreground),
                 1.0);
