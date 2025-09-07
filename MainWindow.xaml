@@ -715,30 +715,31 @@
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch"
                                   VerticalContentAlignment="Top">
-                                <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                <DataGrid x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                                          AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged"
                                           VerticalAlignment="Stretch">
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                                                <Setter Property="VerticalContentAlignment" Value="Top" />
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.View>
-                                            <GridView>
-                                            <GridViewColumn Header="Kaynak" Width="80" DisplayMemberBinding="{Binding Source}" />
-                                            <GridViewColumn Header="Sembol" Width="80" DisplayMemberBinding="{Binding SymbolsDisplay}" />
-                                            <GridViewColumn Header="Zaman" Width="170" DisplayMemberBinding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                            <GridViewColumn Header="Başlık">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                </ListView>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Kaynak" Width="80" Binding="{Binding Source}"/>
+                                        <DataGridTextColumn Header="Sembol" Width="80" Binding="{Binding SymbolsDisplay}"/>
+                                        <DataGridTextColumn Header="Zaman" Width="170" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
+                    <DataGridTemplateColumn Header="Başlık" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                         </GroupBox>
 
                         <!-- TOP MOVERS -->
