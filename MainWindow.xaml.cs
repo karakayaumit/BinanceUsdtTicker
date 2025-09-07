@@ -204,8 +204,7 @@ namespace BinanceUsdtTicker
 
         private async Task LoadNewsFromDatabaseAsync()
         {
-            var connectionString =
-                Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
+            var connectionString = _ui.GetConnectionString();
             if (string.IsNullOrEmpty(connectionString))
                 return;
             try
@@ -353,7 +352,7 @@ namespace BinanceUsdtTicker
             ApplyCustomColors();
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private async void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var win = new SettingsWindow(_ui) { Owner = this };
             if (win.ShowDialog() == true)
@@ -362,7 +361,10 @@ namespace BinanceUsdtTicker
                 _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
                 SaveUiSettingsFromUi();
                 if (Application.Current is App app)
+                {
                     app.UpdateNewsBaseUrl(_ui.BaseUrl);
+                    await app.UpdateDbConnectionAsync(_ui);
+                }
             }
         }
 

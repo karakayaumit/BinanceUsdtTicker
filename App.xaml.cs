@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
+using BinanceUsdtTicker.Models;
 
 namespace BinanceUsdtTicker;
 
@@ -19,8 +20,6 @@ public partial class App : Application
     private NewsDbService? _newsHub;
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
     private WebApplication? _listingApp;
-    private readonly string _connectionString =
-        Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
     private static readonly string SymbolsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "BinanceUsdtTicker", "usdt_symbols.txt");
@@ -35,13 +34,8 @@ public partial class App : Application
     private async Task StartNewsHubAsync()
     {
         await UpdateUsdtSymbolsFileAsync();
-
-        if (!string.IsNullOrEmpty(_connectionString))
-        {
-            _newsHub = new NewsDbService(_connectionString, TimeSpan.FromSeconds(5));
-            _newsHub.NewsReceived += OnNewsReceived;
-            await _newsHub.StartAsync();
-        }
+        var settings = LoadUiSettings();
+        await UpdateDbConnectionAsync(settings);
     }
 
     private async Task StartListingListenerAsync()
@@ -92,6 +86,43 @@ public partial class App : Application
     internal void UpdateNewsBaseUrl(string? baseUrl)
     {
         // no-op: DB-backed news does not use a base URL
+    }
+
+    private static UiSettings LoadUiSettings()
+    {
+        try
+        {
+            var appDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "BinanceUsdtTicker");
+            var settingsPath = Path.Combine(appDir, "ui_settings.json");
+            if (!File.Exists(settingsPath))
+                settingsPath = Path.Combine(appDir, "ui_defaults.json");
+            if (File.Exists(settingsPath))
+            {
+                var json = File.ReadAllText(settingsPath);
+                return JsonSerializer.Deserialize<UiSettings>(json) ?? new UiSettings();
+            }
+        }
+        catch { }
+        return new UiSettings();
+    }
+
+    internal async Task UpdateDbConnectionAsync(UiSettings settings)
+    {
+        if (_newsHub != null)
+        {
+            await _newsHub.DisposeAsync();
+            _newsHub = null;
+        }
+
+        var cs = settings.GetConnectionString();
+        if (!string.IsNullOrEmpty(cs))
+        {
+            _newsHub = new NewsDbService(cs, TimeSpan.FromSeconds(5));
+            _newsHub.NewsReceived += OnNewsReceived;
+            await _newsHub.StartAsync();
+        }
     }
 
     private async Task UpdateUsdtSymbolsFileAsync()

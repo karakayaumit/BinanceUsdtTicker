@@ -129,5 +129,43 @@ namespace BinanceUsdtTicker.Models
             get => _translateRegion;
             set { if (_translateRegion != value) { _translateRegion = value; OnPropertyChanged(); } }
         }
+
+        private string _dbServer = string.Empty;
+        public string DbServer
+        {
+            get => _dbServer;
+            set { if (_dbServer != value) { _dbServer = value; OnPropertyChanged(); } }
+        }
+
+        private string _dbName = string.Empty;
+        public string DbName
+        {
+            get => _dbName;
+            set { if (_dbName != value) { _dbName = value; OnPropertyChanged(); } }
+        }
+
+        private string _dbUser = string.Empty;
+        public string DbUser
+        {
+            get => _dbUser;
+            set { if (_dbUser != value) { _dbUser = value; OnPropertyChanged(); } }
+        }
+
+        private string _dbPassword = string.Empty;
+        public string DbPassword
+        {
+            get => _dbPassword;
+            set { if (_dbPassword != value) { _dbPassword = value; OnPropertyChanged(); } }
+        }
+
+        public string GetConnectionString()
+        {
+            if (string.IsNullOrWhiteSpace(DbServer) ||
+                string.IsNullOrWhiteSpace(DbName) ||
+                string.IsNullOrWhiteSpace(DbUser))
+                return string.Empty;
+
+            return $"Server={DbServer};Database={DbName};User Id={DbUser};Password={DbPassword};TrustServerCertificate=True";
+        }
     }
 }

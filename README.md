@@ -44,10 +44,12 @@ application's settings window; it is not stored in the repository.
 ## Listing Watcher Windows Service
 
 The `ListingWatcherService` project polls several exchange announcement APIs
-and writes new listings directly to a SQL database. Configure the database
+and writes new listings directly to a SQL database. The main application now
+stores the database server, name, user and password in its settings window and
+all components, including the service, read the connection information from that
+settings file. When running the service standalone you may override the
 connection string via the `ConnectionStrings:Listings` setting in
-`ListingWatcherService/appsettings.json` or by setting the
-`BINANCE_DB_CONNECTION` environment variable.
+`ListingWatcherService/appsettings.json`.
 
 You can run the service as a console app for testing:
 
