@@ -362,7 +362,7 @@ namespace BinanceUsdtTicker
                 SaveUiSettingsFromUi();
                 if (Application.Current is App app)
                 {
-                    app.UpdateNewsBaseUrl(_ui.BaseUrl);
+                    await app.UpdateNewsBaseUrl(_ui.BaseUrl);
                     await app.UpdateDbConnectionAsync(_ui);
                 }
             }
