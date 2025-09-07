@@ -730,13 +730,16 @@
                                         <DataTemplate>
                                             <materialDesign:Card Margin="4" Padding="8" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
                                                 <StackPanel>
-                                                    <!-- Source -->
-                                                    <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="64" Height="64" Margin="0,0,0,4"/>
-                                                    <!-- Time and title -->
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
-                                                        <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Margin="8,0,0,0"/>
-                                                    </StackPanel>
+                                                    <!-- Source, time and title -->
+                                                    <DockPanel Margin="0,0,0,4">
+                                                        <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="64" Height="64" Margin="0,0,8,0" HorizontalAlignment="Left" VerticalAlignment="Top" DockPanel.Dock="Left"/>
+                                                        <StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
+                                                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Margin="8,0,0,0"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </DockPanel>
                                                     <!-- Buttons for each symbol -->
                                                     <ItemsControl ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
                                                         <ItemsControl.ItemTemplate>

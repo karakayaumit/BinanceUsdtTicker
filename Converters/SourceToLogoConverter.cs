@@ -17,25 +17,78 @@ namespace BinanceUsdtTicker
             src = src.ToLowerInvariant();
             return src switch
             {
-                "bybit" => CreateLogo("B", Color.FromRgb(0xF7, 0x93, 0x1A)),
-                "kucoin" => CreateLogo("K", Color.FromRgb(0x28, 0xD1, 0xA7)),
-                "okx" => CreateLogo("O", Colors.Black),
+                "bybit" => CreateBybitLogo(),
+                "kucoin" => CreateKucoinLogo(),
+                "okx" => CreateOkxLogo(),
                 _ => null,
             };
         }
 
-        private static ImageSource CreateLogo(string text, Color background)
+        private static ImageSource CreateBybitLogo()
         {
             const int size = 64;
             var dv = new DrawingVisual();
             using (var ctx = dv.RenderOpen())
             {
-                ctx.DrawRectangle(new SolidColorBrush(background), null, new Rect(0, 0, size, size));
+                ctx.DrawRectangle(Brushes.Black, null, new Rect(0, 0, size, size));
 
-                var typeface = new Typeface("Segoe UI");
-                var pixelsPerDip = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
-                var ft = new FormattedText(text, CultureInfo.InvariantCulture,
-                    FlowDirection.LeftToRight, typeface, 40, Brushes.White, pixelsPerDip);
+                var typeface = new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+                var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
+
+                var part1 = new FormattedText("BYB", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
+                var part2 = new FormattedText("I", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, new SolidColorBrush(Color.FromRgb(0xF7, 0x93, 0x1A)), dpi);
+                var part3 = new FormattedText("T", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
+
+                var total = part1.Width + part2.Width + part3.Width;
+                var x = (size - total) / 2;
+                var y = (size - part1.Height) / 2;
+
+                ctx.DrawText(part1, new Point(x, y));
+                ctx.DrawText(part2, new Point(x + part1.Width, y));
+                ctx.DrawText(part3, new Point(x + part1.Width + part2.Width, y));
+            }
+
+            var bmp = new RenderTargetBitmap(size, size, 96, 96, PixelFormats.Pbgra32);
+            bmp.Render(dv);
+            bmp.Freeze();
+            return bmp;
+        }
+
+        private static ImageSource CreateKucoinLogo()
+        {
+            const int size = 64;
+            var dv = new DrawingVisual();
+            using (var ctx = dv.RenderOpen())
+            {
+                ctx.DrawRectangle(Brushes.White, null, new Rect(0, 0, size, size));
+
+                var typeface = new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+                var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
+                var color = new SolidColorBrush(Color.FromRgb(0x28, 0xD1, 0xA7));
+
+                var ft = new FormattedText("KUCOIN", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, color, dpi);
+                var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
+                ctx.DrawText(ft, p);
+            }
+
+            var bmp = new RenderTargetBitmap(size, size, 96, 96, PixelFormats.Pbgra32);
+            bmp.Render(dv);
+            bmp.Freeze();
+            return bmp;
+        }
+
+        private static ImageSource CreateOkxLogo()
+        {
+            const int size = 64;
+            var dv = new DrawingVisual();
+            using (var ctx = dv.RenderOpen())
+            {
+                ctx.DrawRectangle(Brushes.Black, null, new Rect(0, 0, size, size));
+
+                var typeface = new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+                var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
+
+                var ft = new FormattedText("OKX", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
                 var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
                 ctx.DrawText(ft, p);
             }
