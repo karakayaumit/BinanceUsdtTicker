@@ -16,6 +16,5 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Services\SymbolExtractor.cs" Link="SymbolExtractor.cs" />
-    <Compile Include="..\Services\AzureTranslator.cs" Link="AzureTranslator.cs" />
   </ItemGroup>
 </Project>
