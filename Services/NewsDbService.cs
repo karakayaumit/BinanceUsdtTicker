@@ -39,10 +39,18 @@ namespace BinanceUsdtTicker
                     await using var conn = new SqlConnection(_connectionString);
                     await conn.OpenAsync(ct);
                     var cmd = conn.CreateCommand();
-                    cmd.CommandText = @"SELECT Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News WHERE CreatedAt > @last ORDER BY CreatedAt";
-                    cmd.Parameters.AddWithValue("@last", _lastTimestamp);
+                    if (_lastTimestamp == DateTimeOffset.MinValue)
+                    {
+                        cmd.CommandText = @"SELECT TOP 10 Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News ORDER BY CreatedAt DESC";
+                    }
+                    else
+                    {
+                        cmd.CommandText = @"SELECT Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News WHERE CreatedAt > @last ORDER BY CreatedAt";
+                        cmd.Parameters.AddWithValue("@last", _lastTimestamp);
+                    }
 
                     await using var reader = await cmd.ExecuteReaderAsync(ct);
+                    var items = new List<(NewsItem Item, DateTimeOffset Created)>();
                     while (await reader.ReadAsync(ct))
                     {
                         var id = reader.GetString(0);
@@ -54,6 +62,14 @@ namespace BinanceUsdtTicker
                         var created = reader.GetDateTimeOffset(6);
                         IReadOnlyList<string> symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
                         var item = new NewsItem(id: id, source: source, timestamp: created.UtcDateTime, title: title, titleTranslate: titleTranslate, body: null, link: url, type: NewsType.Listing, symbols: symbols);
+                        items.Add((item, created));
+                    }
+
+                    if (_lastTimestamp == DateTimeOffset.MinValue)
+                        items.Reverse();
+
+                    foreach (var (item, created) in items)
+                    {
                         NewsReceived?.Invoke(this, item);
                         if (created > _lastTimestamp)
                             _lastTimestamp = created;
