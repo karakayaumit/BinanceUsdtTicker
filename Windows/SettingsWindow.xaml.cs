@@ -32,7 +32,11 @@ namespace BinanceUsdtTicker
                 BinanceApiKey = settings.BinanceApiKey,
                 BinanceApiSecret = settings.BinanceApiSecret,
                 TranslateKey = settings.TranslateKey,
-                TranslateRegion = settings.TranslateRegion
+                TranslateRegion = settings.TranslateRegion,
+                DbServer = settings.DbServer,
+                DbName = settings.DbName,
+                DbUser = settings.DbUser,
+                DbPassword = settings.DbPassword
             };
             DataContext = _work;
         }
@@ -100,6 +104,10 @@ namespace BinanceUsdtTicker
             _work.BaseUrl = def.BaseUrl;
             _work.TranslateKey = def.TranslateKey;
             _work.TranslateRegion = def.TranslateRegion;
+            _work.DbServer = def.DbServer;
+            _work.DbName = def.DbName;
+            _work.DbUser = def.DbUser;
+            _work.DbPassword = def.DbPassword;
         }
 
         private static string? PickColor(string current)
@@ -141,6 +149,10 @@ namespace BinanceUsdtTicker
             _settings.BinanceApiSecret = _work.BinanceApiSecret;
             _settings.TranslateKey = _work.TranslateKey;
             _settings.TranslateRegion = _work.TranslateRegion;
+            _settings.DbServer = _work.DbServer;
+            _settings.DbName = _work.DbName;
+            _settings.DbUser = _work.DbUser;
+            _settings.DbPassword = _work.DbPassword;
             DialogResult = true;
         }
     }

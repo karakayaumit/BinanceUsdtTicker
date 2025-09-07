@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO;
 using BinanceUsdtTicker;
+using BinanceUsdtTicker.Models;
 
 namespace ListingWatcher;
 
@@ -53,7 +54,7 @@ public sealed class ListingWatcherService : BackgroundService
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
 
         _connectionString = configuration.GetConnectionString("Listings") ??
-            Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
+            LoadConnectionStringFromSettings();
 
         var translatorKey = configuration["AZURE_TRANSLATOR_KEY"] ??
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
@@ -501,6 +502,28 @@ VALUES (@Id, @Source, @Title, @TitleTranslate, @Url, @Symbols, @CreatedAt);";
         {
             _logger.LogError(ex, "DB insert failed");
         }
+    }
+
+    private static string LoadConnectionStringFromSettings()
+    {
+        try
+        {
+            var appDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "BinanceUsdtTicker");
+            var settingsPath = Path.Combine(appDir, "ui_settings.json");
+            if (!File.Exists(settingsPath))
+                settingsPath = Path.Combine(appDir, "ui_defaults.json");
+            if (File.Exists(settingsPath))
+            {
+                var json = File.ReadAllText(settingsPath);
+                var settings = JsonSerializer.Deserialize<UiSettings>(json);
+                if (settings != null)
+                    return settings.GetConnectionString();
+            }
+        }
+        catch { }
+        return string.Empty;
     }
 
     private record ListingItem(string Source, string Id, string Title, string? Url, string Symbol, DateTimeOffset CreatedAt);
