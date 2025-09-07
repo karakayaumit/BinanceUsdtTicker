@@ -114,20 +114,7 @@ public sealed class ListingWatcherService : BackgroundService
                 {
                     try
                     {
-                        var title = item.Title;
-                        if (_translator is not null)
-                        {
-                            try
-                            {
-                                title = await _translator.TranslateAsync(title, "tr");
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.LogError(ex, "translation failed for {Source}/{Id}", item.Source, item.Id);
-                            }
-                        }
-
-                        await SaveListingAsync(item.Source, item.Id, title, item.Url, item.Symbol, item.CreatedAt);
+                        await SaveListingAsync(item.Source, item.Id, item.Title, item.Url, item.Symbol, item.CreatedAt);
                     }
                     catch (SqlException ex) when (ex.Number is 2627 or 2601)
                     {
@@ -373,6 +360,21 @@ END";
         }
     }
 
+    private async Task<string> TranslateTitleAsync(string title)
+    {
+        if (_translator is null || string.IsNullOrWhiteSpace(title))
+            return title;
+        try
+        {
+            return await _translator.TranslateAsync(title, "tr");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "translation failed for {Title}", title);
+            return title;
+        }
+    }
+
     private async Task SaveListingAsync(string source, string id, string title, string? url, string symbol, DateTimeOffset createdAt)
     {
         if (string.IsNullOrEmpty(_connectionString))
@@ -393,7 +395,8 @@ WHERE NOT EXISTS (
 );";
             cmd.Parameters.AddWithValue("@Id", id);
             cmd.Parameters.AddWithValue("@Source", source);
-            cmd.Parameters.AddWithValue("@Title", title);
+            var translated = await TranslateTitleAsync(title);
+            cmd.Parameters.AddWithValue("@Title", translated);
             cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Symbols", symbol);
             var localCreatedAt = TimeZoneInfo.ConvertTime(createdAt, TurkeyTimeZone);
