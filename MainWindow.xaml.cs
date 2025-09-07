@@ -131,16 +131,8 @@ namespace BinanceUsdtTicker
             SetupList("PositionsList", _positions);
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
-            SetupList("NewsList", _newsItems, useScreenHeight: false);
-
-            // Ensure the News section shows multiple items
-            if (FindName("NewsList") is ListView newsList)
-            {
-                double newsHeight = SystemParameters.PrimaryScreenHeight / 3;
-                newsList.Height = newsHeight;
-                newsList.MinHeight = newsHeight;
-                newsList.MaxHeight = newsHeight;
-            }
+            // Fill the screen vertically for the News section
+            SetupList("NewsList", _newsItems);
 
             // show most recent orders/trades first
             var orderView = CollectionViewSource.GetDefaultView(_orderHistory);

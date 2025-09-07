@@ -721,11 +721,12 @@
                         <GroupBox Grid.Row="0" Grid.Column="2" Header="News" Margin="0,0,8,0"
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch"
-                                  VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
+                                  VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                   <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
                                             Foreground="{DynamicResource OnSurface}" BorderThickness="0"
                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            VerticalContentAlignment="Top"
+                                            VerticalAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
                                             HorizontalAlignment="Stretch"
                                             HorizontalContentAlignment="Stretch">
                                     <ListView.ItemTemplate>
