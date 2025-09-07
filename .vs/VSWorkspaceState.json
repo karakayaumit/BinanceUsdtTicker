@@ -1,10 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Converters",
     "\\ListingWatcherService",
-    "\\Models"
+    "\\Services",
+    "\\Services\\Trading"
   ],
-  "SelectedNode": "\\Models\\TickerRow.cs",
+  "SelectedNode": "\\ListingWatcherService\\ListingWatcherService.sln",
   "PreviewInSolutionExplorer": true
 }
