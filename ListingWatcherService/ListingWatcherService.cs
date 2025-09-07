@@ -11,9 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
 using BinanceUsdtTicker;
 
 namespace ListingWatcher;
@@ -31,8 +28,7 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
     private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
     private readonly ISymbolExtractor _symbolExtractor;
-    private readonly string? _translatorKey;
-    private readonly string? _translatorRegion;
+    private readonly AzureTranslator? _translator;
 
     public ListingWatcherService(
         ILogger<ListingWatcherService> logger,
@@ -54,8 +50,12 @@ public sealed class ListingWatcherService : BackgroundService
         _connectionString = configuration.GetConnectionString("Listings") ??
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
 
-        _translatorKey = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
-        _translatorRegion = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
+        var azureKey = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
+        if (!string.IsNullOrEmpty(azureKey))
+        {
+            var azureRegion = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
+            _translator = new AzureTranslator(azureKey, azureRegion);
+        }
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -368,68 +368,17 @@ END";
 
     private async Task<string> TranslateTitleAsync(string title)
     {
-        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrEmpty(_translatorKey))
+        if (_translator is null || string.IsNullOrWhiteSpace(title))
             return title;
-
         try
         {
-            var placeholders = new Dictionary<string, string>();
-            var prepared = ReplaceSymbolsWithPlaceholders(title, placeholders);
-
-            using var request = new HttpRequestMessage(HttpMethod.Post,
-                "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=tr");
-            request.Headers.Add("Ocp-Apim-Subscription-Key", _translatorKey);
-            if (!string.IsNullOrEmpty(_translatorRegion))
-                request.Headers.Add("Ocp-Apim-Subscription-Region", _translatorRegion);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var body = JsonSerializer.Serialize(new object[] { new { text = prepared } });
-            request.Content = new StringContent(body, Encoding.UTF8, "application/json");
-
-            using var resp = await _http.SendAsync(request);
-            resp.EnsureSuccessStatusCode();
-            using var stream = await resp.Content.ReadAsStreamAsync();
-            using var doc = await JsonDocument.ParseAsync(stream);
-            var translated = doc.RootElement[0].GetProperty("translations")[0].GetProperty("text").GetString() ?? string.Empty;
-
-            return RestorePlaceholders(translated, placeholders);
+            return await _translator.TranslateAsync(title, "tr");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "translation failed for {Title}", title);
             return title;
         }
-    }
-
-    private static string ReplaceSymbolsWithPlaceholders(string text, IDictionary<string, string> map)
-    {
-        int index = 0;
-
-        // Protect tokens inside parentheses, e.g. (PROVE)
-        var result = Regex.Replace(text, @"\(([\p{Lu}0-9]+)\)", match =>
-        {
-            var token = match.Groups[1].Value;
-            var placeholder = $"__{index++}__";
-            map[placeholder] = token;
-            return "(" + placeholder + ")";
-        });
-
-        // Protect standalone uppercase tokens (e.g. BTC, PROVE)
-        result = Regex.Replace(result, @"\b[\p{Lu}0-9]{2,}\b", match =>
-        {
-            var token = match.Value;
-            var placeholder = $"__{index++}__";
-            map[placeholder] = token;
-            return placeholder;
-        });
-
-        return result;
-    }
-
-    private static string RestorePlaceholders(string text, IDictionary<string, string> map)
-    {
-        foreach (var kvp in map)
-            text = text.Replace(kvp.Key, kvp.Value);
-        return text;
     }
 
     private async Task SaveListingAsync(string source, string id, string title, string? url, string symbol, DateTimeOffset createdAt)
