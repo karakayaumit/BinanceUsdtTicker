@@ -714,12 +714,12 @@
                         <GroupBox Grid.Row="0" Grid.Column="2" Header="News" Margin="0,0,8,0"
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch"
-                                  VerticalContentAlignment="Top">
+                                  VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
                                 <DataGrid x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                           AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged"
-                                          VerticalAlignment="Stretch">
+                                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Kaynak" Width="80" Binding="{Binding Source}"/>
                                         <DataGridTextColumn Header="Sembol" Width="80" Binding="{Binding SymbolsDisplay}"/>
