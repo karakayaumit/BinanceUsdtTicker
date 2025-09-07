@@ -725,7 +725,7 @@
                                 <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
                                           Foreground="{DynamicResource OnSurface}" BorderThickness="0"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          ScrollViewer.VerticalContentAlignment="Top"
+                                          VerticalContentAlignment="Top"
                                           HorizontalContentAlignment="Stretch">
                                     <ListView.ItemTemplate>
                                             <DataTemplate>
