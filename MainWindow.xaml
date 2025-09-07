@@ -762,40 +762,40 @@
                                                                 <DataTemplate>
                                                                     <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                                                         <TextBlock Text="{Binding}" Margin="0,0,6,0"/>
-                                                                        <UniformGrid Rows="1" Columns="8">
+                                                                        <UniformGrid Rows="2" Columns="4">
                                                                             <!-- 4 green buy buttons -->
                                                                             <Button Content="%25" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%50" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%75" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%100" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <!-- 4 red sell buttons -->
                                                                             <Button Content="%25" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%50" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%75" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%100" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="60" Height="36"
+                                                                                    Margin="2" Width="80" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                         </UniformGrid>
                                                                     </StackPanel>
