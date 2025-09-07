@@ -56,24 +56,25 @@ namespace BinanceUsdtTicker
 
         private static ImageSource CreateKucoinLogo()
         {
-            const int size = 64;
             var dv = new DrawingVisual();
+            var brush = new SolidColorBrush(Color.FromRgb(0x28, 0xD1, 0xA7));
+            var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+
+            double width, height;
             using (var ctx = dv.RenderOpen())
             {
-                var brush = new SolidColorBrush(Color.FromRgb(0x28, 0xD1, 0xA7));
-
-                // Draw the circular dot from the KuCoin logo.
-                ctx.DrawEllipse(brush, null, new Point(size * 0.25, size * 0.5), size * 0.075, size * 0.075);
-
-                // Draw a stylised "K" next to the dot.
-                var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
                 var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
-                var ft = new FormattedText("K", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 48, brush, dpi);
-                var p = new Point(size * 0.30, (size - ft.Height) / 2);
-                ctx.DrawText(ft, p);
+                const string text = "KUCOIN";
+                var ft = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 48, brush, dpi);
+
+                const double padding = 10;
+                width = ft.Width + padding * 2;
+                height = ft.Height + padding * 2;
+
+                ctx.DrawText(ft, new Point(padding, padding));
             }
 
-            var bmp = new RenderTargetBitmap(size, size, 96, 96, PixelFormats.Pbgra32);
+            var bmp = new RenderTargetBitmap((int)Math.Ceiling(width), (int)Math.Ceiling(height), 96, 96, PixelFormats.Pbgra32);
             bmp.Render(dv);
             bmp.Freeze();
             return bmp;
