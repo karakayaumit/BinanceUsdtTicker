@@ -722,18 +722,25 @@
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch"
                                   VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
-                                <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
-                                          Foreground="{DynamicResource OnSurface}" BorderThickness="0"
-                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          VerticalContentAlignment="Top"
-                                          HorizontalContentAlignment="Stretch">
+                                  <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}"
+                                            Foreground="{DynamicResource OnSurface}" BorderThickness="0"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            VerticalContentAlignment="Top"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch">
                                     <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Margin="4" Padding="6" BorderBrush="{DynamicResource Divider}"
                                                         BorderThickness="1">
-                                                    <StackPanel>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
                                                         <!-- Source information with logo -->
-                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,4">
                                                             <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}"
                                                                    Width="24" Height="24" Margin="0,0,6,0"/>
                                                             <TextBlock Text="{Binding Source}" FontWeight="Bold">
@@ -751,59 +758,64 @@
                                                         </StackPanel>
 
                                                         <!-- Time and title on first line -->
-                                                        <TextBlock TextWrapping="Wrap">
+                                                        <TextBlock Grid.Row="1" TextWrapping="Wrap">
                                                             <Run Text="{Binding Timestamp, Mode=OneWay, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
                                                             <Run Text=" "/>
                                                             <Run Text="{Binding Title, Mode=OneWay}"/>
                                                         </TextBlock>
 
                                                         <!-- Symbols with action buttons -->
-                                                        <ItemsControl ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
+                                                        <ItemsControl Grid.Row="2" ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
-                                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                                        <TextBlock Text="{Binding}" Margin="0,0,6,0"/>
-                                                                        <UniformGrid Rows="2" Columns="4">
+                                                                    <Grid Margin="0,4,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+
+                                                                        <TextBlock Text="{Binding}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                                        <UniformGrid Grid.Column="1" Rows="2" Columns="4" HorizontalAlignment="Stretch">
                                                                             <!-- 4 green buy buttons -->
                                                                             <Button Content="%25" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%50" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%75" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%100" Background="{DynamicResource Up1Bg}"
                                                                                     Foreground="{DynamicResource Up1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <!-- 4 red sell buttons -->
                                                                             <Button Content="%25" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%50" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%75" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                             <Button Content="%100" Background="{DynamicResource Down1Bg}"
                                                                                     Foreground="{DynamicResource Down1Fg}"
-                                                                                    Margin="2" Width="80" Height="40"
+                                                                                    Margin="2" Height="40"
                                                                                     FontSize="14" FontWeight="Bold"/>
                                                                         </UniformGrid>
-                                                                    </StackPanel>
+                                                                    </Grid>
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
-                                                    </StackPanel>
+                                                    </Grid>
                                                 </Border>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
