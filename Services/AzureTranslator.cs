@@ -11,7 +11,7 @@ namespace BinanceUsdtTicker
 {
     /// <summary>
     /// Simple Azure Translator client that preserves symbols like (PROVE)
-    /// by replacing them with placeholders during translation.
+    /// by replacing them with numeric placeholders during translation.
     /// </summary>
     public class AzureTranslator
     {
@@ -53,10 +53,12 @@ namespace BinanceUsdtTicker
         private static string ReplaceSymbolsWithPlaceholders(string text, IDictionary<string, string> map)
         {
             int index = 0;
-            return Regex.Replace(text, @"\(([A-Z0-9]+)\)", match =>
+            return Regex.Replace(text, @"\(([A-Za-z0-9]+)\)", match =>
             {
                 var token = match.Groups[1].Value;
-                var placeholder = $"__SYMBOL_{index++}__";
+                // Use numeric placeholders so the translation service doesn't attempt to
+                // translate the placeholder text itself.
+                var placeholder = $"__{index++}__";
                 map[placeholder] = token;
                 return "(" + placeholder + ")";
             });
