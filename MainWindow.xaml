@@ -757,7 +757,6 @@
                                                         <Button Content="%75" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
                                                         <Button Content="%100" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
                                                     </UniformGrid>
->>>>>>> parent of 0a07e7e (Replace news table with card layout)
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
