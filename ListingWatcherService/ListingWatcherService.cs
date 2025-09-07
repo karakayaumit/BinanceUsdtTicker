@@ -256,7 +256,7 @@ public sealed class ListingWatcherService : BackgroundService
         foreach (var el in items.EnumerateArray())
         {
             var id = el.TryGetProperty("annId", out var pId) ? pId.GetInt64().ToString() : Guid.NewGuid().ToString("n");
-           
+
 
             var title = el.TryGetProperty("annTitle", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
             var urlItem = el.TryGetProperty("annUrl", out var pUrl) ? pUrl.GetString() : null;
@@ -288,7 +288,7 @@ public sealed class ListingWatcherService : BackgroundService
             foreach (var el in details.EnumerateArray())
             {
                 var id = el.TryGetProperty("url", out var pUrl) ? pUrl.GetString() ?? Guid.NewGuid().ToString("n") : Guid.NewGuid().ToString("n");
-               
+
                 var title = el.TryGetProperty("title", out var pTitle) ? pTitle.GetString() ?? "(no title)" : "(no title)";
                 var urlItem = el.TryGetProperty("url", out pUrl) ? pUrl.GetString() : null;
                 _logger.LogInformation("OKX new listing: {Title} {Url}", title, urlItem);
@@ -448,7 +448,7 @@ END";
             if (exists != null)
                 return;
 
-            var translated = await TranslateTitleAsync(title, CancellationToken.None);
+            var translated = await TranslateTitleAsync(title);
 
             var cmd = conn.CreateCommand();
             cmd.CommandText = @"INSERT INTO dbo.News (Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt)
@@ -467,72 +467,6 @@ VALUES (@Id, @Source, @Title, @TitleTranslate, @Url, @Symbols, @CreatedAt);";
         {
             _logger.LogError(ex, "DB insert failed");
         }
-    }
-
-    private async Task<string> TranslateTitleAsync(string title)
-    {
-        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrEmpty(_translatorKey))
-            return title;
-
-        try
-        {
-            var placeholders = new Dictionary<string, string>();
-            var prepared = ReplaceSymbolsWithPlaceholders(title, placeholders);
-
-            using var request = new HttpRequestMessage(HttpMethod.Post,
-                "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=tr");
-            request.Headers.Add("Ocp-Apim-Subscription-Key", _translatorKey);
-            if (!string.IsNullOrEmpty(_translatorRegion))
-                request.Headers.Add("Ocp-Apim-Subscription-Region", _translatorRegion);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var body = JsonSerializer.Serialize(new object[] { new { text = prepared } });
-            request.Content = new StringContent(body, Encoding.UTF8, "application/json");
-
-            using var resp = await _http.SendAsync(request);
-            resp.EnsureSuccessStatusCode();
-            using var stream = await resp.Content.ReadAsStreamAsync();
-            using var doc = await JsonDocument.ParseAsync(stream);
-            var translated = doc.RootElement[0].GetProperty("translations")[0].GetProperty("text").GetString() ?? string.Empty;
-
-            return RestorePlaceholders(translated, placeholders);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "translation failed for {Title}", title);
-            return title;
-        }
-    }
-
-    private static string ReplaceSymbolsWithPlaceholders(string text, IDictionary<string, string> map)
-    {
-        int index = 0;
-
-        // Protect tokens inside parentheses, e.g. (PROVE)
-        var result = Regex.Replace(text, @"\(([\p{Lu}0-9]+)\)", match =>
-        {
-            var token = match.Groups[1].Value;
-            var placeholder = $"__{index++}__";
-            map[placeholder] = token;
-            return "(" + placeholder + ")";
-        });
-
-        // Protect standalone uppercase tokens (e.g. BTC, PROVE)
-        result = Regex.Replace(result, @"\b[\p{Lu}0-9]{2,}\b", match =>
-        {
-            var token = match.Value;
-            var placeholder = $"__{index++}__";
-            map[placeholder] = token;
-            return placeholder;
-        });
-
-        return result;
-    }
-
-    private static string RestorePlaceholders(string text, IDictionary<string, string> map)
-    {
-        foreach (var kvp in map)
-            text = text.Replace(kvp.Key, kvp.Value);
-        return text;
     }
 
     private record ListingItem(string Source, string Id, string Title, string? Url, string Symbol, DateTimeOffset CreatedAt);
