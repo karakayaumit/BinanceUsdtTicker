@@ -691,22 +691,28 @@
                                                         </StackPanel>
                                                 </TabItem>
                                         </TabControl>
-                                        <Grid Margin="0,8,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                                        <Button x:Name="BuyButton" Content="Buy/Long" Background="#2ecc71" Foreground="White" FontWeight="Bold" Height="40" Click="BuyButton_Click"/>
+                                        <StackPanel Margin="0,8,0,0">
+                                                <StackPanel Margin="0,0,0,8">
+                                                        <Button x:Name="BuyButton" Background="#2ecc71" Foreground="White" FontWeight="Bold" Height="80" Click="BuyButton_Click">
+                                                                <StackPanel>
+                                                                        <Polygon Points="20,0 40,20 0,20" Fill="White" Width="40" Height="20" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="Buy/Long" FontSize="20" HorizontalAlignment="Center"/>
+                                                                </StackPanel>
+                                                        </Button>
                                                         <TextBlock x:Name="BuyCostText" Margin="0,4,0,0" Text="Cost 0 USDT"/>
                                                         <TextBlock x:Name="BuyMaxText" Text="Max 0 USDT"/>
                                                 </StackPanel>
-                                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                                        <Button x:Name="SellButton" Content="Sell/Short" Background="#e74c3c" Foreground="White" FontWeight="Bold" Height="40" Click="SellButton_Click"/>
+                                                <StackPanel Margin="0,8,0,0">
+                                                        <Button x:Name="SellButton" Background="#e74c3c" Foreground="White" FontWeight="Bold" Height="80" Click="SellButton_Click">
+                                                                <StackPanel>
+                                                                        <Polygon Points="0,0 40,0 20,20" Fill="White" Width="40" Height="20" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="Sell/Short" FontSize="20" HorizontalAlignment="Center"/>
+                                                                </StackPanel>
+                                                        </Button>
                                                         <TextBlock x:Name="SellCostText" Margin="0,4,0,0" Text="Cost 0 USDT"/>
                                                         <TextBlock x:Name="SellMaxText" Text="Max 0 USDT"/>
                                                 </StackPanel>
-                                        </Grid>
+                                        </StackPanel>
                                 </StackPanel>
                         </GroupBox>
 
