@@ -2,6 +2,7 @@ using BinanceUsdtTicker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ListingWatcher;
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
