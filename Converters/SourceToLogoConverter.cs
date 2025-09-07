@@ -26,7 +26,7 @@ namespace BinanceUsdtTicker
 
         private static ImageSource CreateLogo(string text, Color background)
         {
-            const int size = 32;
+            const int size = 64;
             var dv = new DrawingVisual();
             using (var ctx = dv.RenderOpen())
             {
@@ -35,7 +35,7 @@ namespace BinanceUsdtTicker
                 var typeface = new Typeface("Segoe UI");
                 var pixelsPerDip = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
                 var ft = new FormattedText(text, CultureInfo.InvariantCulture,
-                    FlowDirection.LeftToRight, typeface, 20, Brushes.White, pixelsPerDip);
+                    FlowDirection.LeftToRight, typeface, 40, Brushes.White, pixelsPerDip);
                 var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
                 ctx.DrawText(ft, p);
             }
