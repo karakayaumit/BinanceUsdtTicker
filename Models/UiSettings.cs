@@ -115,5 +115,19 @@ namespace BinanceUsdtTicker.Models
             get => _binanceApiSecret;
             set { if (_binanceApiSecret != value) { _binanceApiSecret = value; OnPropertyChanged(); } }
         }
+
+        private string _translateKey = "AxZ98U3z7o8t8cs8UwgarNZeQLs9epE75Zdb71TrwTxmEO0m3odeJQQJ99BIACYeBjFXJ3w3AAAbACOGeRyI";
+        public string TranslateKey
+        {
+            get => _translateKey;
+            set { if (_translateKey != value) { _translateKey = value; OnPropertyChanged(); } }
+        }
+
+        private string _translateRegion = "eastus";
+        public string TranslateRegion
+        {
+            get => _translateRegion;
+            set { if (_translateRegion != value) { _translateRegion = value; OnPropertyChanged(); } }
+        }
     }
 }

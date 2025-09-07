@@ -30,7 +30,9 @@ namespace BinanceUsdtTicker
                 WindowsNotification = settings.WindowsNotification,
                 BaseUrl = settings.BaseUrl,
                 BinanceApiKey = settings.BinanceApiKey,
-                BinanceApiSecret = settings.BinanceApiSecret
+                BinanceApiSecret = settings.BinanceApiSecret,
+                TranslateKey = settings.TranslateKey,
+                TranslateRegion = settings.TranslateRegion
             };
             DataContext = _work;
         }
@@ -96,6 +98,8 @@ namespace BinanceUsdtTicker
             _work.ControlColor = def.ControlColor;
             _work.WindowsNotification = def.WindowsNotification;
             _work.BaseUrl = def.BaseUrl;
+            _work.TranslateKey = def.TranslateKey;
+            _work.TranslateRegion = def.TranslateRegion;
         }
 
         private static string? PickColor(string current)
@@ -135,6 +139,8 @@ namespace BinanceUsdtTicker
             _settings.BaseUrl = _work.BaseUrl;
             _settings.BinanceApiKey = _work.BinanceApiKey;
             _settings.BinanceApiSecret = _work.BinanceApiSecret;
+            _settings.TranslateKey = _work.TranslateKey;
+            _settings.TranslateRegion = _work.TranslateRegion;
             DialogResult = true;
         }
     }

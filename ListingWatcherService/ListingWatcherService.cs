@@ -27,6 +27,8 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
     private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
     private readonly ISymbolExtractor _symbolExtractor;
+    private readonly string _translatorKey;
+    private readonly string _translatorRegion;
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger, ISymbolExtractor symbolExtractor)
     {
@@ -44,6 +46,9 @@ public sealed class ListingWatcherService : BackgroundService
         _connectionString =
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
             "Server=KARAKAYA-MSI\\KARAKAYADB;Database=BinanceUsdtTicker;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
+        _translatorKey = Environment.GetEnvironmentVariable("AZURE_TRANSLATE_KEY") ??
+            "AxZ98U3z7o8t8cs8UwgarNZeQLs9epE75Zdb71TrwTxmEO0m3odeJQQJ99BIACYeBjFXJ3w3AAAbACOGeRyI";
+        _translatorRegion = Environment.GetEnvironmentVariable("AZURE_TRANSLATE_REGION") ?? "eastus";
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -338,6 +343,7 @@ BEGIN
         Id NVARCHAR(100) PRIMARY KEY,
         Source NVARCHAR(50) NOT NULL,
         Title NVARCHAR(MAX) NOT NULL,
+        TitleTranslate NVARCHAR(MAX) NOT NULL,
         Url NVARCHAR(2048) NULL,
         Symbols NVARCHAR(200) NULL,
         CreatedAt DATETIMEOFFSET NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Turkey Standard Time')
@@ -357,19 +363,23 @@ END";
         {
             await using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
+
+            var check = conn.CreateCommand();
+            check.CommandText = "SELECT 1 FROM dbo.News WHERE Id = @Id";
+            check.Parameters.AddWithValue("@Id", id);
+            var exists = await check.ExecuteScalarAsync();
+            if (exists != null)
+                return;
+
+            var translated = await TranslateTitleAsync(title, CancellationToken.None);
+
             var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-               SET NOCOUNT ON;
-INSERT INTO dbo.News (Id, Source, Title, Url, Symbols, CreatedAt)
-SELECT @Id, @Source, @Title, @Url, @Symbols, @CreatedAt
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM dbo.News WITH (UPDLOCK, HOLDLOCK)
-    WHERE Id = @Id
-);";
+            cmd.CommandText = @"INSERT INTO dbo.News (Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt)
+VALUES (@Id, @Source, @Title, @TitleTranslate, @Url, @Symbols, @CreatedAt);";
             cmd.Parameters.AddWithValue("@Id", id);
             cmd.Parameters.AddWithValue("@Source", source);
             cmd.Parameters.AddWithValue("@Title", title);
+            cmd.Parameters.AddWithValue("@TitleTranslate", translated);
             cmd.Parameters.AddWithValue("@Url", (object?)url ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Symbols", symbol);
             var localCreatedAt = TimeZoneInfo.ConvertTime(createdAt, TurkeyTimeZone);
@@ -379,6 +389,31 @@ WHERE NOT EXISTS (
         catch (Exception ex)
         {
             _logger.LogError(ex, "DB insert failed");
+        }
+    }
+
+    private async Task<string> TranslateTitleAsync(string title, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(_translatorKey) || string.IsNullOrWhiteSpace(_translatorRegion))
+            return title;
+        try
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=tr");
+            var payload = JsonSerializer.Serialize(new[] { new { Text = title } });
+            req.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+            req.Headers.Add("Ocp-Apim-Subscription-Key", _translatorKey);
+            req.Headers.Add("Ocp-Apim-Subscription-Region", _translatorRegion);
+            using var resp = await _http.SendAsync(req, ct);
+            resp.EnsureSuccessStatusCode();
+            var json = await resp.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            var translated = doc.RootElement[0].GetProperty("translations")[0].GetProperty("text").GetString();
+            return translated ?? title;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "translation failed");
+            return title;
         }
     }
 

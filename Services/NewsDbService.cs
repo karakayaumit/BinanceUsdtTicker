@@ -39,7 +39,7 @@ namespace BinanceUsdtTicker
                     await using var conn = new SqlConnection(_connectionString);
                     await conn.OpenAsync(ct);
                     var cmd = conn.CreateCommand();
-                    cmd.CommandText = @"SELECT Id, Source, Title, Url, Symbols, CreatedAt FROM dbo.News WHERE CreatedAt > @last ORDER BY CreatedAt";
+                    cmd.CommandText = @"SELECT Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News WHERE CreatedAt > @last ORDER BY CreatedAt";
                     cmd.Parameters.AddWithValue("@last", _lastTimestamp);
 
                     await using var reader = await cmd.ExecuteReaderAsync(ct);
@@ -48,11 +48,12 @@ namespace BinanceUsdtTicker
                         var id = reader.GetString(0);
                         var source = reader.GetString(1);
                         var title = reader.GetString(2);
-                        var url = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
-                        var symbolsStr = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
-                        var created = reader.GetDateTimeOffset(5);
+                        var titleTranslate = reader.IsDBNull(3) ? null : reader.GetString(3);
+                        var url = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
+                        var symbolsStr = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
+                        var created = reader.GetDateTimeOffset(6);
                         IReadOnlyList<string> symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-                        var item = new NewsItem(id: id, source: source, timestamp: created.UtcDateTime, title: title, body: null, link: url, type: NewsType.Listing, symbols: symbols);
+                        var item = new NewsItem(id: id, source: source, timestamp: created.UtcDateTime, title: title, titleTranslate: titleTranslate, body: null, link: url, type: NewsType.Listing, symbols: symbols);
                         NewsReceived?.Invoke(this, item);
                         if (created > _lastTimestamp)
                             _lastTimestamp = created;
