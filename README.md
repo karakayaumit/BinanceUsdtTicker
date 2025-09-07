@@ -45,7 +45,9 @@ application's settings window; it is not stored in the repository.
 
 The `ListingWatcherService` project polls several exchange announcement APIs
 and writes new listings directly to a SQL database. Configure the database
-connection string with the `BINANCE_DB_CONNECTION` environment variable.
+connection string via the `ConnectionStrings:Listings` setting in
+`ListingWatcherService/appsettings.json` or by setting the
+`BINANCE_DB_CONNECTION` environment variable.
 
 You can run the service as a console app for testing:
 
