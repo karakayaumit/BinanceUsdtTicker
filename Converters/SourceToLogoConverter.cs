@@ -32,7 +32,7 @@ namespace BinanceUsdtTicker
             {
                 ctx.DrawRectangle(Brushes.Black, null, new Rect(0, 0, size, size));
 
-                var typeface = new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+                var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
                 var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
 
                 var part1 = new FormattedText("BYB", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
@@ -62,7 +62,7 @@ namespace BinanceUsdtTicker
             {
                 ctx.DrawRectangle(Brushes.White, null, new Rect(0, 0, size, size));
 
-                var typeface = new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+                var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
                 var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
                 var color = new SolidColorBrush(Color.FromRgb(0x28, 0xD1, 0xA7));
 
@@ -85,7 +85,7 @@ namespace BinanceUsdtTicker
             {
                 ctx.DrawRectangle(Brushes.Black, null, new Rect(0, 0, size, size));
 
-                var typeface = new Typeface("Segoe UI", FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+                var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
                 var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
 
                 var ft = new FormattedText("OKX", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
