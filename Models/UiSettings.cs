@@ -115,5 +115,12 @@ namespace BinanceUsdtTicker.Models
             get => _binanceApiSecret;
             set { if (_binanceApiSecret != value) { _binanceApiSecret = value; OnPropertyChanged(); } }
         }
+
+        private string _azureTranslateKey = string.Empty;
+        public string AzureTranslateKey
+        {
+            get => _azureTranslateKey;
+            set { if (_azureTranslateKey != value) { _azureTranslateKey = value; OnPropertyChanged(); } }
+        }
     }
 }

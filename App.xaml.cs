@@ -20,8 +20,7 @@ public partial class App : Application
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
     private WebApplication? _listingApp;
     private readonly string _connectionString =
-        Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
-        "Server=KARAKAYA-MSI\\KARAKAYADB;Database=BinanceUsdtTicker;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
+        Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
     private static readonly string SymbolsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "BinanceUsdtTicker", "usdt_symbols.txt");
@@ -37,9 +36,12 @@ public partial class App : Application
     {
         await UpdateUsdtSymbolsFileAsync();
 
-        _newsHub = new NewsDbService(_connectionString, TimeSpan.FromSeconds(5));
-        _newsHub.NewsReceived += OnNewsReceived;
-        await _newsHub.StartAsync();
+        if (!string.IsNullOrEmpty(_connectionString))
+        {
+            _newsHub = new NewsDbService(_connectionString, TimeSpan.FromSeconds(5));
+            _newsHub.NewsReceived += OnNewsReceived;
+            await _newsHub.StartAsync();
+        }
     }
 
     private async Task StartListingListenerAsync()

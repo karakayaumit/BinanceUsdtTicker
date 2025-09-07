@@ -36,13 +36,16 @@ to the base address of the running script. The desktop app now defaults to
 `http://localhost:5005`, matching the feed script's default port. Adjust this
 value from the settings window if your service runs elsewhere.
 
+## Azure Translation
+
+Azure Translator API support requires a subscription key. Enter this key in the
+application's settings window; it is not stored in the repository.
+
 ## Listing Watcher Windows Service
 
 The `ListingWatcherService` project polls several exchange announcement APIs
 and writes new listings directly to a SQL database. Configure the database
-connection string with the `BINANCE_DB_CONNECTION` environment variable;
-otherwise it connects to `KARAKAYA-MSI\\KARAKAYADB` using the SQL login
-`sa` with password `Lhya!812`.
+connection string with the `BINANCE_DB_CONNECTION` environment variable.
 
 You can run the service as a console app for testing:
 

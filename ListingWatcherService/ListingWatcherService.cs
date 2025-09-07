@@ -42,8 +42,7 @@ public sealed class ListingWatcherService : BackgroundService
         };
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("ListingWatcher/1.0");
         _connectionString =
-            Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ??
-            "Server=KARAKAYA-MSI\\KARAKAYADB;Database=BinanceUsdtTicker;User Id=sa;Password=Lhya!812;TrustServerCertificate=True;";
+            Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -314,6 +313,8 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task EnsureDatabaseAsync(CancellationToken ct)
     {
+        if (string.IsNullOrEmpty(_connectionString))
+            return;
         try
         {
             var builder = new SqlConnectionStringBuilder(_connectionString);
@@ -353,6 +354,8 @@ END";
 
     private async Task SaveListingAsync(string source, string id, string title, string? url, string symbol, DateTimeOffset createdAt)
     {
+        if (string.IsNullOrEmpty(_connectionString))
+            return;
         try
         {
             await using var conn = new SqlConnection(_connectionString);

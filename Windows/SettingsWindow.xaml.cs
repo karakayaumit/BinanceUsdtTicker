@@ -30,7 +30,8 @@ namespace BinanceUsdtTicker
                 WindowsNotification = settings.WindowsNotification,
                 BaseUrl = settings.BaseUrl,
                 BinanceApiKey = settings.BinanceApiKey,
-                BinanceApiSecret = settings.BinanceApiSecret
+                BinanceApiSecret = settings.BinanceApiSecret,
+                AzureTranslateKey = settings.AzureTranslateKey
             };
             DataContext = _work;
         }
@@ -135,6 +136,7 @@ namespace BinanceUsdtTicker
             _settings.BaseUrl = _work.BaseUrl;
             _settings.BinanceApiKey = _work.BinanceApiKey;
             _settings.BinanceApiSecret = _work.BinanceApiSecret;
+            _settings.AzureTranslateKey = _work.AzureTranslateKey;
             DialogResult = true;
         }
     }
