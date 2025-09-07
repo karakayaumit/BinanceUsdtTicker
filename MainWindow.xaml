@@ -750,7 +750,7 @@
 
                                                         <!-- Time and title on first line -->
                                                         <TextBlock TextWrapping="Wrap">
-                                                            <Run Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
+                                                            <Run Text="{Binding Timestamp, Mode=OneWay, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
                                                             <Run Text=" "/>
                                                             <Run Text="{Binding Title}"/>
                                                         </TextBlock>
