@@ -199,7 +199,7 @@ namespace BinanceUsdtTicker
 
                 if (_newsItems.Count > 100)
                     _newsItems.RemoveAt(_newsItems.Count - 1);
-            });
+            }, DispatcherPriority.Background);
         }
 
         private async Task LoadNewsFromDatabaseAsync()
@@ -234,7 +234,7 @@ namespace BinanceUsdtTicker
                     _newsItems.Clear();
                     foreach (var item in items)
                         _newsItems.Add(item);
-                });
+                }, DispatcherPriority.Background);
             }
             catch (Exception ex)
             {
