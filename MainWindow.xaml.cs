@@ -113,14 +113,17 @@ namespace BinanceUsdtTicker
             // emir listeleri bağla
             void SetupList(string name, IEnumerable? source = null)
             {
-                if (FindName(name) is ListView lv)
+                if (FindName(name) is ItemsControl ic)
                 {
                     if (source != null)
-                        lv.ItemsSource = source;
+                        ic.ItemsSource = source;
 
-                    lv.Height = screenHeight;
-                    lv.MinHeight = screenHeight;
-                    lv.MaxHeight = screenHeight;
+                    if (ic is FrameworkElement fe)
+                    {
+                        fe.Height = screenHeight;
+                        fe.MinHeight = screenHeight;
+                        fe.MaxHeight = screenHeight;
+                    }
                 }
             }
 
@@ -1258,7 +1261,7 @@ namespace BinanceUsdtTicker
 
         private void AdjustNewsTitleColumnWidth()
         {
-            var newsList = Q<ListView>("NewsList");
+            var newsList = Q<DataGrid>("NewsList");
             if (newsList == null) return;
 
             // Increase the News section height so more items are visible
@@ -1267,17 +1270,15 @@ namespace BinanceUsdtTicker
             newsList.MinHeight = screenHeight;
             newsList.MaxHeight = screenHeight;
 
-            if (newsList.View is not GridView gv) return;
-
-            GridViewColumn? titleCol = gv.Columns.FirstOrDefault(c =>
+            DataGridColumn? titleCol = newsList.Columns.FirstOrDefault(c =>
                 string.Equals(c.Header?.ToString(), "Başlık", StringComparison.OrdinalIgnoreCase));
             if (titleCol == null) return;
 
             double fixedSum = 0;
-            foreach (var col in gv.Columns)
+            foreach (var col in newsList.Columns)
             {
                 if (ReferenceEquals(col, titleCol)) continue;
-                var w = col.Width;
+                var w = col.ActualWidth;
                 if (double.IsNaN(w) || w <= 0) w = 100;
                 fixedSum += w;
             }
@@ -1291,7 +1292,7 @@ namespace BinanceUsdtTicker
                 scroll = SystemParameters.VerticalScrollBarWidth;
 
             double newWidth = Math.Max(100, total - fixedSum - padding - scroll);
-            titleCol.Width = newWidth;
+            titleCol.Width = new DataGridLength(newWidth, DataGridLengthUnitType.Pixel);
         }
 
         private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
