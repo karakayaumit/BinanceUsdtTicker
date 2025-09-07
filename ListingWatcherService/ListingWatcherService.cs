@@ -9,6 +9,7 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using BinanceUsdtTicker;
 using System.Data;
 using System.Data.SqlClient;
 using System.Net.Http.Headers;
