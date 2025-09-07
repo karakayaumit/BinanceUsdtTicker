@@ -17,7 +17,9 @@ namespace BinanceUsdtTicker;
 
 public partial class App : Application
 {
+    private FreeNewsHubService? _freeNewsHub;
     private NewsDbService? _newsHub;
+    private readonly ISymbolExtractor _symbolExtractor = new RegexSymbolExtractor();
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
     private WebApplication? _listingApp;
     private static readonly string SymbolsFile = Path.Combine(
@@ -35,6 +37,7 @@ public partial class App : Application
     {
         await UpdateUsdtSymbolsFileAsync();
         var settings = LoadUiSettings();
+        await UpdateNewsBaseUrl(settings.BaseUrl);
         await UpdateDbConnectionAsync(settings);
     }
 
@@ -83,9 +86,22 @@ public partial class App : Application
         await app.StartAsync();
     }
 
-    internal void UpdateNewsBaseUrl(string? baseUrl)
+    internal async Task UpdateNewsBaseUrl(string? baseUrl)
     {
-        // no-op: DB-backed news does not use a base URL
+        if (_freeNewsHub != null)
+        {
+            await _freeNewsHub.DisposeAsync();
+            _freeNewsHub.NewsReceived -= OnNewsReceived;
+            _freeNewsHub = null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(baseUrl))
+        {
+            var opts = new FreeNewsOptions { RssBaseUrl = baseUrl };
+            _freeNewsHub = new FreeNewsHubService(opts, _symbolExtractor);
+            _freeNewsHub.NewsReceived += OnNewsReceived;
+            await _freeNewsHub.StartAsync();
+        }
     }
 
     private static UiSettings LoadUiSettings()
@@ -185,6 +201,8 @@ public partial class App : Application
 
     protected override async void OnExit(ExitEventArgs e)
     {
+        if (_freeNewsHub != null)
+            await _freeNewsHub.DisposeAsync();
         if (_newsHub != null)
             await _newsHub.DisposeAsync();
         if (_listingApp != null)
