@@ -60,14 +60,16 @@ namespace BinanceUsdtTicker
             var dv = new DrawingVisual();
             using (var ctx = dv.RenderOpen())
             {
-                ctx.DrawRectangle(Brushes.White, null, new Rect(0, 0, size, size));
+                var brush = new SolidColorBrush(Color.FromRgb(0x28, 0xD1, 0xA7));
 
+                // Draw the circular dot from the KuCoin logo.
+                ctx.DrawEllipse(brush, null, new Point(size * 0.25, size * 0.5), size * 0.075, size * 0.075);
+
+                // Draw a stylised "K" next to the dot.
                 var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
                 var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
-                var color = new SolidColorBrush(Color.FromRgb(0x28, 0xD1, 0xA7));
-
-                var ft = new FormattedText("KUCOIN", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, color, dpi);
-                var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
+                var ft = new FormattedText("K", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 48, brush, dpi);
+                var p = new Point(size * 0.30, (size - ft.Height) / 2);
                 ctx.DrawText(ft, p);
             }
 
