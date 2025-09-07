@@ -27,7 +27,8 @@ namespace BinanceUsdtTicker
 
         private async Task FetchAndSubscribeAsync()
         {
-            _dependency?.OnChange -= OnDependencyChange;
+            if (_dependency != null)
+                _dependency.OnChange -= OnDependencyChange;
             await using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
             var cmd = conn.CreateCommand();
