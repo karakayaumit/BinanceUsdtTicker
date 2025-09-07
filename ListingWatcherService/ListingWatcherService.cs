@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.IO;
 using BinanceUsdtTicker;
 
 namespace ListingWatcher;
@@ -54,10 +55,41 @@ public sealed class ListingWatcherService : BackgroundService
         _connectionString = configuration.GetConnectionString("Listings") ??
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
 
-        _translatorKey = configuration["AZURE_TRANSLATOR_KEY"] ??
+        var translatorKey = configuration["AZURE_TRANSLATOR_KEY"] ??
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
-        _translatorRegion = configuration["AZURE_TRANSLATOR_REGION"] ??
+        var translatorRegion = configuration["AZURE_TRANSLATOR_REGION"] ??
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
+
+        if (string.IsNullOrEmpty(translatorKey) || string.IsNullOrEmpty(translatorRegion))
+        {
+            try
+            {
+                var appDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "BinanceUsdtTicker");
+                var settingsPath = Path.Combine(appDir, "ui_settings.json");
+                if (!File.Exists(settingsPath))
+                    settingsPath = Path.Combine(appDir, "ui_defaults.json");
+                if (File.Exists(settingsPath))
+                {
+                    using var stream = File.OpenRead(settingsPath);
+                    using var doc = JsonDocument.Parse(stream);
+                    if (string.IsNullOrEmpty(translatorKey) &&
+                        doc.RootElement.TryGetProperty("TranslateKey", out var keyEl))
+                        translatorKey = keyEl.GetString();
+                    if (string.IsNullOrEmpty(translatorRegion) &&
+                        doc.RootElement.TryGetProperty("TranslateRegion", out var regionEl))
+                        translatorRegion = regionEl.GetString();
+                }
+            }
+            catch
+            {
+                // ignore config file errors
+            }
+        }
+
+        _translatorKey = translatorKey;
+        _translatorRegion = translatorRegion;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
