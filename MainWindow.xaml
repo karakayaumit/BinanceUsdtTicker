@@ -721,51 +721,49 @@
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch"
                                   VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
-                                <DataGrid x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                                          AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True"
+                                <ListView x:Name="NewsList" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          Loaded="NewsList_Loaded" SizeChanged="NewsList_SizeChanged"
-                                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Kaynak" Width="80" Binding="{Binding Source}"/>
-                                        <DataGridTextColumn Header="Sembol" Width="80" Binding="{Binding SymbolsDisplay}"/>
-                                        <DataGridTextColumn Header="Zaman" Width="170" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
-                    <DataGridTemplateColumn Header="Başlık" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <!-- News headline -->
-                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
-
-                                    <!-- Buttons for each symbol -->
-                                    <ItemsControl ItemsSource="{Binding Symbols}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                    <!-- Symbol label -->
-                                                    <TextBlock Text="{Binding}" Margin="0,0,6,0"/>
-                                                    <UniformGrid Rows="2" Columns="4">
-                                                        <!-- 4 green buy buttons -->
-                                                        <Button Content="%25" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <Button Content="%50" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <Button Content="%75" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <Button Content="%100" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <!-- 4 red sell buttons -->
-                                                        <Button Content="%25" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <Button Content="%50" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <Button Content="%75" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                        <Button Content="%100" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
-                                                    </UniformGrid>
+                                          VirtualizingStackPanel.IsVirtualizing="True"
+                                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <materialDesign:Card Margin="4" Padding="8" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
+                                                <StackPanel>
+                                                    <!-- Source -->
+                                                    <TextBlock Text="{Binding Source}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                                    <!-- Time and title -->
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
+                                                        <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Margin="8,0,0,0"/>
+                                                    </StackPanel>
+                                                    <!-- Buttons for each symbol -->
+                                                    <ItemsControl ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                                    <!-- Symbol label -->
+                                                                    <TextBlock Text="{Binding}" Margin="0,0,6,0"/>
+                                                                    <UniformGrid Rows="2" Columns="4">
+                                                                        <!-- 4 green buy buttons -->
+                                                                        <Button Content="%25" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <Button Content="%50" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <Button Content="%75" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <Button Content="%100" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <!-- 4 red sell buttons -->
+                                                                        <Button Content="%25" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <Button Content="%50" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <Button Content="%75" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                        <Button Content="%100" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Width="72" Height="40" FontSize="16" FontWeight="Bold"/>
+                                                                    </UniformGrid>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
                                                 </StackPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                            </materialDesign:Card>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                         </GroupBox>
 
                         <!-- TOP MOVERS -->
