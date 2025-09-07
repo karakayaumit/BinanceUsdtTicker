@@ -101,7 +101,7 @@ namespace BinanceUsdtTicker
                         ts = dt.ToUniversalTime();
                     var type = Classify(title);
                     var symbols = _symbolExtractor.ExtractUsdtPairs(title);
-                    list.Add(new NewsItem(id: $"{source}::{link}", source: source, timestamp: ts, title: title, body: null, link: link, type: type, symbols: symbols));
+                    list.Add(new NewsItem(id: $"{source}::{link}", source: source, timestamp: ts, title: title, titleTranslate: null, body: null, link: link, type: type, symbols: symbols));
                 }
             }
             catch (Exception ex)

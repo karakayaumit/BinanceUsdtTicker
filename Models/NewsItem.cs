@@ -5,12 +5,13 @@ namespace BinanceUsdtTicker
 {
     public class NewsItem : EventArgs
     {
-        public NewsItem(string id, string source, DateTime timestamp, string title, string? body, string link, NewsType type, IReadOnlyList<string> symbols)
+        public NewsItem(string id, string source, DateTime timestamp, string title, string? titleTranslate, string? body, string link, NewsType type, IReadOnlyList<string> symbols)
         {
             Id = id;
             Source = source;
             Timestamp = timestamp;
             Title = title;
+            TitleTranslate = titleTranslate;
             Body = body;
             Link = link;
             Type = type;
@@ -21,6 +22,7 @@ namespace BinanceUsdtTicker
         public string Source { get; }
         public DateTime Timestamp { get; }
         public string Title { get; }
+        public string? TitleTranslate { get; }
         public string? Body { get; }
         public string Link { get; }
         public NewsType Type { get; }

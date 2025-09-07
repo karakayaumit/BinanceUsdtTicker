@@ -213,7 +213,7 @@ namespace BinanceUsdtTicker
                 await using var conn = new SqlConnection(connectionString);
                 await conn.OpenAsync();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = @"SELECT TOP 100 Id, Source, Title, Url, Symbols, CreatedAt FROM dbo.News ORDER BY CreatedAt DESC";
+                cmd.CommandText = @"SELECT TOP 100 Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News ORDER BY CreatedAt DESC";
                 await using var reader = await cmd.ExecuteReaderAsync();
                 var items = new List<NewsItem>();
                 while (await reader.ReadAsync())
@@ -221,12 +221,13 @@ namespace BinanceUsdtTicker
                     var id = reader.GetString(0);
                     var source = reader.GetString(1);
                     var title = reader.GetString(2);
-                    var url = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
-                    var symbolsStr = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
-                    var created = reader.GetDateTime(5);
+                    var titleTranslate = reader.IsDBNull(3) ? null : reader.GetString(3);
+                    var url = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
+                    var symbolsStr = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
+                    var created = reader.GetDateTime(6);
                     var symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
                     var createdUtc = DateTime.SpecifyKind(created, DateTimeKind.Utc);
-                    items.Add(new NewsItem(id, source, createdUtc, title, null, url, NewsType.Listing, symbols));
+                    items.Add(new NewsItem(id, source, createdUtc, title, titleTranslate, null, url, NewsType.Listing, symbols));
                 }
 
                 Dispatcher.Invoke(() =>

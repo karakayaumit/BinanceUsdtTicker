@@ -739,6 +739,7 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
+															<RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
 
                                                         <!-- Source information with logo -->
@@ -767,8 +768,11 @@
                                                             <Run Text="{Binding Title, Mode=OneWay}"/>
                                                         </TextBlock>
 
-                                                        <!-- Symbols with action buttons -->
-                                                        <ItemsControl Grid.Row="2" ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
+														<!-- Translated title -->
+														<TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{Binding TitleTranslate}"/>
+
+														<!-- Symbols with action buttons -->
+														<ItemsControl Grid.Row="3" ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <Grid Margin="0,4,0,0">

@@ -66,8 +66,12 @@
               "RelativeToolTip": "Windows\\SettingsWindow.xaml.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAAAAIEAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:35:44.818Z",
               "EditorCaption": ""
+=======
+              "WhenOpened": "2025-09-07T17:35:44.818Z"
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -161,7 +165,11 @@
               "RelativeDocumentMoniker": "ListingWatcherService\\ListingWatcherService.cs",
               "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\ListingWatcherService\\ListingWatcherService.cs",
               "RelativeToolTip": "ListingWatcherService\\ListingWatcherService.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAJMBAAAAAAAAAAAUwLMBAAAoAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKEBAAAFAAAAAAAAAA==",
+>>>>>>> codex/patch-20250907-195518
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-07T17:29:12.097Z",
               "EditorCaption": ""

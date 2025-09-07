@@ -79,7 +79,12 @@
               "RelativeToolTip": "Windows\\SettingsWindow.xaml",
               "ViewState": "AgIAAEoAAAAAAAAAAAAmwGEAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:35:13.444Z"
+=======
+              "WhenOpened": "2025-09-07T17:35:13.444Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -91,7 +96,12 @@
               "RelativeToolTip": "Services\\NewsDbService.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAADsAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:34:32.934Z"
+=======
+              "WhenOpened": "2025-09-07T17:34:32.934Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -103,7 +113,12 @@
               "RelativeToolTip": "Services\\FreeNewsHubService.cs",
               "ViewState": "AgIAAEUAAAAAAAAAAAAAAGcAAAC9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:33:59.732Z"
+=======
+              "WhenOpened": "2025-09-07T17:33:59.732Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -115,7 +130,12 @@
               "RelativeToolTip": "Models\\UiSettings.cs",
               "ViewState": "AgIAAEUAAAAAAAAAAAAAAHUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:33:20.318Z"
+=======
+              "WhenOpened": "2025-09-07T17:33:20.318Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -127,7 +147,12 @@
               "RelativeToolTip": "Models\\NewsItem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:32:49.27Z"
+=======
+              "WhenOpened": "2025-09-07T17:32:49.27Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -139,7 +164,12 @@
               "RelativeToolTip": "MainWindow.xaml.cs",
               "ViewState": "AgIAAMkAAAAAAAAAAAAAAPIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:32:19.639Z"
+=======
+              "WhenOpened": "2025-09-07T17:32:19.639Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -151,7 +181,12 @@
               "RelativeToolTip": "MainWindow.xaml",
               "ViewState": "AgIAAN8CAAAAAAAAAAAmwAYDAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:31:00.832Z"
+=======
+              "WhenOpened": "2025-09-07T17:31:00.832Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             },
             {
               "$type": "Document",
@@ -161,7 +196,11 @@
               "RelativeDocumentMoniker": "ListingWatcherService\\ListingWatcherService.cs",
               "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\ListingWatcherService\\ListingWatcherService.cs",
               "RelativeToolTip": "ListingWatcherService\\ListingWatcherService.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAJMBAAAAAAAAAAAUwLMBAAAoAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKEBAAAFAAAAAAAAAA==",
+>>>>>>> codex/patch-20250907-195518
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-07T17:29:12.097Z",
               "EditorCaption": ""
@@ -176,7 +215,12 @@
               "RelativeToolTip": "App.xaml.cs",
               "ViewState": "AgIAAF8AAAAAAAAAAAAUwJYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-09-07T17:28:00.284Z"
+=======
+              "WhenOpened": "2025-09-07T17:28:00.284Z",
+              "EditorCaption": ""
+>>>>>>> codex/patch-20250907-195518
             }
           ]
         }
