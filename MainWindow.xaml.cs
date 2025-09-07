@@ -131,8 +131,8 @@ namespace BinanceUsdtTicker
             SetupList("PositionsList", _positions);
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
-            // Fill the screen vertically for the News section
-            SetupList("NewsList", _newsItems);
+            // Let the News section use the available height so all items are visible
+            SetupList("NewsList", _newsItems, useScreenHeight: false);
 
             // show most recent orders/trades first
             var orderView = CollectionViewSource.GetDefaultView(_orderHistory);
