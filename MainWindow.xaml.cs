@@ -111,14 +111,14 @@ namespace BinanceUsdtTicker
             }
 
             // emir listeleri bağla
-            void SetupList(string name, IEnumerable? source = null, bool useScreenHeight = true)
+            void SetupList(string name, IEnumerable? source = null)
             {
                 if (FindName(name) is ItemsControl ic)
                 {
                     if (source != null)
                         ic.ItemsSource = source;
 
-                    if (useScreenHeight && ic is FrameworkElement fe)
+                    if (ic is FrameworkElement fe)
                     {
                         fe.Height = screenHeight;
                         fe.MinHeight = screenHeight;
@@ -131,7 +131,7 @@ namespace BinanceUsdtTicker
             SetupList("PositionsList", _positions);
             SetupList("OrderHistoryList", _orderHistory);
             SetupList("TradeHistoryList", _tradeHistory);
-            SetupList("NewsList", _newsItems, useScreenHeight: false);
+            SetupList("NewsList", _newsItems);
 
             // show most recent orders/trades first
             var orderView = CollectionViewSource.GetDefaultView(_orderHistory);
