@@ -83,10 +83,7 @@ namespace BinanceUsdtTicker
             var dv = new DrawingVisual();
             using (var ctx = dv.RenderOpen())
             {
-                ctx.DrawRectangle(Brushes.Black, null, new Rect(0, 0, size, size));
-
-                var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-                var dpi = VisualTreeHelper.GetDpi(dv).PixelsPerDip;
+                ctx.DrawRectangle(new SolidColorBrush(background), null, new Rect(0, 0, size, size));
 
                 var ft = new FormattedText("OKX", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
                 var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
