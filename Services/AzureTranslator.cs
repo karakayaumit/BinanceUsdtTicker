@@ -55,8 +55,9 @@ namespace BinanceUsdtTicker
         {
             int index = 0;
 
-            // First protect tokens inside parentheses, e.g. (PROVE)
-            var result = Regex.Replace(text, @"\(([A-Za-z0-9]+)\)", match =>
+            // First protect tokens inside parentheses, e.g. (PROVE).
+            // Use Unicode-aware matching so non-English uppercase letters stay intact.
+            var result = Regex.Replace(text, @"\(([\p{Lu}0-9]+)\)", match =>
             {
                 var token = match.Groups[1].Value;
                 var placeholder = $"__{index++}__";
@@ -64,8 +65,9 @@ namespace BinanceUsdtTicker
                 return "(" + placeholder + ")";
             });
 
-            // Then protect standalone uppercase tokens (e.g. BTC, PROVE)
-            result = Regex.Replace(result, @"\b[A-Z0-9]{2,}\b", match =>
+            // Then protect standalone uppercase tokens (e.g. BTC, PROVE).
+            // \p{Lu} covers all Unicode uppercase letters.
+            result = Regex.Replace(result, @"\b[\p{Lu}0-9]{2,}\b", match =>
             {
                 var token = match.Value;
                 var placeholder = $"__{index++}__";
