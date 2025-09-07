@@ -12,6 +12,7 @@
 	<!-- ========== RESOURCES ========== -->
         <Window.Resources>
                 <local:SideToBrushConverter x:Key="SideToBrush"/>
+                <local:SourceToLogoConverter x:Key="SourceToLogo"/>
                 <!-- Şeffaf yıldız -->
                 <Style x:Key="StarToggleStyle" TargetType="ToggleButton">
 			<Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -730,7 +731,10 @@
                                             <materialDesign:Card Margin="4" Padding="8" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
                                                 <StackPanel>
                                                     <!-- Source -->
-                                                    <TextBlock Text="{Binding Source}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                        <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="24" Height="24" Margin="0,0,4,0"/>
+                                                        <TextBlock Text="{Binding Source}" FontWeight="Bold" VerticalAlignment="Center"/>
+                                                    </StackPanel>
                                                     <!-- Time and title -->
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
