@@ -190,7 +190,7 @@ namespace BinanceUsdtTicker
 
         public void AddNewsItem(NewsItem item)
         {
-            Dispatcher.Invoke(() =>
+            _ = Dispatcher.InvokeAsync(() =>
             {
                 if (_newsItems.Any(n => n.Id == item.Id))
                     return;
@@ -212,7 +212,7 @@ namespace BinanceUsdtTicker
                 await using var conn = new SqlConnection(connectionString);
                 await conn.OpenAsync();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = @"SELECT TOP 100 Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News ORDER BY CreatedAt DESC";
+                cmd.CommandText = @"SELECT TOP 10 Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News ORDER BY CreatedAt DESC";
                 await using var reader = await cmd.ExecuteReaderAsync();
                 var items = new List<NewsItem>();
                 while (await reader.ReadAsync())
@@ -229,7 +229,7 @@ namespace BinanceUsdtTicker
                     items.Add(new NewsItem(id, source, createdUtc, title, titleTranslate, null, url, NewsType.Listing, symbols));
                 }
 
-                Dispatcher.Invoke(() =>
+                await Dispatcher.InvokeAsync(() =>
                 {
                     _newsItems.Clear();
                     foreach (var item in items)
@@ -548,7 +548,7 @@ namespace BinanceUsdtTicker
         {
             if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
 
-            Dispatcher.Invoke(() =>
+            _ = Dispatcher.InvokeAsync(() =>
             {
                 ApplyUpdate(latest);
 
@@ -573,7 +573,7 @@ namespace BinanceUsdtTicker
             {
                 if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
 
-                Dispatcher.Invoke(() =>
+                _ = Dispatcher.InvokeAsync(() =>
                 {
                     var tb = Q<TextBlock>("WsStateText");
                     if (tb != null)
@@ -903,7 +903,7 @@ namespace BinanceUsdtTicker
                 await Task.Delay(1000);
                 if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
 
-                Dispatcher.Invoke(() =>
+                await Dispatcher.InvokeAsync(() =>
                 {
                     if (EvaluateAllAlertsNow())
                         SaveAlertsSafe();

@@ -726,10 +726,18 @@
                                             Foreground="{DynamicResource OnSurface}" BorderThickness="0"
                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                            ScrollViewer.CanContentScroll="True"
+                                            VirtualizingStackPanel.IsVirtualizing="True"
+                                            VirtualizingStackPanel.VirtualizationMode="Recycling"
                                             VerticalAlignment="Stretch"
                                             VerticalContentAlignment="Stretch"
                                             HorizontalAlignment="Stretch"
                                             HorizontalContentAlignment="Stretch">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
                                     <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Margin="4" Padding="6" BorderBrush="{DynamicResource Divider}"
