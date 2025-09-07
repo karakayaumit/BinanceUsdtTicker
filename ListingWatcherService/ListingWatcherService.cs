@@ -15,8 +15,6 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO;
-using BinanceUsdtTicker;
-using BinanceUsdtTicker.Models;
 
 namespace ListingWatcher;
 
