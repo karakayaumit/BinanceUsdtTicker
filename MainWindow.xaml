@@ -727,14 +727,34 @@
                     <DataGridTemplateColumn Header="Başlık" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap"/>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal"/>
-                                </Grid>
+                                <StackPanel>
+                                    <!-- News headline -->
+                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+
+                                    <!-- Buttons for each symbol -->
+                                    <ItemsControl ItemsSource="{Binding Symbols}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                    <!-- Symbol label -->
+                                                    <TextBlock Text="{Binding}" Margin="0,0,6,0"/>
+                                                    <UniformGrid Rows="1" Columns="8">
+                                                        <!-- 4 green buy buttons -->
+                                                        <Button Content="%25" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Padding="4,2"/>
+                                                        <Button Content="%50" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Padding="4,2"/>
+                                                        <Button Content="%75" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Padding="4,2"/>
+                                                        <Button Content="%100" Background="{DynamicResource Up1Bg}" Foreground="{DynamicResource Up1Fg}" Margin="2" Padding="4,2"/>
+                                                        <!-- 4 red sell buttons -->
+                                                        <Button Content="%25" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Padding="4,2"/>
+                                                        <Button Content="%50" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Padding="4,2"/>
+                                                        <Button Content="%75" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Padding="4,2"/>
+                                                        <Button Content="%100" Background="{DynamicResource Down1Bg}" Foreground="{DynamicResource Down1Fg}" Margin="2" Padding="4,2"/>
+                                                    </UniformGrid>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
