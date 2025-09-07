@@ -54,8 +54,10 @@ public sealed class ListingWatcherService : BackgroundService
         _connectionString = configuration.GetConnectionString("Listings") ??
             Environment.GetEnvironmentVariable("BINANCE_DB_CONNECTION") ?? string.Empty;
 
-        _translatorKey = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
-        _translatorRegion = Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
+        _translatorKey = configuration["AZURE_TRANSLATOR_KEY"] ??
+            Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
+        _translatorRegion = configuration["AZURE_TRANSLATOR_REGION"] ??
+            Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
