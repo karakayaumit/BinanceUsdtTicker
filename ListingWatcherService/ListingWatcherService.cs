@@ -28,6 +28,7 @@ public sealed class ListingWatcherService : BackgroundService
     private static readonly TimeZoneInfo TurkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
     private readonly string _connectionString;
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
+    private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
 
     public ListingWatcherService(ILogger<ListingWatcherService> logger)
     {
@@ -49,6 +50,7 @@ public sealed class ListingWatcherService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await EnsureDatabaseAsync(stoppingToken);
+        await LoadBinanceSymbolsAsync(stoppingToken);
 
         var tasks = new[]
         {
@@ -59,6 +61,37 @@ public sealed class ListingWatcherService : BackgroundService
         };
 
         await Task.WhenAll(tasks);
+    }
+
+    private async Task LoadBinanceSymbolsAsync(CancellationToken ct)
+    {
+        try
+        {
+            using var resp = await _http.GetAsync("https://fapi.binance.com/fapi/v1/exchangeInfo", ct);
+            resp.EnsureSuccessStatusCode();
+            using var stream = await resp.Content.ReadAsStreamAsync(ct);
+            using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ct);
+            if (doc.RootElement.TryGetProperty("symbols", out var symbolsEl))
+            {
+                foreach (var el in symbolsEl.EnumerateArray())
+                {
+                    if (el.TryGetProperty("quoteAsset", out var quoteEl) &&
+                        string.Equals(quoteEl.GetString(), "USDT", StringComparison.OrdinalIgnoreCase) &&
+                        el.TryGetProperty("status", out var statusEl) &&
+                        string.Equals(statusEl.GetString(), "TRADING", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var sym = el.GetProperty("symbol").GetString();
+                        if (!string.IsNullOrEmpty(sym))
+                            _binanceSymbols.Add(sym);
+                    }
+                }
+            }
+            _logger.LogInformation("loaded {Count} binance usdt futures symbols", _binanceSymbols.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "failed to load binance symbols");
+        }
     }
 
     private async Task SaveWorkerAsync(CancellationToken ct)
@@ -258,7 +291,11 @@ public sealed class ListingWatcherService : BackgroundService
 
     private Task ProcessListingAsync(string source, string id, string title, string? url, DateTimeOffset createdAt, CancellationToken ct)
     {
-        var symbols = ExtractSymbols(title);
+        var symbols = ExtractSymbols(title)
+            .Where(s => _binanceSymbols.Contains(s))
+            .ToList();
+        if (symbols.Count == 0)
+            return Task.CompletedTask;
         var normalizedId = NormalizeId(id);
         var item = new ListingItem(source, normalizedId, title, url, symbols, createdAt);
         return _queue.Writer.WriteAsync(item, ct).AsTask();
