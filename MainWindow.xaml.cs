@@ -133,6 +133,15 @@ namespace BinanceUsdtTicker
             SetupList("TradeHistoryList", _tradeHistory);
             SetupList("NewsList", _newsItems, useScreenHeight: false);
 
+            // Ensure the News section shows multiple items
+            if (FindName("NewsList") is ListView newsList)
+            {
+                double newsHeight = SystemParameters.PrimaryScreenHeight / 3;
+                newsList.Height = newsHeight;
+                newsList.MinHeight = newsHeight;
+                newsList.MaxHeight = newsHeight;
+            }
+
             // show most recent orders/trades first
             var orderView = CollectionViewSource.GetDefaultView(_orderHistory);
             orderView.SortDescriptions.Clear();
@@ -1225,9 +1234,6 @@ namespace BinanceUsdtTicker
         private void AlertList_Loaded(object sender, RoutedEventArgs e) => AdjustAlertMsgColumnWidth();
         private void AlertList_SizeChanged(object sender, SizeChangedEventArgs e) => AdjustAlertMsgColumnWidth();
 
-        private void NewsList_Loaded(object sender, RoutedEventArgs e) => AdjustNewsTitleColumnWidth();
-        private void NewsList_SizeChanged(object sender, SizeChangedEventArgs e) => AdjustNewsTitleColumnWidth();
-
         private void AdjustAlertMsgColumnWidth()
         {
             var alertList = Q<ListView>("AlertList");
@@ -1257,42 +1263,6 @@ namespace BinanceUsdtTicker
 
             double newWidth = Math.Max(120, total - fixedSum - padding - scroll);
             msgCol.Width = newWidth;
-        }
-
-        private void AdjustNewsTitleColumnWidth()
-        {
-            var newsList = Q<DataGrid>("NewsList");
-            if (newsList == null) return;
-
-            // Increase the News section height so more items are visible
-            double screenHeight = SystemParameters.PrimaryScreenHeight / 3;
-            newsList.Height = screenHeight;
-            newsList.MinHeight = screenHeight;
-            newsList.MaxHeight = screenHeight;
-
-            DataGridColumn? titleCol = newsList.Columns.FirstOrDefault(c =>
-                string.Equals(c.Header?.ToString(), "Başlık", StringComparison.OrdinalIgnoreCase));
-            if (titleCol == null) return;
-
-            double fixedSum = 0;
-            foreach (var col in newsList.Columns)
-            {
-                if (ReferenceEquals(col, titleCol)) continue;
-                var w = col.ActualWidth;
-                if (double.IsNaN(w) || w <= 0) w = 100;
-                fixedSum += w;
-            }
-
-            double total = newsList.ActualWidth;
-            double padding = 35;
-
-            double scroll = 0;
-            var sv = FindDescendant<ScrollViewer>(newsList);
-            if (sv != null && sv.ComputedVerticalScrollBarVisibility == Visibility.Visible)
-                scroll = SystemParameters.VerticalScrollBarWidth;
-
-            double newWidth = Math.Max(100, total - fixedSum - padding - scroll);
-            titleCol.Width = new DataGridLength(newWidth, DataGridLengthUnitType.Pixel);
         }
 
         private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
