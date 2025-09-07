@@ -1,30 +1,23 @@
+using BinanceUsdtTicker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ListingWatcher;
-using System;
+using Microsoft.Extensions.Logging;
 
 var builder = Host.CreateDefaultBuilder(args)
-.UseWindowsService()
-.ConfigureServices(services =>
-{
-    services.AddHostedService<ListingWatcherService>();
-})
-.ConfigureLogging(logging =>
-{
-    logging.ClearProviders();
-    logging.AddEventLog(o => o.SourceName = "ListingWatcherService");
-});
+    .ConfigureServices(services =>
+    {
+        services.AddSingleton<ISymbolExtractor, RegexSymbolExtractor>();
+        services.AddHostedService<ListingWatcherService>();
+    })
+    .ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddEventLog(o => o.SourceName = "ListingWatcherService");
+    });
 
 if (OperatingSystem.IsWindows())
 {
     builder.UseWindowsService();
 }
-
-builder.ConfigureServices(services =>
-    {
-        services.AddHostedService<ListingWatcherService>();
-    })
-    .Build()
-    .Run();
 
 await builder.Build().RunAsync();

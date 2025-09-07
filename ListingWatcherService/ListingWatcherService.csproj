@@ -14,4 +14,7 @@
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.8" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.*" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Services\SymbolExtractor.cs" Link="SymbolExtractor.cs" />
+  </ItemGroup>
 </Project>
