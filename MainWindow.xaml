@@ -731,10 +731,7 @@
                                             <materialDesign:Card Margin="4" Padding="8" Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
                                                 <StackPanel>
                                                     <!-- Source -->
-                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                                        <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="32" Height="32" Margin="0,0,4,0"/>
-                                                        <TextBlock Text="{Binding Source}" FontWeight="Bold" VerticalAlignment="Center"/>
-                                                    </StackPanel>
+                                                    <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="64" Height="64" Margin="0,0,0,4"/>
                                                     <!-- Time and title -->
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
