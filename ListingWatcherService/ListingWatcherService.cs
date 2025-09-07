@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Data.SqlClient;
+using BinanceUsdtTicker;
 
 namespace ListingWatcher;
 
@@ -22,17 +22,16 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly ILogger<ListingWatcherService> _logger;
     private readonly HttpClient _http;
     //private readonly ConcurrentDictionary<string, byte> _seen = new();
-    private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
-    private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
-    private static readonly Regex UpperSym = new(@"\b([A-Z][A-Z0-9]{1,14})\b", RegexOptions.Compiled);
     private static readonly TimeZoneInfo TurkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
     private readonly string _connectionString;
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
     private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ISymbolExtractor _symbolExtractor;
 
-    public ListingWatcherService(ILogger<ListingWatcherService> logger)
+    public ListingWatcherService(ILogger<ListingWatcherService> logger, ISymbolExtractor symbolExtractor)
     {
         _logger = logger;
+        _symbolExtractor = symbolExtractor;
 
         _http = new HttpClient(new HttpClientHandler
         {
@@ -291,7 +290,7 @@ public sealed class ListingWatcherService : BackgroundService
 
     private async Task ProcessListingAsync(string source, string id, string title, string? url, DateTimeOffset createdAt, CancellationToken ct)
     {
-        var symbols = ExtractSymbols(title)
+        var symbols = _symbolExtractor.ExtractUsdtPairs(title)
             .Where(s => _binanceSymbols.Contains(s))
             .ToList();
         if (symbols.Count == 0)
@@ -304,33 +303,6 @@ public sealed class ListingWatcherService : BackgroundService
         }
     }
 
-    private static IReadOnlyList<string> ExtractSymbols(string text)
-    {
-        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (Match m in UsdtSym.Matches(text))
-            set.Add(m.Groups[1].Value + "USDT");
-        foreach (Match m in ParenSym.Matches(text))
-        {
-            var sym = m.Groups[1].Value;
-            if (sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
-                set.Add(sym);
-            else if (sym.EndsWith("USDTM", StringComparison.OrdinalIgnoreCase))
-                set.Add(sym.Substring(0, sym.Length - 1));
-            else
-                set.Add(sym + "USDT");
-        }
-        foreach (Match m in UpperSym.Matches(text))
-        {
-            var sym = m.Groups[1].Value;
-            if (sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
-                set.Add(sym);
-            else if (sym.EndsWith("USDTM", StringComparison.OrdinalIgnoreCase))
-                set.Add(sym.Substring(0, sym.Length - 1));
-            else
-                set.Add(sym + "USDT");
-        }
-        return set.ToList();
-    }
 
     private static string NormalizeId(string id)
     {

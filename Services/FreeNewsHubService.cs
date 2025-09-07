@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -14,14 +13,16 @@ namespace BinanceUsdtTicker
         private readonly FreeNewsOptions _options;
         private readonly HttpClient _httpClient = new();
         private readonly HashSet<string> _dedup = new(StringComparer.Ordinal);
+        private readonly ISymbolExtractor _symbolExtractor;
         private CancellationTokenSource? _cts;
         private Task? _loop;
 
         public event EventHandler<NewsItem>? NewsReceived;
 
-        public FreeNewsHubService(FreeNewsOptions options)
+        public FreeNewsHubService(FreeNewsOptions options, ISymbolExtractor symbolExtractor)
         {
             _options = options;
+            _symbolExtractor = symbolExtractor;
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; BinanceUsdtTicker)");
         }
 
@@ -99,7 +100,8 @@ namespace BinanceUsdtTicker
                     if (DateTime.TryParse(pubDate, out var dt))
                         ts = dt.ToUniversalTime();
                     var type = Classify(title);
-                    list.Add(new NewsItem(id: $"{source}::{link}", source: source, timestamp: ts, title: title, body: null, link: link, type: type, symbols: ExtractSymbols(title)));
+                    var symbols = _symbolExtractor.ExtractUsdtPairs(title);
+                    list.Add(new NewsItem(id: $"{source}::{link}", source: source, timestamp: ts, title: title, body: null, link: link, type: type, symbols: symbols));
                 }
             }
             catch (Exception ex)
@@ -121,28 +123,6 @@ namespace BinanceUsdtTicker
             return NewsType.General;
         }
 
-        private static readonly Regex UsdtSym = new(@"\b([A-Z0-9]{2,15})(?:/|-)?USDTM?\b", RegexOptions.Compiled);
-        private static readonly Regex ParenSym = new(@"\(([A-Z0-9]{2,15})\)", RegexOptions.Compiled);
-
-        private static IReadOnlyList<string> ExtractSymbols(string text)
-        {
-            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (Match m in UsdtSym.Matches(text))
-                set.Add(m.Groups[1].Value + "USDT");
-
-            foreach (Match m in ParenSym.Matches(text))
-            {
-                var sym = m.Groups[1].Value;
-                if (sym.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
-                    set.Add(sym);
-                else if (sym.EndsWith("USDTM", StringComparison.OrdinalIgnoreCase))
-                    set.Add(sym.Substring(0, sym.Length - 1));
-                else
-                    set.Add(sym + "USDT");
-            }
-
-            return set.ToList();
-        }
+        // symbol extraction delegated to ISymbolExtractor
     }
 }
