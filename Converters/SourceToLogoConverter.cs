@@ -17,35 +17,23 @@ namespace BinanceUsdtTicker
             src = src.ToLowerInvariant();
             return src switch
             {
-                "bybit" => CreateLogo("BYBIT", Color.FromRgb(0xF7, 0x93, 0x1A), Colors.White),
-                "kucoin" => CreateLogo("KUCOIN", Color.FromRgb(0x28, 0xD1, 0xA7), Colors.White),
-                "okx" => CreateLogo("OKX", Colors.Black, Colors.White),
+                "bybit" => CreateLogo(Color.FromRgb(0xF7, 0x93, 0x1A)),
+                "kucoin" => CreateLogo(Color.FromRgb(0x28, 0xD1, 0xA7)),
+                "okx" => CreateLogo(Colors.Black),
                 _ => null,
             };
         }
 
-        private static ImageSource CreateLogo(string text, Color background, Color foreground)
+        private static ImageSource CreateLogo(Color background)
         {
-            var ft = new FormattedText(
-                text,
-                CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal),
-                16,
-                new SolidColorBrush(foreground),
-                1.0);
-
-            var width = Math.Ceiling(ft.Width) + 4;
-            var height = Math.Ceiling(ft.Height) + 4;
-
+            const int size = 32;
             var dv = new DrawingVisual();
             using (var ctx = dv.RenderOpen())
             {
-                ctx.DrawRectangle(new SolidColorBrush(background), null, new Rect(0, 0, width, height));
-                ctx.DrawText(ft, new System.Windows.Point(2, 2));
+                ctx.DrawRectangle(new SolidColorBrush(background), null, new Rect(0, 0, size, size));
             }
 
-            var bmp = new RenderTargetBitmap((int)width, (int)height, 96, 96, PixelFormats.Pbgra32);
+            var bmp = new RenderTargetBitmap(size, size, 96, 96, PixelFormats.Pbgra32);
             bmp.Render(dv);
             return bmp;
         }

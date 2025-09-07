@@ -732,7 +732,7 @@
                                                 <StackPanel>
                                                     <!-- Source -->
                                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                                        <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="24" Height="24" Margin="0,0,4,0"/>
+                                                        <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}" Width="32" Height="32" Margin="0,0,4,0"/>
                                                         <TextBlock Text="{Binding Source}" FontWeight="Bold" VerticalAlignment="Center"/>
                                                     </StackPanel>
                                                     <!-- Time and title -->
