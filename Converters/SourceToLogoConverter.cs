@@ -93,7 +93,7 @@ namespace BinanceUsdtTicker
 
             using (var ctx = dv.RenderOpen())
             {
-                var ft = new FormattedText("OKX", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.White, dpi);
+                var ft = new FormattedText("OKX", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 24, Brushes.Black, dpi);
                 var p = new Point((size - ft.Width) / 2, (size - ft.Height) / 2);
                 ctx.DrawText(ft, p);
             }

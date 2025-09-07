@@ -734,3 +734,320 @@
 2025-09-07 15:04:55 ConnectLoop error: The operation was canceled.
 2025-09-07 15:04:55 WS closed
 2025-09-07 15:04:55 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 15:11:28 StartAsync
+2025-09-07 15:11:28 StopAsync
+2025-09-07 15:11:28 Monitor: state Connecting gap -1
+2025-09-07 15:11:28 WS state Connecting attempt 0
+2025-09-07 15:11:29 WS connected
+2025-09-07 15:57:03 StopAsync
+2025-09-07 15:57:03 ConnectLoop error: The operation was canceled.
+2025-09-07 15:57:03 WS closed
+2025-09-07 15:57:03 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 15:57:20 StartAsync
+2025-09-07 15:57:20 StopAsync
+2025-09-07 15:57:20 Monitor: state Connecting gap -1
+2025-09-07 15:57:21 WS state Connecting attempt 0
+2025-09-07 15:57:21 WS connected
+2025-09-07 16:00:04 StartAsync
+2025-09-07 16:00:04 StopAsync
+2025-09-07 16:00:04 Monitor: state Connecting gap -1
+2025-09-07 16:00:04 WS state Connecting attempt 0
+2025-09-07 16:00:05 WS connected
+2025-09-07 16:03:06 StartAsync
+2025-09-07 16:03:06 StopAsync
+2025-09-07 16:03:06 Monitor: state Closed gap -1
+2025-09-07 16:03:06 WS state Connecting attempt 0
+2025-09-07 16:03:07 WS connected
+2025-09-07 16:04:11 StopAsync
+2025-09-07 16:04:11 ConnectLoop error: The operation was canceled.
+2025-09-07 16:04:11 WS closed
+2025-09-07 16:04:11 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 16:18:23 StartAsync
+2025-09-07 16:18:23 StopAsync
+2025-09-07 16:18:23 Monitor: state Closed gap -1
+2025-09-07 16:18:24 WS state Connecting attempt 0
+2025-09-07 16:18:25 WS connected
+2025-09-07 16:18:43 StopAsync
+2025-09-07 16:18:43 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 16:18:43 ConnectLoop error: The operation was canceled.
+2025-09-07 16:18:43 WS closed
+2025-09-07 16:22:56 StartAsync
+2025-09-07 16:22:56 StopAsync
+2025-09-07 16:22:56 Monitor: state Connecting gap -1
+2025-09-07 16:22:56 WS state Connecting attempt 0
+2025-09-07 16:22:57 WS connected
+2025-09-07 16:24:35 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:40 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:44 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:45 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:50 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:53 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:54 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:55 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:56 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:57 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:58 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:24:59 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:00 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:01 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:02 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:05 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:06 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:07 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:08 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:10 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:11 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:12 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:13 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:14 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:15 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:17 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:18 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:19 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:20 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 16:25:20 StopAsync
+2025-09-07 16:25:20 ConnectLoop error: The operation was canceled.
+2025-09-07 16:25:20 WS closed
+2025-09-07 16:25:20 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 16:26:39 StartAsync
+2025-09-07 16:26:39 StopAsync
+2025-09-07 16:26:39 Monitor: state Closed gap -1
+2025-09-07 16:26:39 WS state Connecting attempt 0
+2025-09-07 16:26:40 WS connected
+2025-09-07 16:26:55 StopAsync
+2025-09-07 16:26:55 ConnectLoop error: The operation was canceled.
+2025-09-07 16:26:55 WS closed
+2025-09-07 16:26:55 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 16:55:09 StartAsync
+2025-09-07 16:55:09 StopAsync
+2025-09-07 16:55:09 Monitor: state Connecting gap -1
+2025-09-07 16:55:09 WS state Connecting attempt 0
+2025-09-07 16:55:10 WS connected
+2025-09-07 16:55:14 StopAsync
+2025-09-07 16:55:14 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 16:55:14 ConnectLoop error: The operation was canceled.
+2025-09-07 16:55:14 WS closed
+2025-09-07 16:56:08 StartAsync
+2025-09-07 16:56:08 StopAsync
+2025-09-07 16:56:08 Monitor: state Connecting gap -1
+2025-09-07 16:56:08 WS state Connecting attempt 0
+2025-09-07 16:56:09 WS connected
+2025-09-07 16:56:20 StopAsync
+2025-09-07 16:56:20 WS closed
+2025-09-07 17:19:07 StartAsync
+2025-09-07 17:19:07 StopAsync
+2025-09-07 17:19:07 Monitor: state Closed gap -1
+2025-09-07 17:19:07 WS state Connecting attempt 0
+2025-09-07 17:19:08 WS connected
+2025-09-07 17:21:19 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:21:23 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:21:27 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:21:28 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:21:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:21:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:21:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:22:02 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:22:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:22:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:22:09 StopAsync
+2025-09-07 17:22:09 ConnectLoop error: The operation was canceled.
+2025-09-07 17:22:09 WS closed
+2025-09-07 17:22:10 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:24:34 StartAsync
+2025-09-07 17:24:34 StopAsync
+2025-09-07 17:24:34 Monitor: state Connecting gap -1
+2025-09-07 17:24:34 WS state Connecting attempt 0
+2025-09-07 17:24:35 WS connected
+2025-09-07 17:25:30 StopAsync
+2025-09-07 17:25:30 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:25:30 ConnectLoop error: The operation was canceled.
+2025-09-07 17:25:30 WS closed
+2025-09-07 17:30:36 StartAsync
+2025-09-07 17:30:36 StopAsync
+2025-09-07 17:30:36 Monitor: state Connecting gap -1
+2025-09-07 17:30:36 WS state Connecting attempt 0
+2025-09-07 17:30:37 WS connected
+2025-09-07 17:30:41 StopAsync
+2025-09-07 17:30:41 ConnectLoop error: The operation was canceled.
+2025-09-07 17:30:41 WS closed
+2025-09-07 17:30:41 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:31:25 StartAsync
+2025-09-07 17:31:25 StopAsync
+2025-09-07 17:31:25 Monitor: state Closed gap -1
+2025-09-07 17:31:26 WS state Connecting attempt 0
+2025-09-07 17:31:27 WS connected
+2025-09-07 17:35:00 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:01 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:08 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:10 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:12 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:15 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:18 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:20 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:22 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:23 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:24 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:25 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:28 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:31 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:34 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:35 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:40 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:44 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:45 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:50 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:54 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:55 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-07 17:35:55 StopAsync
+2025-09-07 17:35:55 WS closed
+2025-09-07 17:38:31 StartAsync
+2025-09-07 17:38:31 StopAsync
+2025-09-07 17:38:31 Monitor: state Connecting gap -1
+2025-09-07 17:38:31 WS state Connecting attempt 0
+2025-09-07 17:38:32 WS connected
+2025-09-07 17:38:56 StopAsync
+2025-09-07 17:38:56 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:38:56 ConnectLoop error: The operation was canceled.
+2025-09-07 17:38:56 WS closed
+2025-09-07 17:40:02 StartAsync
+2025-09-07 17:40:02 StopAsync
+2025-09-07 17:40:02 Monitor: state Connecting gap -1
+2025-09-07 17:40:02 WS state Connecting attempt 0
+2025-09-07 17:40:03 WS connected
+2025-09-07 17:40:11 StopAsync
+2025-09-07 17:40:11 ConnectLoop error: The operation was canceled.
+2025-09-07 17:40:11 WS closed
+2025-09-07 17:40:11 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:40:21 StartAsync
+2025-09-07 17:40:21 StopAsync
+2025-09-07 17:40:21 Monitor: state Connecting gap -1
+2025-09-07 17:40:21 WS state Connecting attempt 0
+2025-09-07 17:40:22 WS connected
+2025-09-07 17:40:38 StopAsync
+2025-09-07 17:40:38 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:40:38 ConnectLoop error: The operation was canceled.
+2025-09-07 17:40:38 WS closed
+2025-09-07 17:40:57 StartAsync
+2025-09-07 17:40:57 StopAsync
+2025-09-07 17:40:57 Monitor: state Connecting gap -1
+2025-09-07 17:40:58 WS state Connecting attempt 0
+2025-09-07 17:40:58 WS connected
+2025-09-07 17:41:04 StopAsync
+2025-09-07 17:41:04 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:41:04 ConnectLoop error: The operation was canceled.
+2025-09-07 17:41:04 WS closed
+2025-09-07 17:42:06 StartAsync
+2025-09-07 17:42:06 StopAsync
+2025-09-07 17:42:06 Monitor: state Closed gap -1
+2025-09-07 17:42:06 WS state Connecting attempt 0
+2025-09-07 17:42:07 WS connected
+2025-09-07 17:42:28 StopAsync
+2025-09-07 17:42:28 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:42:28 ConnectLoop error: The operation was canceled.
+2025-09-07 17:42:28 WS closed
+2025-09-07 17:43:46 StartAsync
+2025-09-07 17:43:46 StopAsync
+2025-09-07 17:43:46 Monitor: state Connecting gap -1
+2025-09-07 17:43:46 WS state Connecting attempt 0
+2025-09-07 17:43:47 WS connected
+2025-09-07 17:43:56 StopAsync
+2025-09-07 17:43:56 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:43:56 ConnectLoop error: The operation was canceled.
+2025-09-07 17:43:56 WS closed
+2025-09-07 17:45:21 StartAsync
+2025-09-07 17:45:21 StopAsync
+2025-09-07 17:45:21 Monitor: state Closed gap -1
+2025-09-07 17:45:22 WS state Connecting attempt 0
+2025-09-07 17:45:23 WS connected
+2025-09-07 17:45:34 StopAsync
+2025-09-07 17:45:34 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:45:34 ConnectLoop error: The operation was canceled.
+2025-09-07 17:45:34 WS closed
+2025-09-07 17:45:49 StartAsync
+2025-09-07 17:45:49 StopAsync
+2025-09-07 17:45:49 Monitor: state Connecting gap -1
+2025-09-07 17:45:49 WS state Connecting attempt 0
+2025-09-07 17:45:50 WS connected
+2025-09-07 17:45:55 StopAsync
+2025-09-07 17:45:56 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:45:56 ConnectLoop error: The operation was canceled.
+2025-09-07 17:45:56 WS closed
+2025-09-07 17:46:08 StartAsync
+2025-09-07 17:46:08 StopAsync
+2025-09-07 17:46:08 Monitor: state Closed gap -1
+2025-09-07 17:46:08 WS state Connecting attempt 0
+2025-09-07 17:46:09 WS connected
+2025-09-07 17:46:13 StopAsync
+2025-09-07 17:46:13 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:46:13 ConnectLoop error: The operation was canceled.
+2025-09-07 17:46:13 WS closed
+2025-09-07 17:46:42 StartAsync
+2025-09-07 17:46:42 StopAsync
+2025-09-07 17:46:42 Monitor: state Closed gap -1
+2025-09-07 17:46:42 WS state Connecting attempt 0
+2025-09-07 17:46:43 WS connected
+2025-09-07 17:46:47 StopAsync
+2025-09-07 17:46:47 WS closed
+2025-09-07 17:50:38 StartAsync
+2025-09-07 17:50:38 StopAsync
+2025-09-07 17:50:38 Monitor: state Closed gap -1
+2025-09-07 17:50:38 WS state Connecting attempt 0
+2025-09-07 17:50:39 WS connected
+2025-09-07 17:50:58 StopAsync
+2025-09-07 17:50:58 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:50:58 ConnectLoop error: The operation was canceled.
+2025-09-07 17:50:58 WS closed
+2025-09-07 17:52:04 StartAsync
+2025-09-07 17:52:04 StopAsync
+2025-09-07 17:52:04 Monitor: state Connecting gap -1
+2025-09-07 17:52:05 WS state Connecting attempt 0
+2025-09-07 17:52:05 WS connected
+2025-09-07 17:52:16 StopAsync
+2025-09-07 17:52:16 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:52:16 ConnectLoop error: The operation was canceled.
+2025-09-07 17:52:16 WS closed
+2025-09-07 17:52:41 StartAsync
+2025-09-07 17:52:41 StopAsync
+2025-09-07 17:52:41 Monitor: state Closed gap -1
+2025-09-07 17:52:41 WS state Connecting attempt 0
+2025-09-07 17:52:42 WS connected
+2025-09-07 17:52:58 StopAsync
+2025-09-07 17:52:58 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-07 17:52:58 ConnectLoop error: The operation was canceled.
+2025-09-07 17:52:58 WS closed
