@@ -122,5 +122,19 @@ namespace BinanceUsdtTicker.Models
             get => _azureTranslateKey;
             set { if (_azureTranslateKey != value) { _azureTranslateKey = value; OnPropertyChanged(); } }
         }
+
+        private string _translateKey = string.Empty;
+        public string TranslateKey
+        {
+            get => _translateKey;
+            set { if (_translateKey != value) { _translateKey = value; OnPropertyChanged(); } }
+        }
+
+        private string _translateRegion = string.Empty;
+        public string TranslateRegion
+        {
+            get => _translateRegion;
+            set { if (_translateRegion != value) { _translateRegion = value; OnPropertyChanged(); } }
+        }
     }
 }
