@@ -1162,3 +1162,389 @@
 2025-09-08 01:14:20 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
 2025-09-08 01:14:20 ConnectLoop error: The operation was canceled.
 2025-09-08 01:14:20 WS closed
+2025-09-08 01:16:37 StartAsync
+2025-09-08 01:16:37 StopAsync
+2025-09-08 01:16:37 Monitor: state Connecting gap -1
+2025-09-08 01:16:37 WS state Connecting attempt 0
+2025-09-08 01:16:38 WS connected
+2025-09-08 01:17:03 StopAsync
+2025-09-08 01:17:03 ConnectLoop error: The operation was canceled.
+2025-09-08 01:17:03 WS closed
+2025-09-08 01:17:04 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 01:22:23 StartAsync
+2025-09-08 01:22:23 StopAsync
+2025-09-08 01:22:23 Monitor: state Connecting gap -1
+2025-09-08 01:22:23 WS state Connecting attempt 0
+2025-09-08 01:22:24 WS connected
+2025-09-08 01:23:11 StopAsync
+2025-09-08 01:23:11 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 01:23:11 ConnectLoop error: The operation was canceled.
+2025-09-08 01:23:11 WS closed
+2025-09-08 01:33:51 StartAsync
+2025-09-08 01:33:51 StopAsync
+2025-09-08 01:33:51 Monitor: state Connecting gap -1
+2025-09-08 01:33:52 WS state Connecting attempt 0
+2025-09-08 01:33:53 WS connected
+2025-09-08 01:34:47 StopAsync
+2025-09-08 01:34:47 ConnectLoop error: The operation was canceled.
+2025-09-08 01:34:47 WS closed
+2025-09-08 01:34:47 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 01:37:24 StartAsync
+2025-09-08 01:37:24 StopAsync
+2025-09-08 01:37:24 Monitor: state Closed gap -1
+2025-09-08 01:37:25 WS state Connecting attempt 0
+2025-09-08 01:37:26 WS connected
+2025-09-08 01:37:40 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:50 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:53 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:54 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:55 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:56 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:57 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:58 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:37:59 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:00 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:01 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:02 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:05 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:06 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:07 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:08 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:10 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:11 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:12 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:13 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:14 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:15 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:17 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:18 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:19 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:20 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:22 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:23 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:24 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:25 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:26 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:29 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:31 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:32 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:34 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:35 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:40 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:44 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 01:38:44 StopAsync
+2025-09-08 01:38:44 ConnectLoop error: The operation was canceled.
+2025-09-08 01:38:44 WS closed
+2025-09-08 01:38:45 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 01:39:50 StartAsync
+2025-09-08 01:39:50 StopAsync
+2025-09-08 01:39:50 Monitor: state Connecting gap -1
+2025-09-08 01:39:50 WS state Connecting attempt 0
+2025-09-08 01:39:51 WS connected
+2025-09-08 01:39:58 StopAsync
+2025-09-08 01:39:58 ConnectLoop error: The operation was canceled.
+2025-09-08 01:39:58 WS closed
+2025-09-08 01:39:58 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 01:40:42 StartAsync
+2025-09-08 01:40:42 StopAsync
+2025-09-08 01:40:42 Monitor: state Closed gap -1
+2025-09-08 01:40:42 WS state Connecting attempt 0
+2025-09-08 01:40:43 WS connected
+2025-09-08 01:41:02 StopAsync
+2025-09-08 01:41:02 WS closed
+2025-09-08 01:41:07 StartAsync
+2025-09-08 01:41:07 StopAsync
+2025-09-08 01:41:07 Monitor: state Closed gap -1
+2025-09-08 01:41:07 WS state Connecting attempt 0
+2025-09-08 01:41:10 WS connected
+2025-09-08 01:48:40 StartAsync
+2025-09-08 01:48:40 StopAsync
+2025-09-08 01:48:40 Monitor: state Closed gap -1
+2025-09-08 01:48:40 WS state Connecting attempt 0
+2025-09-08 01:48:41 WS connected
+2025-09-08 01:51:08 StopAsync
+2025-09-08 01:51:08 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 01:51:08 ConnectLoop error: The operation was canceled.
+2025-09-08 01:51:08 WS closed
+2025-09-08 02:07:25 StartAsync
+2025-09-08 02:07:25 StopAsync
+2025-09-08 02:07:25 Monitor: state Closed gap -1
+2025-09-08 02:07:25 WS state Connecting attempt 0
+2025-09-08 02:07:26 WS connected
+2025-09-08 02:09:20 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:22 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:23 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:24 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:25 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:26 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:27 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:28 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:29 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:31 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:32 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:33 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:34 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:35 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:40 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:44 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:45 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:50 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:53 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:54 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:55 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:56 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:57 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:58 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:09:59 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:00 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:01 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:02 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:05 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:06 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:07 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:08 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:10 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:11 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:12 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:13 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:15 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:17 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:18 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:24 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:25 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:27 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:45 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:53 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:10:55 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:00 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:05 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:13 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:28 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:57 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:11:59 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:05 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:10 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:13 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:15 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:18 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:32 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:34 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:12:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:13:07 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:13:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:13:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:14:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:14:06 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:14:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:15:04 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:15:12 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:15:14 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:15:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:15:33 StopAsync
+2025-09-08 02:15:33 ConnectLoop error: The operation was canceled.
+2025-09-08 02:15:33 WS closed
+2025-09-08 02:15:33 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:20:39 StartAsync
+2025-09-08 02:20:39 StopAsync
+2025-09-08 02:20:39 WS state Connecting attempt 0
+2025-09-08 02:20:39 Monitor: state Closed gap -1
+2025-09-08 02:20:40 WS connected
+2025-09-08 02:21:25 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:26 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:27 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:28 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:29 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:31 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:33 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:34 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:40 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:44 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:45 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:50 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:21:53 StopAsync
+2025-09-08 02:21:53 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:21:53 ConnectLoop error: The operation was canceled.
+2025-09-08 02:21:53 WS closed
+2025-09-08 02:29:19 StartAsync
+2025-09-08 02:29:19 StopAsync
+2025-09-08 02:29:19 WS state Connecting attempt 0
+2025-09-08 02:29:19 Monitor: state Closed gap -1
+2025-09-08 02:29:21 WS connected
+2025-09-08 02:30:12 StopAsync
+2025-09-08 02:30:12 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:30:12 ConnectLoop error: The operation was canceled.
+2025-09-08 02:30:12 WS closed
+2025-09-08 02:31:48 StartAsync
+2025-09-08 02:31:48 StopAsync
+2025-09-08 02:31:48 WS state Connecting attempt 0
+2025-09-08 02:31:48 Monitor: state Closed gap -1
+2025-09-08 02:31:49 WS connected
+2025-09-08 02:31:58 StopAsync
+2025-09-08 02:31:58 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:31:58 ConnectLoop error: The operation was canceled.
+2025-09-08 02:31:58 WS closed
+2025-09-08 02:36:22 StartAsync
+2025-09-08 02:36:22 StopAsync
+2025-09-08 02:36:22 WS state Connecting attempt 0
+2025-09-08 02:36:22 Monitor: state Connecting gap -1
+2025-09-08 02:36:23 WS connected
+2025-09-08 02:37:13 StopAsync
+2025-09-08 02:37:13 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:37:13 ConnectLoop error: The operation was canceled.
+2025-09-08 02:37:13 WS closed
+2025-09-08 02:40:35 StartAsync
+2025-09-08 02:40:35 StopAsync
+2025-09-08 02:40:35 WS state Connecting attempt 0
+2025-09-08 02:40:35 Monitor: state Closed gap -1
+2025-09-08 02:40:36 WS connected
+2025-09-08 02:46:44 StopAsync
+2025-09-08 02:46:44 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:46:44 ConnectLoop error: The operation was canceled.
+2025-09-08 02:46:44 WS closed
+2025-09-08 02:46:49 StartAsync
+2025-09-08 02:46:49 StopAsync
+2025-09-08 02:46:49 WS state Connecting attempt 0
+2025-09-08 02:46:49 Monitor: state Connecting gap -1
+2025-09-08 02:46:50 WS connected
+2025-09-08 02:48:53 StopAsync
+2025-09-08 02:48:54 ConnectLoop error: The operation was canceled.
+2025-09-08 02:48:54 WS closed
+2025-09-08 02:48:54 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:55:00 StartAsync
+2025-09-08 02:55:00 StopAsync
+2025-09-08 02:55:00 WS state Connecting attempt 0
+2025-09-08 02:55:00 Monitor: state Closed gap -1
+2025-09-08 02:55:01 WS connected
+2025-09-08 02:55:33 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:35 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:36 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:50 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:51 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:52 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:53 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:57 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:55:59 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:00 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:01 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:02 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:03 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:05 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:06 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:07 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:08 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:09 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:11 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:12 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:13 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:14 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:15 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:16 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:18 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:19 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:21 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:22 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:23 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:24 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:27 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:29 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:30 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:31 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:32 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:33 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:35 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:37 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:38 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:39 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:41 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:42 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:43 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:44 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:45 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:46 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:47 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:48 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:49 Parse error: Başka bir iş parçacığına ait olduğundan çağıran iş parçacığı bu nesneye erişemiyor.
+2025-09-08 02:56:50 StopAsync
+2025-09-08 02:56:50 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-08 02:56:50 ConnectLoop error: The operation was canceled.
+2025-09-08 02:56:50 WS closed
+2025-09-08 02:59:17 StartAsync
+2025-09-08 02:59:17 StopAsync
+2025-09-08 02:59:17 WS state Connecting attempt 0
+2025-09-08 02:59:17 Monitor: state Connecting gap -1
+2025-09-08 02:59:19 WS connected
+2025-09-08 02:59:40 StopAsync
+2025-09-08 02:59:40 ConnectLoop error: The operation was canceled.
+2025-09-08 02:59:40 WS closed
+2025-09-08 02:59:40 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'

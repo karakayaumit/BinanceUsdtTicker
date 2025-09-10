@@ -13,7 +13,7 @@
           "Microsoft.Extensions.Logging.Console": "9.0.8",
           "System.Data.SqlClient": "4.9.0",
           "System.Diagnostics.DiagnosticSource": "9.0.8",
-          "System.ServiceProcess.ServiceController": "9.0.8"
+          "System.ServiceProcess.ServiceController": "9.0.9"
         },
         "runtime": {
           "ListingWatcherService.dll": {}
@@ -247,7 +247,7 @@
         "dependencies": {
           "Microsoft.Extensions.Hosting": "9.0.8",
           "Microsoft.Extensions.Logging.EventLog": "9.0.8",
-          "System.ServiceProcess.ServiceController": "9.0.8"
+          "System.ServiceProcess.ServiceController": "9.0.9"
         },
         "runtime": {
           "lib/net9.0/Microsoft.Extensions.Hosting.WindowsServices.dll": {
@@ -332,7 +332,7 @@
           "Microsoft.Extensions.Logging": "9.0.8",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.8",
           "Microsoft.Extensions.Options": "9.0.8",
-          "System.Diagnostics.EventLog": "9.0.8"
+          "System.Diagnostics.EventLog": "9.0.9"
         },
         "runtime": {
           "lib/net9.0/Microsoft.Extensions.Logging.EventLog.dll": {
@@ -451,11 +451,11 @@
         }
       },
       "System.Diagnostics.DiagnosticSource/9.0.8": {},
-      "System.Diagnostics.EventLog/9.0.8": {
+      "System.Diagnostics.EventLog/9.0.9": {
         "runtime": {
           "lib/net9.0/System.Diagnostics.EventLog.dll": {
             "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.825.36511"
+            "fileVersion": "9.0.925.41916"
           }
         },
         "runtimeTargets": {
@@ -469,26 +469,26 @@
             "rid": "win",
             "assetType": "runtime",
             "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.825.36511"
+            "fileVersion": "9.0.925.41916"
           }
         }
       },
-      "System.ServiceProcess.ServiceController/9.0.8": {
+      "System.ServiceProcess.ServiceController/9.0.9": {
         "dependencies": {
-          "System.Diagnostics.EventLog": "9.0.8"
+          "System.Diagnostics.EventLog": "9.0.9"
         },
         "runtime": {
           "lib/net9.0/System.ServiceProcess.ServiceController.dll": {
-            "assemblyVersion": "9.0.0.8",
-            "fileVersion": "9.0.825.36511"
+            "assemblyVersion": "9.0.0.9",
+            "fileVersion": "9.0.925.41916"
           }
         },
         "runtimeTargets": {
           "runtimes/win/lib/net9.0/System.ServiceProcess.ServiceController.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "9.0.0.8",
-            "fileVersion": "9.0.825.36511"
+            "assemblyVersion": "9.0.0.9",
+            "fileVersion": "9.0.925.41916"
           }
         }
       }
@@ -738,19 +738,19 @@
       "path": "system.diagnostics.diagnosticsource/9.0.8",
       "hashPath": "system.diagnostics.diagnosticsource.9.0.8.nupkg.sha512"
     },
-    "System.Diagnostics.EventLog/9.0.8": {
+    "System.Diagnostics.EventLog/9.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gebRF3JLLJ76jz1CQpvwezNapZUjFq20JQsaGHzBH0DzlkHBLpdhwkOei9usiOkIGMwU/L0ALWpNe1JE+5/itw==",
-      "path": "system.diagnostics.eventlog/9.0.8",
-      "hashPath": "system.diagnostics.eventlog.9.0.8.nupkg.sha512"
+      "sha512": "sha512-wpsUfnyv8E5K4WQaok6weewvAbQhcLwXFcHBm5U0gdEaBs85N//ssuYvRPFWwz2rO/9/DFP3A1sGMzUFBj8y3w==",
+      "path": "system.diagnostics.eventlog/9.0.9",
+      "hashPath": "system.diagnostics.eventlog.9.0.9.nupkg.sha512"
     },
-    "System.ServiceProcess.ServiceController/9.0.8": {
+    "System.ServiceProcess.ServiceController/9.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ze4X8bOF6tVAVZM3ogiBr8ZgcD8Zs25H93zEyne739ZRva/q8sVjuWwP0B8kwWEq7XUVRDOz+X3RP5/o36hfJw==",
-      "path": "system.serviceprocess.servicecontroller/9.0.8",
-      "hashPath": "system.serviceprocess.servicecontroller.9.0.8.nupkg.sha512"
+      "sha512": "sha512-G+7s4ED3AQRCnIdMRo4KceochK1RxyP+LGS49DbHJ0M2uVPG+Loo5lXOyG6mxabV7kthE6A88OKZ4vdFLz/rfg==",
+      "path": "system.serviceprocess.servicecontroller/9.0.9",
+      "hashPath": "system.serviceprocess.servicecontroller.9.0.9.nupkg.sha512"
     }
   }
 }

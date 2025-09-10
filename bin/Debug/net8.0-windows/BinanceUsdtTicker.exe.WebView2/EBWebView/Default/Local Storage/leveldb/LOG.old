@@ -1,5 +1,15 @@
-2025/09/07-17:21:19.561 62d4 Reusing MANIFEST C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUsdtTicker.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2025/09/07-17:21:19.567 62d4 Recovering log #35
-2025/09/07-17:21:19.567 62d4 Level-0 table #38: started
-2025/09/07-17:21:19.571 62d4 Level-0 table #38: 28561 bytes OK
-2025/09/07-17:21:19.576 62d4 Delete type=0 #35
+2025/09/08-02:09:20.429 5c74 Reusing MANIFEST C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUsdtTicker.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2025/09/08-02:09:20.435 5c74 Recovering log #39
+2025/09/08-02:09:20.438 5c74 Reusing old log C:\Users\Karak\Source\Repos\BinanceUsdtTicker\bin\Debug\net8.0-windows\BinanceUsdtTicker.exe.WebView2\EBWebView\Default\Local Storage\leveldb/000039.log 
+2025/09/08-02:10:20.453 6838 Level-0 table #42: started
+2025/09/08-02:10:20.458 6838 Level-0 table #42: 26963 bytes OK
+2025/09/08-02:10:20.462 6838 Delete type=0 #39
+2025/09/08-02:10:20.463 5c74 Compacting 4@0 + 1@1 files
+2025/09/08-02:10:20.467 5c74 Generated table #43@0: 6 keys, 5319 bytes
+2025/09/08-02:10:20.468 5c74 Compacted 4@0 + 1@1 files => 5319 bytes
+2025/09/08-02:10:20.469 5c74 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/09/08-02:10:20.470 5c74 Delete type=2 #30
+2025/09/08-02:10:20.470 5c74 Delete type=2 #32
+2025/09/08-02:10:20.470 5c74 Delete type=2 #36
+2025/09/08-02:10:20.470 5c74 Delete type=2 #38
+2025/09/08-02:10:20.470 5c74 Delete type=2 #42
