@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
@@ -9,26 +10,44 @@ namespace BinanceUsdtTicker
     public class NewsDbService : IAsyncDisposable
     {
         private readonly string _connectionString;
-        private SqlDependency? _dependency;
+        private readonly TimeSpan _pollInterval;
+        private CancellationTokenSource? _cts;
+        private Task? _loop;
         private DateTimeOffset _lastTimestamp = DateTimeOffset.MinValue;
 
         public event EventHandler<NewsItem>? NewsReceived;
 
-        public NewsDbService(string connectionString, TimeSpan _)
+        public NewsDbService(string connectionString, TimeSpan pollInterval)
         {
             _connectionString = connectionString;
+            _pollInterval = pollInterval;
         }
 
         public async Task StartAsync()
         {
-            SqlDependency.Start(_connectionString);
-            await FetchAndSubscribeAsync();
+            await FetchLatestAsync();
+            _cts = new CancellationTokenSource();
+            _loop = PollLoopAsync(_cts.Token);
         }
 
-        private async Task FetchAndSubscribeAsync()
+        private async Task PollLoopAsync(CancellationToken ct)
         {
-            if (_dependency != null)
-                _dependency.OnChange -= OnDependencyChange;
+            while (!ct.IsCancellationRequested)
+            {
+                try
+                {
+                    await Task.Delay(_pollInterval, ct);
+                    await FetchLatestAsync();
+                }
+                catch (TaskCanceledException)
+                {
+                    // graceful shutdown
+                }
+            }
+        }
+
+        private async Task FetchLatestAsync()
+        {
             await using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
             var cmd = conn.CreateCommand();
@@ -41,9 +60,6 @@ namespace BinanceUsdtTicker
                 cmd.CommandText = @"SELECT Id, Source, Title, TitleTranslate, Url, Symbols, CreatedAt FROM dbo.News WHERE CreatedAt > @last ORDER BY CreatedAt";
                 cmd.Parameters.AddWithValue("@last", _lastTimestamp);
             }
-
-            _dependency = new SqlDependency(cmd);
-            _dependency.OnChange += OnDependencyChange;
 
             await using var reader = await cmd.ExecuteReaderAsync();
             var items = new List<(NewsItem Item, DateTimeOffset Created)>();
@@ -72,20 +88,21 @@ namespace BinanceUsdtTicker
             }
         }
 
-        private async void OnDependencyChange(object? sender, SqlNotificationEventArgs e)
+        public async ValueTask DisposeAsync()
         {
-            await FetchAndSubscribeAsync();
-        }
-
-        public ValueTask DisposeAsync()
-        {
-            if (_dependency != null)
+            if (_cts != null)
             {
-                _dependency.OnChange -= OnDependencyChange;
-                _dependency = null;
+                _cts.Cancel();
+                try
+                {
+                    if (_loop != null)
+                        await _loop;
+                }
+                catch (TaskCanceledException)
+                {
+                }
+                _cts.Dispose();
             }
-            SqlDependency.Stop(_connectionString);
-            return ValueTask.CompletedTask;
         }
     }
 }
