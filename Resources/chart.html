@@ -20,22 +20,42 @@ const intervalMap = {
     '1d': '1D'
 };
 
-new TradingView.widget({
-    autosize: true,
-    container_id: 'tv_chart_container',
-    // Yalnızca Binance spot verisini göster
-    symbol: 'BINANCE:' + symbol,
-    interval: intervalMap[interval] || '1',
-    timezone: 'Etc/UTC',
-    theme: 'light',
-    style: '1',
-    locale: 'en',
-    toolbar_bg: '#f1f3f6',
-    hide_side_toolbar: false,
-    withdateranges: true,
-    allow_symbol_change: false,
-    disabled_features: ['header_symbol_search', 'symbol_search', 'header_compare']
-});
+async function loadChart() {
+    const container = document.getElementById('tv_chart_container');
+    try {
+        // Binance futures'ta sembol var mı kontrol et
+        const resp = await fetch(`https://fapi.binance.com/fapi/v1/exchangeInfo?symbol=${symbol}`);
+        const data = await resp.json();
+        if (!data.symbols || data.symbols.length === 0) {
+            container.innerHTML = '<div style="color:red;padding:20px;">Sembol Binance futures\'da bulunamadı.</div>';
+            return;
+        }
+    } catch {
+        container.innerHTML = '<div style="color:red;padding:20px;">Sembol Binance futures\'da bulunamadı.</div>';
+        return;
+    }
+
+    const futuresSymbol = symbol.endsWith('PERP') ? symbol : symbol + 'PERP';
+
+    new TradingView.widget({
+        autosize: true,
+        container_id: 'tv_chart_container',
+        // Yalnızca Binance futures verisini göster
+        symbol: 'BINANCE:' + futuresSymbol,
+        interval: intervalMap[interval] || '1',
+        timezone: 'Etc/UTC',
+        theme: 'light',
+        style: '1',
+        locale: 'en',
+        toolbar_bg: '#f1f3f6',
+        hide_side_toolbar: false,
+        withdateranges: true,
+        allow_symbol_change: false,
+        disabled_features: ['header_symbol_search', 'symbol_search', 'header_compare']
+    });
+}
+
+loadChart();
 </script>
 </body>
 </html>
