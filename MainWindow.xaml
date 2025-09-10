@@ -775,13 +775,13 @@
                                                         <!-- Translated title -->
                                                         <TextBlock Grid.Row="1" TextWrapping="Wrap">
                                                             <Run FontWeight="Bold" Text="TR: "/>
-                                                            <Run Text="{Binding TitleTranslate}"/>
+                                                            <Run Text="{Binding TitleTranslate, Mode=OneWay}"/>
                                                         </TextBlock>
 
                                                         <!-- Original title -->
                                                         <TextBlock Grid.Row="2" TextWrapping="Wrap">
                                                             <Run FontWeight="Bold" Text="EN: "/>
-                                                            <Run Text="{Binding Title}"/>
+                                                            <Run Text="{Binding Title, Mode=OneWay}"/>
                                                         </TextBlock>
 
                                                         <!-- Symbols with action buttons -->
