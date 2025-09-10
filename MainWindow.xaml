@@ -748,10 +748,9 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
 
-                                                        <!-- Source information with logo -->
+                                                        <!-- Source information with logo and date -->
                                                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,4">
                                                             <Image Source="{Binding Source, Converter={StaticResource SourceToLogo}}"
                                                                    Margin="0,0,6,0"
@@ -768,19 +767,25 @@
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
+                                                            <TextBlock Text="{Binding Timestamp, Mode=OneWay, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                                                       Margin="12,0,0,0"
+                                                                       VerticalAlignment="Center"/>
                                                         </StackPanel>
 
-                                                        <!-- Date below the logo -->
-                                                        <TextBlock Grid.Row="1" Text="{Binding Timestamp, Mode=OneWay, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
+                                                        <!-- Translated title -->
+                                                        <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                                                            <Run FontWeight="Bold" Text="TR: "/>
+                                                            <Run Text="{Binding TitleTranslate}"/>
+                                                        </TextBlock>
 
-                                                        <!-- Translated title below the date -->
-                                                        <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{Binding TitleTranslate}"/>
-
-                                                        <!-- Original title below the translation -->
-                                                        <TextBlock Grid.Row="3" TextWrapping="Wrap" Text="{Binding Title}"/>
+                                                        <!-- Original title -->
+                                                        <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                                                            <Run FontWeight="Bold" Text="EN: "/>
+                                                            <Run Text="{Binding Title}"/>
+                                                        </TextBlock>
 
                                                         <!-- Symbols with action buttons -->
-                                                        <ItemsControl Grid.Row="4" ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
+                                                        <ItemsControl Grid.Row="3" ItemsSource="{Binding Symbols}" Margin="0,4,0,0">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <Grid Margin="0,4,0,0">
