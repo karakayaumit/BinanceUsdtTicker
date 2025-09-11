@@ -1719,7 +1719,9 @@ namespace BinanceUsdtTicker
         private static decimal AdjustToStep(decimal value, decimal step)
         {
             if (step <= 0m) return value;
-            return Math.Floor(value / step) * step;
+            var precision = GetPrecision(step);
+            var n = Math.Floor(value / step) * step;
+            return Math.Round(n, precision, MidpointRounding.ToZero);
         }
 
         private async Task RefreshTradingDataAsync()
