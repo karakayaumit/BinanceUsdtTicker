@@ -384,12 +384,12 @@ namespace BinanceUsdtTicker
                 ["symbol"] = symbol,
                 ["side"] = side.ToUpperInvariant(),
                 ["type"] = type.ToUpperInvariant(),
-                ["quantity"] = adjQty.ToString(CultureInfo.InvariantCulture)
+                ["quantity"] = FormatForApi(adjQty, filters.StepSize)
             };
             if (price.HasValue)
             {
                 var adjPrice = filters.TickSize > 0 ? AdjustToStep(price.Value, filters.TickSize) : price.Value;
-                query["price"] = adjPrice.ToString(CultureInfo.InvariantCulture);
+                query["price"] = FormatForApi(adjPrice, filters.TickSize);
             }
             if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
                 query["timeInForce"] = "GTC";
@@ -406,6 +406,13 @@ namespace BinanceUsdtTicker
             var s = step.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
             var idx = s.IndexOf('.');
             return idx >= 0 ? s.Length - idx - 1 : 0;
+        }
+
+        private static string FormatForApi(decimal value, decimal step)
+        {
+            var precision = GetPrecision(step);
+            var formatted = value.ToString($"F{precision}", CultureInfo.InvariantCulture);
+            return formatted.TrimEnd('0').TrimEnd('.');
         }
 
         private static decimal AdjustToStep(decimal value, decimal step)
