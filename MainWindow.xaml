@@ -881,11 +881,7 @@
                                                                                <Setter Property="Background" Value="{DynamicResource Up1Bg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
                                                                        </DataTrigger>
-                                                                       <!-- Hover: highlight row -->
-                                                                       <Trigger Property="IsMouseOver" Value="True">
-                                                                               <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
-                                                                               <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-                                                                       </Trigger>
+                                                                       <!-- No hover styling to match Coin grid -->
                                                                </Style.Triggers>
                                                        </Style>
                                                </DataGrid.RowStyle>
@@ -898,9 +894,6 @@
                                                                        <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
                                                                                <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
                                                                        </DataTrigger>
-                                                                       <Trigger Property="IsMouseOver" Value="True">
-                                                                               <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-                                                                       </Trigger>
                                                                </Style.Triggers>
                                                        </Style>
                                                </DataGrid.CellStyle>
@@ -945,11 +938,7 @@
                                                                                <Setter Property="Background" Value="{DynamicResource Down1Bg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
                                                                        </DataTrigger>
-                                                                       <!-- Hover: highlight row -->
-                                                                       <Trigger Property="IsMouseOver" Value="True">
-                                                                               <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
-                                                                               <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-                                                                       </Trigger>
+                                                                       <!-- No hover styling to match Coin grid -->
                                                                </Style.Triggers>
                                                        </Style>
                                                </DataGrid.RowStyle>
@@ -962,9 +951,6 @@
                                                                        <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
                                                                                <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
                                                                        </DataTrigger>
-                                                                       <Trigger Property="IsMouseOver" Value="True">
-                                                                               <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-                                                                       </Trigger>
                                                                </Style.Triggers>
                                                        </Style>
                                                </DataGrid.CellStyle>
