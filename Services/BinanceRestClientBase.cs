@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace BinanceUsdtTicker
 {
@@ -64,8 +65,16 @@ namespace BinanceUsdtTicker
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new HttpRequestException(
-                    $"Response status code does not indicate success: {(int)response.StatusCode} ({response.StatusCode}). Content: {content}");
+                Logger.Log(content);
+                var message = content;
+                try
+                {
+                    using var doc = JsonDocument.Parse(content);
+                    if (doc.RootElement.TryGetProperty("msg", out var msgEl))
+                        message = msgEl.GetString() ?? content;
+                }
+                catch { }
+                throw new HttpRequestException(message);
             }
 
             return content;
@@ -98,7 +107,8 @@ namespace BinanceUsdtTicker
 
         private static string Normalize(string value)
         {
-            if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.CurrentCulture, out var dec))
+            if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var dec) ||
+                decimal.TryParse(value, NumberStyles.Number, new CultureInfo("tr-TR"), out dec))
                 return dec.ToString("0.####################", CultureInfo.InvariantCulture)
                         .TrimEnd('0').TrimEnd('.');
             return value;
