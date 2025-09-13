@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Text.Json.Serialization;
 using System.Globalization;
+using System.Collections.Concurrent;
 using BinanceUsdtTicker.Models;
 using BinanceUsdtTicker.Helpers;
 
@@ -20,6 +21,10 @@ namespace BinanceUsdtTicker
     {
         private readonly Dictionary<string, (decimal TickSize, decimal StepSize, decimal MinNotional)> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
         private ExchangeInfo? _exchangeInfo;
+        private readonly ConcurrentDictionary<string, SymbolRules> _rulesCache = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly TimeSpan RulesTtl = TimeSpan.FromMinutes(15);
+
+        private record SymbolRules(decimal TickSize, decimal StepSize, decimal? MinQty, decimal? MinNotional, DateTime FetchedAt);
         internal static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -406,40 +411,116 @@ namespace BinanceUsdtTicker
             return (filters.TickSize, filters.StepSize, filters.MinNotional, priceAdj, qtyAdj);
         }
 
-        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null, decimal? stopPrice = null, decimal? activationPrice = null)
+        private async Task<SymbolRules> GetSymbolRulesAsync(string symbol, CancellationToken ct = default)
         {
-            var (tick, step, minNotional, adjPrice, adjQty) = await ApplyOrderPrecisionAsync(symbol, price, quantity);
+            if (_rulesCache.TryGetValue(symbol, out var cached) &&
+                (DateTime.UtcNow - cached.FetchedAt) < RulesTtl)
+                return cached;
 
-            var priceForNotional = adjPrice;
-            if (!priceForNotional.HasValue)
-                priceForNotional = await GetMarkPriceAsync(symbol);
-            var notional = priceForNotional.Value * adjQty;
-            if (notional < minNotional)
-                throw new InvalidOperationException($"Order notional {notional} is below minimum {minNotional}.");
+            var url = $"https://fapi.binance.com/fapi/v1/exchangeInfo?symbol={symbol}";
+            using var resp = await _http.GetAsync(url, ct);
+            resp.EnsureSuccessStatusCode();
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStreamAsync(ct));
+            var sym = doc.RootElement.GetProperty("symbols")[0];
+            decimal tick = 0, step = 0;
+            decimal? minQty = null, minNotional = null;
+            foreach (var f in sym.GetProperty("filters").EnumerateArray())
+            {
+                var type = f.GetProperty("filterType").GetString();
+                if (type == "PRICE_FILTER")
+                    tick = decimal.Parse(f.GetProperty("tickSize").GetString()!, CultureInfo.InvariantCulture);
+                else if (type == "LOT_SIZE")
+                    step = decimal.Parse(f.GetProperty("stepSize").GetString()!, CultureInfo.InvariantCulture);
+                else if (type == "MARKET_LOT_SIZE" && step == 0)
+                    step = decimal.Parse(f.GetProperty("stepSize").GetString()!, CultureInfo.InvariantCulture);
+                else if (type == "MIN_NOTIONAL")
+                    minNotional = decimal.Parse(f.GetProperty("notional").GetString()!, CultureInfo.InvariantCulture);
+            }
+            try { minQty = decimal.Parse(sym.GetProperty("filters").EnumerateArray().First(f => f.GetProperty("filterType").GetString()=="LOT_SIZE").GetProperty("minQty").GetString()!, CultureInfo.InvariantCulture); } catch {}
 
-            var query = new Dictionary<string, string>
+            var rules = new SymbolRules(tick, step, minQty, minNotional, DateTime.UtcNow);
+            _rulesCache[symbol] = rules;
+            return rules;
+        }
+
+        private static decimal QuantizeDown(decimal value, decimal step)
+        {
+            if (step <= 0) return value;
+            var steps = Math.Floor(value / step);
+            return steps * step;
+        }
+
+        private static decimal QuantizeToTick(decimal value, decimal tick)
+        {
+            if (tick <= 0) return value;
+            var steps = Math.Round(value / tick, MidpointRounding.AwayFromZero);
+            return steps * tick;
+        }
+
+        private static string ToInvariantString(decimal v)
+            => v.ToString("0.####################", CultureInfo.InvariantCulture)
+                 .TrimEnd('0').TrimEnd('.');
+
+        private async Task<(string qStr, string? pStr, string? spStr)> PrepareOrderNumbersAsync(
+            string symbol, decimal quantity, decimal? price, decimal? stopPrice, CancellationToken ct)
+        {
+            var r = await GetSymbolRulesAsync(symbol, ct);
+            var q = r.StepSize > 0 ? QuantizeDown(quantity, r.StepSize) : quantity;
+            if (q <= 0 || (r.MinQty is decimal mq && q < mq))
+                throw new InvalidOperationException($"Quantity {quantity} not valid for {symbol} (step {r.StepSize}, min {r.MinQty}).");
+
+            string qStr = ToInvariantString(q);
+
+            string? pStr = null;
+            if (price.HasValue)
+            {
+                var p = r.TickSize > 0 ? QuantizeToTick(price.Value, r.TickSize) : price.Value;
+                pStr = ToInvariantString(p);
+            }
+
+            string? spStr = null;
+            if (stopPrice.HasValue)
+            {
+                var sp = r.TickSize > 0 ? QuantizeToTick(stopPrice.Value, r.TickSize) : stopPrice.Value;
+                spStr = ToInvariantString(sp);
+            }
+
+            if (r.MinNotional is decimal mn && price.HasValue)
+            {
+                var notion = (decimal.Parse(qStr, CultureInfo.InvariantCulture)) *
+                             (decimal.Parse(pStr!, CultureInfo.InvariantCulture));
+                if (notion < mn) throw new InvalidOperationException($"Notional {notion} < minNotional {mn} for {symbol}.");
+            }
+
+            return (qStr, pStr, spStr);
+        }
+
+        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null, string? timeInForce = null, decimal? stopPrice = null, decimal? activationPrice = null)
+        {
+            var parameters = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
-                ["side"] = side.ToUpperInvariant(),
-                ["type"] = type.ToUpperInvariant(),
-                ["quantity"] = PrecisionHelper.FormatForApi(adjQty, step)
+                ["side"] = side,
+                ["type"] = type
             };
-            if (adjPrice.HasValue)
-                query["price"] = PrecisionHelper.FormatForApi(adjPrice.Value, tick);
 
-            if (stopPrice.HasValue)
-                query["stopPrice"] = PrecisionHelper.FormatForApi(PrecisionHelper.AdjustToStep(stopPrice.Value, tick), tick);
+            var prep = await PrepareOrderNumbersAsync(symbol, quantity, price, stopPrice, CancellationToken.None);
+            parameters["quantity"] = prep.qStr;
+            if (prep.pStr != null) parameters["price"] = prep.pStr;
+            if (prep.spStr != null) parameters["stopPrice"] = prep.spStr;
+
+            if (!string.IsNullOrEmpty(timeInForce)) parameters["timeInForce"] = timeInForce;
+            if (reduceOnly) parameters["reduceOnly"] = "true";
+            if (!string.IsNullOrEmpty(positionSide)) parameters["positionSide"] = positionSide;
+
             if (activationPrice.HasValue)
-                query["activationPrice"] = PrecisionHelper.FormatForApi(PrecisionHelper.AdjustToStep(activationPrice.Value, tick), tick);
+            {
+                var r = await GetSymbolRulesAsync(symbol);
+                var ap = r.TickSize > 0 ? QuantizeToTick(activationPrice.Value, r.TickSize) : activationPrice.Value;
+                parameters["activationPrice"] = ToInvariantString(ap);
+            }
 
-            if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
-                query["timeInForce"] = "GTC";
-            if (reduceOnly)
-                query["reduceOnly"] = "true";
-            if (!string.IsNullOrEmpty(positionSide))
-                query["positionSide"] = positionSide.ToUpperInvariant();
-
-            await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", query);
+            await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", parameters);
         }
 
         

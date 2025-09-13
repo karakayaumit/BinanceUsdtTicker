@@ -48,7 +48,7 @@ namespace BinanceUsdtTicker
             if (!parameters.ContainsKey("timestamp"))
                 parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(CultureInfo.InvariantCulture);
 
-            var queryString = string.Join("&", parameters.Select(kv => $"{kv.Key}={kv.Value}"));
+            var queryString = BuildQuery(parameters);
             var signature = Sign(queryString);
             var url = endpoint + "?" + queryString + "&signature=" + signature;
 
@@ -89,6 +89,12 @@ namespace BinanceUsdtTicker
             var data = Encoding.UTF8.GetBytes(queryString);
             var hash = HMACSHA256.HashData(_secretKeyBytes, data);
             return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
+        }
+
+        private static string BuildQuery(IDictionary<string, string> p)
+        {
+            // Değerler zaten Invariant string'e çevrildi (BinanceApiService tarafı).
+            return string.Join("&", p.Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value)}"));
         }
     }
 }
