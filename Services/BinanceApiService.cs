@@ -545,7 +545,28 @@ namespace BinanceUsdtTicker
                 parameters["activationPrice"] = ToInvariantString(ap);
             }
 
-            await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", parameters);
+            var testParams = new Dictionary<string, string>(parameters);
+            try
+            {
+                await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order/test", testParams);
+            }
+            catch (HttpRequestException ex)
+            {
+                Logger.Log($"ORDER TEST ERROR: {ex.Message}");
+                throw;
+            }
+
+            Logger.Log($"ORDER SEND symbol={symbol} side={side} type={type} reduceOnly={reduceOnly} positionSide={positionSide} qty={prep.qStr} price={prep.pStr} stopPrice={prep.spStr} timeInForce={(parameters.TryGetValue("timeInForce", out var tif) ? tif : null)}");
+
+            try
+            {
+                await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", parameters);
+            }
+            catch (HttpRequestException ex)
+            {
+                Logger.Log($"ORDER ERROR: {ex.Message}");
+                throw;
+            }
         }
 
         
@@ -588,6 +609,7 @@ namespace BinanceUsdtTicker
                     positions.Add(new FuturesPosition
                     {
                         Symbol = sym,
+                        PositionSide = el.PositionSideRaw,
                         PositionAmt = amt,
                         EntryPrice = el.EntryPrice,
                         UnrealizedPnl = el.UnrealizedPnl,

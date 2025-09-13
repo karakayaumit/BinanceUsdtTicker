@@ -1675,10 +1675,14 @@ namespace BinanceUsdtTicker
             if (qty <= 0m) return;
             try
             {
+                var posSide = string.Equals(pos.PositionSide, "BOTH", StringComparison.OrdinalIgnoreCase)
+                    ? null
+                    : pos.PositionSide;
+
                 if (limitPrice.HasValue)
-                    await _api.PlaceOrderAsync(pos.Symbol, side, "LIMIT", qty, limitPrice.Value, true);
+                    await _api.PlaceOrderAsync(pos.Symbol, side, "LIMIT", qty, limitPrice.Value, true, posSide);
                 else
-                    await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true);
+                    await _api.PlaceOrderAsync(pos.Symbol, side, "MARKET", qty, null, true, posSide);
 
                 pos.CloseLimitPrice = null;
                 _ = RefreshTradingDataAsync();
@@ -1690,10 +1694,7 @@ namespace BinanceUsdtTicker
         }
 
         private static bool TryParseDecimal(string text, out decimal value)
-        {
-            return decimal.TryParse(text, NumberStyles.Any, CultureInfo.CurrentCulture, out value)
-                || decimal.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
-        }
+            => Helpers.InputParser.TryParseUserDecimal(text, out value);
 
         private static int GetPrecision(decimal step)
         {

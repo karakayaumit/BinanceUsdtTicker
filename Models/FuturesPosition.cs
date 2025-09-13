@@ -9,6 +9,10 @@ namespace BinanceUsdtTicker.Models
     public class FuturesPosition : BindableBase
     {
         public string Symbol { get; set; } = string.Empty;
+        /// <summary>
+        /// Position side reported by Binance (BOTH/LONG/SHORT).
+        /// </summary>
+        public string PositionSide { get; set; } = string.Empty;
         private decimal _positionAmt;
         public decimal PositionAmt
         {
