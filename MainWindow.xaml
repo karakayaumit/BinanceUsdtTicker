@@ -987,7 +987,7 @@
                                                         <ListView x:Name="PositionsList" HorizontalContentAlignment="Stretch">
                                                                 <ListView.View>
                                                                         <GridView>
-                                                                                <GridViewColumn Header="Sembol" Width="90">
+                                                                                <GridViewColumn Header="Sembol" Width="110">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <TextBlock Foreground="{Binding SideBrush}">
@@ -997,35 +997,35 @@
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Adet" Width="80">
+                                                                                <GridViewColumn Header="Adet" Width="100">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <TextBlock Text="{Binding PositionAmt, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Giriş" Width="80">
+                                                                                <GridViewColumn Header="Giriş" Width="100">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Mark" Width="80">
+                                                                                <GridViewColumn Header="Mark" Width="100">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Liq" Width="80">
+                                                                                <GridViewColumn Header="Liq" Width="100">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="PNL" Width="120">
+                                                                                <GridViewColumn Header="PNL" Width="160">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -1035,23 +1035,23 @@
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="x" Width="40" DisplayMemberBinding="{Binding Leverage}"/>
-                                                                                <GridViewColumn Header="Pozisyon boyutu" Width="100">
+                                                                                <GridViewColumn Header="x" Width="60" DisplayMemberBinding="{Binding Leverage}"/>
+                                                                                <GridViewColumn Header="Pozisyon boyutu" Width="140">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding PositionSize, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                                                                                                        <TextBlock Text="{Binding PositionSize, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Giriş tutarı" Width="80">
+                                                                                <GridViewColumn Header="Giriş tutarı" Width="120">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding EntryAmount, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                                                                                                        <TextBlock Text="{Binding EntryAmount, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Tip" Width="60" DisplayMemberBinding="{Binding MarginType}"/>
-                                                                                <GridViewColumn Header="Kapat" Width="180">
+                                                                                <GridViewColumn Header="Tip" Width="80" DisplayMemberBinding="{Binding MarginType}"/>
+                                                                                <GridViewColumn Header="Kapat" Width="220">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <StackPanel Orientation="Horizontal">
