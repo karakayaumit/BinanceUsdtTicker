@@ -93,8 +93,15 @@ namespace BinanceUsdtTicker
 
         private static string BuildQuery(IDictionary<string, string> p)
         {
-            // Değerler zaten Invariant string'e çevrildi (BinanceApiService tarafı).
-            return string.Join("&", p.Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value)}"));
+            return string.Join("&", p.Select(kv => $"{kv.Key}={Uri.EscapeDataString(Normalize(kv.Value))}"));
+        }
+
+        private static string Normalize(string value)
+        {
+            if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.CurrentCulture, out var dec))
+                return dec.ToString("0.####################", CultureInfo.InvariantCulture)
+                        .TrimEnd('0').TrimEnd('.');
+            return value;
         }
     }
 }
