@@ -1348,7 +1348,7 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                                                 </DataTemplate>
                                                                         </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Ücret" Width="80">
+                                                                        <DataGridTemplateColumn Header="Vergi" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
                                                                                                 <TextBlock Text="{Binding Fee, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
