@@ -1040,6 +1040,7 @@
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
+                                                                        <DataGridTextColumn Header="x" Width="60" Binding="{Binding Leverage}"/>
                                                                         <DataGridTemplateColumn Header="Adet" Width="100">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
@@ -1068,17 +1069,6 @@
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="PNL" Width="160">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" Foreground="{Binding PnlBrush}"/>
-                                                                                                        <TextBlock Text="{Binding RoiPercent, StringFormat={}{0:#,0.##}%}" Foreground="{Binding PnlBrush}" Margin="4,0,0,0"/>
-                                                                                                </StackPanel>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTextColumn Header="x" Width="60" Binding="{Binding Leverage}"/>
                                                                         <DataGridTemplateColumn Header="Pozisyon boyutu" Width="140">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
@@ -1094,6 +1084,16 @@
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTextColumn Header="Tip" Width="80" Binding="{Binding MarginType}"/>
+                                                                        <DataGridTemplateColumn Header="PNL" Width="160">
+                                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                                        <DataTemplate>
+                                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" Foreground="{Binding PnlBrush}"/>
+                                                                                                        <TextBlock Text="{Binding RoiPercent, StringFormat={}{0:#,0.##}%}" Foreground="{Binding PnlBrush}" Margin="4,0,0,0"/>
+                                                                                                </StackPanel>
+                                                                                        </DataTemplate>
+                                                                                </DataGridTemplateColumn.CellTemplate>
+                                                                        </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Kapat" Width="220">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
