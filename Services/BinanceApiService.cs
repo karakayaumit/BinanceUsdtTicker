@@ -8,6 +8,7 @@ using System.Threading;
 using System.Text.Json.Serialization;
 using System.Globalization;
 using BinanceUsdtTicker.Models;
+using BinanceUsdtTicker.Helpers;
 
 
 namespace BinanceUsdtTicker
@@ -17,7 +18,7 @@ namespace BinanceUsdtTicker
     /// </summary>
     public class BinanceApiService : BinanceRestClientBase
     {
-        private readonly Dictionary<string, (decimal TickSize, decimal StepSize)> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, (decimal TickSize, decimal StepSize, decimal MinNotional)> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
         private ExchangeInfo? _exchangeInfo;
         internal static readonly JsonSerializerOptions JsonOptions = new()
         {
@@ -353,20 +354,25 @@ namespace BinanceUsdtTicker
             catch { }
         }
 
-        public async Task<(decimal TickSize, decimal StepSize)> GetSymbolFiltersAsync(string symbol)
+        public async Task<(decimal TickSize, decimal StepSize, decimal MinNotional)> GetSymbolFiltersAsync(string symbol)
         {
             if (_symbolFilters.TryGetValue(symbol, out var f))
                 return f;
 
-            var info = await GetExchangeInfoAsync();
+            var json = await SendAsync(HttpMethod.Get, $"/fapi/v1/exchangeInfo?symbol={symbol}");
+            var info = JsonSerializer.Deserialize<ExchangeInfo>(json, JsonOptions) ?? new ExchangeInfo();
+
             decimal tick = 0m;
             decimal step = 0m;
-            var sym = info.Symbols.FirstOrDefault(s => s.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase));
+            decimal minNotional = 0m;
+
+            var sym = info.Symbols.FirstOrDefault();
             if (sym != null)
             {
                 var price = sym.Filters.OfType<PriceFilter>().FirstOrDefault();
                 var lot = sym.Filters.OfType<LotSizeFilter>().FirstOrDefault();
                 var marketLot = sym.Filters.OfType<MarketLotSizeFilter>().FirstOrDefault();
+                var minNot = sym.Filters.OfType<MinNotionalFilter>().FirstOrDefault();
                 if (price != null) tick = price.TickSize;
 
                 // Some symbols have different step sizes for market and limit orders.
@@ -378,35 +384,54 @@ namespace BinanceUsdtTicker
                     step = lot.StepSize;
                 else if (marketLot != null)
                     step = marketLot.StepSize;
+
+                if (minNot != null)
+                    minNotional = minNot.Notional;
             }
 
-            var res = (tick, step);
+            var res = (tick, step, minNotional);
             _symbolFilters[symbol] = res;
             return res;
         }
 
-        public async Task<(decimal TickSize, decimal StepSize, decimal? Price, decimal Quantity)> ApplyOrderPrecisionAsync(string symbol, decimal? price, decimal quantity)
+        public async Task<(decimal TickSize, decimal StepSize, decimal MinNotional, decimal? Price, decimal Quantity)> ApplyOrderPrecisionAsync(string symbol, decimal? price, decimal quantity)
         {
             var filters = await GetSymbolFiltersAsync(symbol);
-            var qtyAdj = filters.StepSize > 0 ? AdjustToStep(quantity, filters.StepSize) : quantity;
+            var qtyAdj = filters.StepSize > 0 ? PrecisionHelper.AdjustToStep(quantity, filters.StepSize) : quantity;
+            if (qtyAdj <= 0m)
+                throw new ArgumentException("Quantity is too small for the step size.");
             decimal? priceAdj = null;
             if (price.HasValue)
-                priceAdj = filters.TickSize > 0 ? AdjustToStep(price.Value, filters.TickSize) : price.Value;
-            return (filters.TickSize, filters.StepSize, priceAdj, qtyAdj);
+                priceAdj = filters.TickSize > 0 ? PrecisionHelper.AdjustToStep(price.Value, filters.TickSize) : price.Value;
+            return (filters.TickSize, filters.StepSize, filters.MinNotional, priceAdj, qtyAdj);
         }
 
-        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
+        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null, decimal? stopPrice = null, decimal? activationPrice = null)
         {
-            var (tick, step, adjPrice, adjQty) = await ApplyOrderPrecisionAsync(symbol, price, quantity);
+            var (tick, step, minNotional, adjPrice, adjQty) = await ApplyOrderPrecisionAsync(symbol, price, quantity);
+
+            var priceForNotional = adjPrice;
+            if (!priceForNotional.HasValue)
+                priceForNotional = await GetMarkPriceAsync(symbol);
+            var notional = priceForNotional.Value * adjQty;
+            if (notional < minNotional)
+                throw new InvalidOperationException($"Order notional {notional} is below minimum {minNotional}.");
+
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
                 ["side"] = side.ToUpperInvariant(),
                 ["type"] = type.ToUpperInvariant(),
-                ["quantity"] = FormatForApi(adjQty, step)
+                ["quantity"] = PrecisionHelper.FormatForApi(adjQty, step)
             };
             if (adjPrice.HasValue)
-                query["price"] = FormatForApi(adjPrice.Value, tick);
+                query["price"] = PrecisionHelper.FormatForApi(adjPrice.Value, tick);
+
+            if (stopPrice.HasValue)
+                query["stopPrice"] = PrecisionHelper.FormatForApi(PrecisionHelper.AdjustToStep(stopPrice.Value, tick), tick);
+            if (activationPrice.HasValue)
+                query["activationPrice"] = PrecisionHelper.FormatForApi(PrecisionHelper.AdjustToStep(activationPrice.Value, tick), tick);
+
             if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
                 query["timeInForce"] = "GTC";
             if (reduceOnly)
@@ -417,33 +442,7 @@ namespace BinanceUsdtTicker
             await SendSignedAsync(HttpMethod.Post, "/fapi/v1/order", query);
         }
 
-        private static int GetPrecision(decimal step)
-        {
-            var s = step.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
-            var idx = s.IndexOf('.');
-            return idx >= 0 ? s.Length - idx - 1 : 0;
-        }
-
-        private static string FormatForApi(decimal value, decimal step)
-        {
-            var precision = GetPrecision(step);
-            string formatted;
-            if (precision > 0)
-                formatted = value.ToString($"F{precision}", CultureInfo.InvariantCulture);
-            else
-                formatted = value.ToString(CultureInfo.InvariantCulture);
-
-            var trimmed = formatted.TrimEnd('0').TrimEnd('.');
-            return string.IsNullOrEmpty(trimmed) ? "0" : trimmed;
-        }
-
-        private static decimal AdjustToStep(decimal value, decimal step)
-        {
-            if (step <= 0m) return value;
-            var precision = GetPrecision(step);
-            var n = Math.Floor(value / step) * step;
-            return Math.Round(n, precision, MidpointRounding.ToZero);
-        }
+        
 
         /// <summary>
         /// Hesaptaki açık pozisyonları döner.
