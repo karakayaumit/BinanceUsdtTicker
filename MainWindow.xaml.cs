@@ -89,7 +89,7 @@ namespace BinanceUsdtTicker
             var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
 
             // alarm geçmişi bağla
-            var alertList = FindName("AlertList") as ListView;
+            var alertList = FindName("AlertList") as DataGrid;
             if (alertList != null)
             {
                 alertList.ItemsSource = _alertLog;
@@ -100,7 +100,7 @@ namespace BinanceUsdtTicker
             }
 
             // cüzdan listesi bağla
-            var walletList = FindName("WalletList") as ListView;
+            var walletList = FindName("WalletList") as DataGrid;
             if (walletList != null)
             {
                 walletList.ItemsSource = _walletAssets;
@@ -936,7 +936,6 @@ namespace BinanceUsdtTicker
             if (_alertLog.Count > MaxAlertLog)
                 _alertLog.RemoveAt(_alertLog.Count - 1);
 
-            AdjustAlertMsgColumnWidth();
         }
 
         private void ShowWindowsNotification(string msg)
@@ -962,7 +961,6 @@ namespace BinanceUsdtTicker
         private void ClearAlertLog_Click(object sender, RoutedEventArgs e)
         {
             _alertLog.Clear();
-            AdjustAlertMsgColumnWidth();
         }
 
         private void ExportAlertLog_Click(object sender, RoutedEventArgs e)
@@ -1226,40 +1224,6 @@ namespace BinanceUsdtTicker
                         col.Width = new DataGridLength(st.Width, DataGridLengthUnitType.Pixel);
                 }
             }
-        }
-
-        private void AlertList_Loaded(object sender, RoutedEventArgs e) => AdjustAlertMsgColumnWidth();
-        private void AlertList_SizeChanged(object sender, SizeChangedEventArgs e) => AdjustAlertMsgColumnWidth();
-
-        private void AdjustAlertMsgColumnWidth()
-        {
-            var alertList = Q<ListView>("AlertList");
-            if (alertList?.View is not GridView gv) return;
-
-            // "Mesaj" başlıklı sütunu bul
-            GridViewColumn? msgCol = gv.Columns.FirstOrDefault(c =>
-                string.Equals(c.Header?.ToString(), "Mesaj", StringComparison.OrdinalIgnoreCase));
-            if (msgCol == null) return;
-
-            double fixedSum = 0;
-            foreach (var col in gv.Columns)
-            {
-                if (ReferenceEquals(col, msgCol)) continue;
-                var w = col.Width;
-                if (double.IsNaN(w) || w <= 0) w = 100;
-                fixedSum += w;
-            }
-
-            double total = alertList.ActualWidth;
-            double padding = 35;
-
-            double scroll = 0;
-            var sv = FindDescendant<ScrollViewer>(alertList);
-            if (sv != null && sv.ComputedVerticalScrollBarVisibility == Visibility.Visible)
-                scroll = SystemParameters.VerticalScrollBarWidth;
-
-            double newWidth = Math.Max(120, total - fixedSum - padding - scroll);
-            msgCol.Width = newWidth;
         }
 
         private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
