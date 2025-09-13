@@ -1455,6 +1455,42 @@ namespace BinanceUsdtTicker
                 priceBox.Text = _selectedTicker.Price.ToString("0.########", CultureInfo.CurrentCulture);
         }
 
+        private void LimitPrice_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text == ",")
+            {
+                if (sender is TextBox tb)
+                {
+                    int caret = tb.CaretIndex;
+                    tb.Text = tb.Text.Insert(caret, ".");
+                    tb.CaretIndex = caret + 1;
+                }
+                e.Handled = true;
+            }
+        }
+
+        private void LimitPriceTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is not TextBox tb)
+                return;
+
+            var digitsOnly = new string(tb.Text.Where(c => char.IsDigit(c) || c == '.').ToArray());
+            if (string.IsNullOrWhiteSpace(digitsOnly))
+            {
+                tb.Text = string.Empty;
+                return;
+            }
+
+            if (decimal.TryParse(digitsOnly, NumberStyles.Float, CultureInfo.InvariantCulture, out var price))
+            {
+                tb.Text = price.ToString("0.00", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                tb.Text = string.Empty;
+            }
+        }
+
         private void UpdatePriceAndSize()
         {
             var tab = Q<TabControl>("OrderTypeTab");
