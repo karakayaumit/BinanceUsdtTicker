@@ -1016,6 +1016,19 @@
                                                                                 </Setter>
                                                                         </Style>
                                                                 </DataGrid.ColumnHeaderStyle>
+                                                                <DataGrid.RowStyle>
+                                                                        <Style TargetType="DataGridRow">
+                                                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                                        </Style>
+                                                                </DataGrid.RowStyle>
+                                                                <DataGrid.CellStyle>
+                                                                        <Style TargetType="DataGridCell">
+                                                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                                                        </Style>
+                                                                </DataGrid.CellStyle>
                                                                 <DataGrid.Columns>
                                                                         <DataGridTemplateColumn Header="Sembol" Width="110">
                                                                                 <DataGridTemplateColumn.CellTemplate>
