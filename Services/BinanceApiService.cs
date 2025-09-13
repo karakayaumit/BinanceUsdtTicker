@@ -194,13 +194,13 @@ namespace BinanceUsdtTicker
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
-                ["limit"] = limit.ToString()
+                ["limit"] = limit.ToString(CultureInfo.InvariantCulture)
             };
 
             if (startTime.HasValue)
             {
                 var ms = new DateTimeOffset(startTime.Value).ToUnixTimeMilliseconds();
-                query["startTime"] = ms.ToString();
+                query["startTime"] = ms.ToString(CultureInfo.InvariantCulture);
             }
 
             var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/userTrades", query);
@@ -236,13 +236,13 @@ namespace BinanceUsdtTicker
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
-                ["limit"] = limit.ToString()
+                ["limit"] = limit.ToString(CultureInfo.InvariantCulture)
             };
 
             if (startTime.HasValue)
             {
                 var ms = new DateTimeOffset(startTime.Value).ToUnixTimeMilliseconds();
-                query["startTime"] = ms.ToString();
+                query["startTime"] = ms.ToString(CultureInfo.InvariantCulture);
             }
 
             var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v1/allOrders", query);
@@ -318,7 +318,7 @@ namespace BinanceUsdtTicker
                 ["symbol"] = symbol
             };
             if (orderId.HasValue)
-                query["orderId"] = orderId.Value.ToString();
+                query["orderId"] = orderId.Value.ToString(CultureInfo.InvariantCulture);
             if (!string.IsNullOrEmpty(origClientOrderId))
                 query["origClientOrderId"] = origClientOrderId;
 
