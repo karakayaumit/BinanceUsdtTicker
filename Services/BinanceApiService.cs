@@ -19,7 +19,7 @@ namespace BinanceUsdtTicker
     /// </summary>
     public class BinanceApiService : BinanceRestClientBase
     {
-        private readonly Dictionary<string, (decimal TickSize, decimal StepSize, decimal MinNotional)> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, SymbolPrecision> _symbolFilters = new(StringComparer.OrdinalIgnoreCase);
         private ExchangeInfo? _exchangeInfo;
         private readonly ConcurrentDictionary<string, SymbolRules> _rulesCache = new(StringComparer.OrdinalIgnoreCase);
         private static readonly TimeSpan RulesTtl = TimeSpan.FromMinutes(15);
@@ -388,7 +388,7 @@ namespace BinanceUsdtTicker
             catch { }
         }
 
-        public async Task<(decimal TickSize, decimal StepSize, decimal MinNotional)> GetSymbolFiltersAsync(string symbol)
+        public async Task<SymbolPrecision> GetSymbolFiltersAsync(string symbol)
         {
             if (_symbolFilters.TryGetValue(symbol, out var f))
                 return f;
@@ -423,12 +423,12 @@ namespace BinanceUsdtTicker
                     minNotional = minNot.Notional;
             }
 
-            var res = (tick, step, minNotional);
+            var res = new SymbolPrecision(tick, step, minNotional);
             _symbolFilters[symbol] = res;
             return res;
         }
 
-        public async Task<(decimal TickSize, decimal StepSize, decimal MinNotional, decimal? Price, decimal Quantity)> ApplyOrderPrecisionAsync(string symbol, decimal? price, decimal quantity)
+        public async Task<(SymbolPrecision Filters, decimal? Price, decimal Quantity)> ApplyOrderPrecisionAsync(string symbol, decimal? price, decimal quantity)
         {
             var filters = await GetSymbolFiltersAsync(symbol);
             var qtyAdj = filters.StepSize > 0 ? PrecisionHelper.AdjustToStep(quantity, filters.StepSize) : quantity;
@@ -437,7 +437,7 @@ namespace BinanceUsdtTicker
             decimal? priceAdj = null;
             if (price.HasValue)
                 priceAdj = filters.TickSize > 0 ? PrecisionHelper.AdjustToStep(price.Value, filters.TickSize) : price.Value;
-            return (filters.TickSize, filters.StepSize, filters.MinNotional, priceAdj, qtyAdj);
+            return (filters, priceAdj, qtyAdj);
         }
 
         private async Task<SymbolRules> GetSymbolRulesAsync(string symbol, CancellationToken ct = default)
