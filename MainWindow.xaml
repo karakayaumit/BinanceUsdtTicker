@@ -868,7 +868,7 @@
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                             RowHeight="25">
+                             RowHeight="25" FontSize="12">
                                                <DataGrid.RowStyle>
                                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
@@ -927,7 +927,7 @@
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                             RowHeight="25">
+                             RowHeight="25" FontSize="12">
                                                <DataGrid.RowStyle>
                                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
