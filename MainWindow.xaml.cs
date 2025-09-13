@@ -417,9 +417,31 @@ namespace BinanceUsdtTicker
             try
             {
                 var positions = await _api.GetOpenPositionsAsync();
-                _positions.Clear();
-                foreach (var p in positions)
-                    _positions.Add(p);
+                var map = positions.ToDictionary(p => p.Symbol);
+
+                for (int i = _positions.Count - 1; i >= 0; i--)
+                {
+                    var existing = _positions[i];
+                    if (map.TryGetValue(existing.Symbol, out var p))
+                    {
+                        existing.PositionAmt = p.PositionAmt;
+                        existing.EntryPrice = p.EntryPrice;
+                        existing.UnrealizedPnl = p.UnrealizedPnl;
+                        existing.Leverage = p.Leverage;
+                        existing.MarginType = p.MarginType;
+                        existing.EntryAmount = p.EntryAmount;
+                        existing.MarkPrice = p.MarkPrice;
+                        existing.LiquidationPrice = p.LiquidationPrice;
+                        map.Remove(existing.Symbol);
+                    }
+                    else
+                    {
+                        _positions.RemoveAt(i);
+                    }
+                }
+
+                foreach (var remaining in map.Values)
+                    _positions.Add(remaining);
 
                 UpdatePositionPnls();
             }
