@@ -506,7 +506,10 @@ namespace BinanceUsdtTicker
             string? pStr = null;
             if (price.HasValue)
             {
-                var p = r.TickSize > 0 ? QuantizeToTick(price.Value, r.TickSize) : price.Value;
+                var scaledPrice = symbol.StartsWith("1M", StringComparison.OrdinalIgnoreCase)
+                    ? price.Value * 1_000_000m
+                    : price.Value;
+                var p = r.TickSize > 0 ? QuantizeToTick(scaledPrice, r.TickSize) : scaledPrice;
                 if (r.MinPrice is decimal minP && p < minP)
                     throw new InvalidOperationException($"Price {p} < minPrice {minP} for {symbol}.");
                 if (r.MaxPrice is decimal maxP && p > maxP)
@@ -517,7 +520,10 @@ namespace BinanceUsdtTicker
             string? spStr = null;
             if (stopPrice.HasValue)
             {
-                var sp = r.TickSize > 0 ? QuantizeToTick(stopPrice.Value, r.TickSize) : stopPrice.Value;
+                var scaledStopPrice = symbol.StartsWith("1M", StringComparison.OrdinalIgnoreCase)
+                    ? stopPrice.Value * 1_000_000m
+                    : stopPrice.Value;
+                var sp = r.TickSize > 0 ? QuantizeToTick(scaledStopPrice, r.TickSize) : scaledStopPrice;
                 spStr = ToInvariantString(sp);
             }
 
@@ -556,7 +562,10 @@ namespace BinanceUsdtTicker
             if (activationPrice.HasValue)
             {
                 var r = await GetSymbolRulesAsync(symbol);
-                var ap = r.TickSize > 0 ? QuantizeToTick(activationPrice.Value, r.TickSize) : activationPrice.Value;
+                var scaledActivationPrice = symbol.StartsWith("1M", StringComparison.OrdinalIgnoreCase)
+                    ? activationPrice.Value * 1_000_000m
+                    : activationPrice.Value;
+                var ap = r.TickSize > 0 ? QuantizeToTick(scaledActivationPrice, r.TickSize) : scaledActivationPrice;
                 parameters["activationPrice"] = ToInvariantString(ap);
             }
 
