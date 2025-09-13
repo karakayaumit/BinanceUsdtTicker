@@ -109,8 +109,7 @@ namespace BinanceUsdtTicker
         {
             if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var dec) ||
                 decimal.TryParse(value, NumberStyles.Number, new CultureInfo("tr-TR"), out dec))
-                return dec.ToString("0.####################", CultureInfo.InvariantCulture)
-                        .TrimEnd('0').TrimEnd('.');
+                return dec.ToString("0.####################", CultureInfo.InvariantCulture);
             return value;
         }
     }

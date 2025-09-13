@@ -35,6 +35,15 @@ public class PrecisionHelperTests
         Assert.Equal("116500", result);
     }
 
+    [Fact]
+    public void BuildQuery_LeavesIntegerUnchanged()
+    {
+        var method = typeof(BinanceRestClientBase).GetMethod("BuildQuery", BindingFlags.NonPublic | BindingFlags.Static);
+        var dict = new Dictionary<string, string> { ["price"] = "116500" };
+        var result = (string)method!.Invoke(null, new object[] { dict })!;
+        Assert.Equal("price=116500", result);
+    }
+
     private static BinanceApiService CreateApi()
     {
         var api = new BinanceApiService(new HttpClient());
