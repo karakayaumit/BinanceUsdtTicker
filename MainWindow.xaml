@@ -1183,6 +1183,13 @@
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTextColumn Header="Durum" Width="80" Binding="{Binding Status}"/>
+                                                                        <DataGridTemplateColumn Header="İptal" Width="60">
+                                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                                        <DataTemplate>
+                                                                                                <Button Content="İptal" Tag="{Binding}" Click="CancelOrder_Click"/>
+                                                                                        </DataTemplate>
+                                                                                </DataGridTemplateColumn.CellTemplate>
+                                                                        </DataGridTemplateColumn>
                                                                 </DataGrid.Columns>
                                                         </DataGrid>
                                                 </TabItem>
@@ -1235,20 +1242,54 @@
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Fiyat" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTextColumn Header="Durum" Width="80" Binding="{Binding Status}"/>
-                                                                        <DataGridTemplateColumn Header="Zaman" Width="120">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
+        <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding Price,
+ StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                </DataTemplate>
+        </DataGridTemplateColumn.CellTemplate>
+</DataGridTemplateColumn>
+<DataGridTemplateColumn Header="Executed" Width="80">
+        <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding Filled,
+ StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                </DataTemplate>
+        </DataGridTemplateColumn.CellTemplate>
+</DataGridTemplateColumn>
+<DataGridTemplateColumn Header="Amount" Width="90">
+        <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding Amount,
+ StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                </DataTemplate>
+        </DataGridTemplateColumn.CellTemplate>
+</DataGridTemplateColumn>
+<DataGridTemplateColumn Header="Durum" Width="80">
+        <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding Status}">
+                                <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="FILLED">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                        </DataTrigger>
+                                                </Style.Triggers>
+                                        </Style>
+                                </TextBlock.Style>
+                        </TextBlock>
+                </DataTemplate>
+        </DataGridTemplateColumn.CellTemplate>
+</DataGridTemplateColumn>
+<DataGridTemplateColumn Header="Zaman" Width="150">
+        <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding Time,
+StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
+                </DataTemplate>
+        </DataGridTemplateColumn.CellTemplate>
+</DataGridTemplateColumn>
                                                                 </DataGrid.Columns>
                                                         </DataGrid>
                                                 </TabItem>
@@ -1293,7 +1334,7 @@
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Adet" Width="80">
+                                                                        <DataGridTemplateColumn Header="Pozisyon Boyutu" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
                                                                                                 <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
@@ -1301,11 +1342,11 @@
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Fiyat" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
+                                                                        <DataGridTemplateColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                </DataTemplate>
+                                                                        </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Ücret" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>

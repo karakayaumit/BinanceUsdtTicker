@@ -7,6 +7,7 @@ namespace BinanceUsdtTicker.Models
     /// </summary>
     public class FuturesOrder
     {
+        public long OrderId { get; set; }
         public string Symbol { get; set; } = string.Empty;
         public string Side { get; set; } = string.Empty;
         public decimal Quantity { get; set; }
