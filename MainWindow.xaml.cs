@@ -1474,16 +1474,9 @@ namespace BinanceUsdtTicker
             if (sender is not TextBox tb)
                 return;
 
-            var digitsOnly = new string(tb.Text.Where(c => char.IsDigit(c) || c == '.').ToArray());
-            if (string.IsNullOrWhiteSpace(digitsOnly))
+            if (Helpers.InputParser.TryParseUserDecimal(tb.Text, out var price) && price > 0m)
             {
-                tb.Text = string.Empty;
-                return;
-            }
-
-            if (decimal.TryParse(digitsOnly, NumberStyles.Float, CultureInfo.InvariantCulture, out var price))
-            {
-                tb.Text = price.ToString("0.00", CultureInfo.InvariantCulture);
+                tb.Text = price.ToString("0.########", CultureInfo.InvariantCulture);
             }
             else
             {
