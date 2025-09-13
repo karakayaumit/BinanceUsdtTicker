@@ -1692,6 +1692,22 @@ namespace BinanceUsdtTicker
                 await ClosePositionAsync(pos, null);
         }
 
+        private async void CancelOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is FuturesOrder order)
+            {
+                try
+                {
+                    await _api.CancelOrderAsync(order.Symbol, order.OrderId);
+                    _ = RefreshTradingDataAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message, "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private async void ClosePositionLimit_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is FuturesPosition pos)

@@ -252,12 +252,14 @@ namespace BinanceUsdtTicker
                 using var doc = JsonDocument.Parse(json);
                 foreach (var el in doc.RootElement.EnumerateArray())
                 {
+                    long orderId = el.GetProperty("orderId").GetInt64();
                     decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                     decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
                     decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                     long time = el.GetProperty("time").GetInt64();
                     list.Add(new FuturesOrder
                     {
+                        OrderId = orderId,
                         Symbol = el.GetProperty("symbol").GetString() ?? symbol,
                         Side = el.GetProperty("side").GetString() ?? string.Empty,
                         Quantity = qty,
@@ -288,12 +290,14 @@ namespace BinanceUsdtTicker
                 using var doc = JsonDocument.Parse(json);
                 foreach (var el in doc.RootElement.EnumerateArray())
                 {
+                    long orderId = el.GetProperty("orderId").GetInt64();
                     decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                     decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
                     decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                     long time = el.GetProperty("time").GetInt64();
                     list.Add(new FuturesOrder
                     {
+                        OrderId = orderId,
                         Symbol = el.GetProperty("symbol").GetString() ?? string.Empty,
                         Side = el.GetProperty("side").GetString() ?? string.Empty,
                         Quantity = qty,
@@ -327,12 +331,14 @@ namespace BinanceUsdtTicker
             {
                 using var doc = JsonDocument.Parse(json);
                 var el = doc.RootElement;
+                long orderId = el.GetProperty("orderId").GetInt64();
                 decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                 decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
                 decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                 long time = el.GetProperty("time").GetInt64();
                 return new FuturesOrder
                 {
+                    OrderId = orderId,
                     Symbol = el.GetProperty("symbol").GetString() ?? symbol,
                     Side = el.GetProperty("side").GetString() ?? string.Empty,
                     Quantity = qty,
@@ -346,6 +352,16 @@ namespace BinanceUsdtTicker
             {
                 return null;
             }
+        }
+
+        public async Task CancelOrderAsync(string symbol, long orderId)
+        {
+            var query = new Dictionary<string, string>
+            {
+                ["symbol"] = symbol,
+                ["orderId"] = orderId.ToString(CultureInfo.InvariantCulture)
+            };
+            await SendSignedAsync(HttpMethod.Delete, "/fapi/v1/order", query);
         }
 
         public async Task SetLeverageAsync(string symbol, int leverage)
