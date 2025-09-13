@@ -11,14 +11,14 @@ namespace BinanceUsdtTicker
     /// </summary>
     public class UserDecimalConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is decimal d)
                 return d.ToString("0.####################", CultureInfo.CurrentCulture);
             return string.Empty;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var s = value?.ToString();
             if (string.IsNullOrWhiteSpace(s))
