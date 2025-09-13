@@ -385,22 +385,28 @@ namespace BinanceUsdtTicker
             return res;
         }
 
-        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
+        public async Task<(decimal TickSize, decimal StepSize, decimal? Price, decimal Quantity)> ApplyOrderPrecisionAsync(string symbol, decimal? price, decimal quantity)
         {
             var filters = await GetSymbolFiltersAsync(symbol);
-            var adjQty = filters.StepSize > 0 ? AdjustToStep(quantity, filters.StepSize) : quantity;
+            var qtyAdj = filters.StepSize > 0 ? AdjustToStep(quantity, filters.StepSize) : quantity;
+            decimal? priceAdj = null;
+            if (price.HasValue)
+                priceAdj = filters.TickSize > 0 ? AdjustToStep(price.Value, filters.TickSize) : price.Value;
+            return (filters.TickSize, filters.StepSize, priceAdj, qtyAdj);
+        }
+
+        public async Task PlaceOrderAsync(string symbol, string side, string type, decimal quantity, decimal? price = null, bool reduceOnly = false, string? positionSide = null)
+        {
+            var (tick, step, adjPrice, adjQty) = await ApplyOrderPrecisionAsync(symbol, price, quantity);
             var query = new Dictionary<string, string>
             {
                 ["symbol"] = symbol,
                 ["side"] = side.ToUpperInvariant(),
                 ["type"] = type.ToUpperInvariant(),
-                ["quantity"] = FormatForApi(adjQty, filters.StepSize)
+                ["quantity"] = FormatForApi(adjQty, step)
             };
-            if (price.HasValue)
-            {
-                var adjPrice = filters.TickSize > 0 ? AdjustToStep(price.Value, filters.TickSize) : price.Value;
-                query["price"] = FormatForApi(adjPrice, filters.TickSize);
-            }
+            if (adjPrice.HasValue)
+                query["price"] = FormatForApi(adjPrice.Value, tick);
             if (type.Equals("LIMIT", StringComparison.OrdinalIgnoreCase))
                 query["timeInForce"] = "GTC";
             if (reduceOnly)
