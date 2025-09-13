@@ -23,9 +23,19 @@ namespace BinanceUsdtTicker
             var s = value?.ToString();
             if (string.IsNullOrWhiteSpace(s))
                 return null;
+
+            s = s.Trim();
+
+            // Allow the user to temporarily enter a trailing decimal separator
+            // without losing it immediately due to binding updates.
+            char last = s[s.Length - 1];
+            if (last == '.' || last == ',')
+                return Binding.DoNothing;
+
             if (InputParser.TryParseUserDecimal(s, out var v))
                 return v;
-            throw new FormatException($"Invalid decimal: {s}");
+
+            return Binding.DoNothing;
         }
     }
 }
