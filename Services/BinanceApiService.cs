@@ -24,7 +24,14 @@ namespace BinanceUsdtTicker
         private readonly ConcurrentDictionary<string, SymbolRules> _rulesCache = new(StringComparer.OrdinalIgnoreCase);
         private static readonly TimeSpan RulesTtl = TimeSpan.FromMinutes(15);
 
-        private record SymbolRules(decimal TickSize, decimal StepSize, decimal? MinQty, decimal? MinNotional, DateTime FetchedAt);
+        private record SymbolRules(
+            decimal TickSize,
+            decimal StepSize,
+            decimal? MinQty,
+            decimal? MinNotional,
+            decimal? MinPrice,
+            decimal? MaxPrice,
+            DateTime FetchedAt);
         internal static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -429,12 +436,16 @@ namespace BinanceUsdtTicker
             using var doc = JsonDocument.Parse(await resp.Content.ReadAsStreamAsync(ct));
             var sym = doc.RootElement.GetProperty("symbols")[0];
             decimal tick = 0, step = 0;
-            decimal? minQty = null, minNotional = null;
+            decimal? minQty = null, minNotional = null, minPrice = null, maxPrice = null;
             foreach (var f in sym.GetProperty("filters").EnumerateArray())
             {
                 var type = f.GetProperty("filterType").GetString();
                 if (type == "PRICE_FILTER")
+                {
                     tick = decimal.Parse(f.GetProperty("tickSize").GetString()!, CultureInfo.InvariantCulture);
+                    try { minPrice = decimal.Parse(f.GetProperty("minPrice").GetString()!, CultureInfo.InvariantCulture); } catch { }
+                    try { maxPrice = decimal.Parse(f.GetProperty("maxPrice").GetString()!, CultureInfo.InvariantCulture); } catch { }
+                }
                 else if (type == "LOT_SIZE")
                     step = decimal.Parse(f.GetProperty("stepSize").GetString()!, CultureInfo.InvariantCulture);
                 else if (type == "MARKET_LOT_SIZE" && step == 0)
@@ -444,7 +455,7 @@ namespace BinanceUsdtTicker
             }
             try { minQty = decimal.Parse(sym.GetProperty("filters").EnumerateArray().First(f => f.GetProperty("filterType").GetString()=="LOT_SIZE").GetProperty("minQty").GetString()!, CultureInfo.InvariantCulture); } catch {}
 
-            var rules = new SymbolRules(tick, step, minQty, minNotional, DateTime.UtcNow);
+            var rules = new SymbolRules(tick, step, minQty, minNotional, minPrice, maxPrice, DateTime.UtcNow);
             _rulesCache[symbol] = rules;
             return rules;
         }
@@ -481,6 +492,10 @@ namespace BinanceUsdtTicker
             if (price.HasValue)
             {
                 var p = r.TickSize > 0 ? QuantizeToTick(price.Value, r.TickSize) : price.Value;
+                if (r.MinPrice is decimal minP && p < minP)
+                    throw new InvalidOperationException($"Price {p} < minPrice {minP} for {symbol}.");
+                if (r.MaxPrice is decimal maxP && p > maxP)
+                    throw new InvalidOperationException($"Price {p} > maxPrice {maxP} for {symbol}.");
                 pStr = ToInvariantString(p);
             }
 
