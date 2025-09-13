@@ -1033,7 +1033,7 @@
                                                                         <DataGridTemplateColumn Header="Sembol" Width="110">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Foreground="{Binding SideBrush}">
+                                                                                                <TextBlock Foreground="{Binding SideBrush}" TextAlignment="Center">
                                                                                                         <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
                                                                                                         <Run Text="/USDT" Foreground="Gray"/>
                                                                                                 </TextBlock>
@@ -1043,35 +1043,35 @@
                                                                         <DataGridTemplateColumn Header="Adet" Width="100">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding PositionAmt, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding PositionAmt, StringFormat={}{0:#,0.####}}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Giriş" Width="100">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Mark" Width="100">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Liq" Width="100">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="PNL" Width="160">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                                                                         <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" Foreground="{Binding PnlBrush}"/>
                                                                                                         <TextBlock Text="{Binding RoiPercent, StringFormat={}{0:#,0.##}%}" Foreground="{Binding PnlBrush}" Margin="4,0,0,0"/>
                                                                                                 </StackPanel>
@@ -1082,14 +1082,14 @@
                                                                         <DataGridTemplateColumn Header="Pozisyon boyutu" Width="140">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding PositionSize, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding PositionSize, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Giriş tutarı" Width="120">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding EntryAmount, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding EntryAmount, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
