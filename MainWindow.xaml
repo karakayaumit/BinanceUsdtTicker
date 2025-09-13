@@ -868,7 +868,7 @@
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                             RowHeight="25" FontSize="12">
+                             RowHeight="28" FontSize="12">
                                                <DataGrid.RowStyle>
                                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
@@ -899,7 +899,7 @@
                                                        </Style>
                                                </DataGrid.CellStyle>
                                                <DataGrid.Columns>
-                                                       <DataGridTemplateColumn Header="Sembol" Width="120">
+                                                       <DataGridTemplateColumn Header="Sembol" Width="130">
                                                                <DataGridTemplateColumn.CellTemplate>
                                                                        <DataTemplate>
                                                                                <TextBlock FontWeight="Light">
@@ -921,13 +921,13 @@
                                                </DataGrid.Columns>
                                         </DataGrid>
 
-                                        <TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,6,0,4"/>
+                                        <TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,0,0,4"/>
                                         <DataGrid Grid.Row="4" x:Name="TopLosersList"
                              Style="{DynamicResource MaterialDesignDataGrid}"
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                             RowHeight="25" FontSize="12">
+                             RowHeight="28" FontSize="12">
                                                <DataGrid.RowStyle>
                                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
@@ -958,7 +958,7 @@
                                                        </Style>
                                                </DataGrid.CellStyle>
                                                <DataGrid.Columns>
-                                                       <DataGridTemplateColumn Header="Sembol" Width="120">
+                                                       <DataGridTemplateColumn Header="Sembol" Width="130">
                                                                <DataGridTemplateColumn.CellTemplate>
                                                                        <DataTemplate>
                                                                                <TextBlock FontWeight="Light">
