@@ -6,8 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <!-- Exclude nested projects from being compiled into this project -->
-    <DefaultItemExcludes>ListingWatcherService\**;$(DefaultItemExcludes)</DefaultItemExcludes>
+    <!-- Exclude nested projects and test files from being compiled into this project -->
+    <DefaultItemExcludes>ListingWatcherService\**;Tests\**;$(DefaultItemExcludes)</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +26,11 @@
   <!-- Prevent the worker service project from being compiled into the WPF application -->
   <ItemGroup>
     <Compile Remove="ListingWatcherService\**" />
+    <Compile Remove="Tests\**" />
     <None Remove="ListingWatcherService\**" />
+    <None Remove="Tests\**" />
     <EmbeddedResource Remove="ListingWatcherService\**" />
+    <EmbeddedResource Remove="Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
