@@ -7,6 +7,7 @@
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
         Background="{DynamicResource Surface}"
+        WindowState="Maximized"
        >
 
 	<!-- ========== RESOURCES ========== -->
