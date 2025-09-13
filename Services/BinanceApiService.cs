@@ -331,14 +331,14 @@ namespace BinanceUsdtTicker
             {
                 using var doc = JsonDocument.Parse(json);
                 var el = doc.RootElement;
-                long orderId = el.GetProperty("orderId").GetInt64();
+                long parsedOrderId = el.GetProperty("orderId").GetInt64();
                 decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                 decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
                 decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                 long time = el.GetProperty("time").GetInt64();
                 return new FuturesOrder
                 {
-                    OrderId = orderId,
+                    OrderId = parsedOrderId,
                     Symbol = el.GetProperty("symbol").GetString() ?? symbol,
                     Side = el.GetProperty("side").GetString() ?? string.Empty,
                     Quantity = qty,
