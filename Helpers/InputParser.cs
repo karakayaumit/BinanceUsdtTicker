@@ -17,13 +17,32 @@ namespace BinanceUsdtTicker.Helpers
                 return false;
             }
 
-            var tr = new CultureInfo("tr-TR");
-            s = s.Replace(" ", string.Empty)
-                 .Replace(tr.NumberFormat.NumberGroupSeparator, string.Empty)
-                 .Replace(CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator, string.Empty);
+            s = s.Replace(" ", string.Empty);
 
-            if (decimal.TryParse(s, NumberStyles.Number, tr, out value))
-                return true;
+            var commaIndex = s.LastIndexOf(',');
+            var dotIndex = s.LastIndexOf('.');
+
+            if (commaIndex >= 0 && dotIndex >= 0)
+            {
+                if (commaIndex > dotIndex)
+                {
+                    s = s.Replace(".", string.Empty);
+                    s = s.Replace(',', '.');
+                }
+                else
+                {
+                    s = s.Replace(",", string.Empty);
+                }
+            }
+            else if (commaIndex >= 0)
+            {
+                s = s.Replace(',', '.');
+            }
+            else
+            {
+                s = s.Replace(",", string.Empty);
+            }
+
             if (decimal.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
                 return true;
 
