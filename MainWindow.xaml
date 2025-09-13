@@ -1320,79 +1320,84 @@
                                                 </DockPanel>
                                         </Expander.Header>
 
-                                        <ListView x:Name="AlertList" Margin="0,6,0,0"
-                          Loaded="AlertList_Loaded"
-                          SizeChanged="AlertList_SizeChanged">
-                                                <ListView.View>
-                                                        <GridView>
-                                                                <GridViewColumn Header="Zaman"  Width="80"  DisplayMemberBinding="{Binding LocalTime}"/>
-                                                                <GridViewColumn Header="Sembol" Width="110">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock>
-                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                <Run Text="/USDT" Foreground="Gray"/>
-                                                                                        </TextBlock>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="Koşul"  Width="160" DisplayMemberBinding="{Binding TypeText}"/>
-                                                                <GridViewColumn x:Name="MsgColumn" Header="Mesaj" Width="260">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Message}"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   ToolTip="{Binding Message}"/>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                        </GridView>
-                                                </ListView.View>
-                                        </ListView>
+                                        <DataGrid x:Name="AlertList" Margin="0,6,0,0"
+          Style="{DynamicResource MaterialDesignDataGrid}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          CanUserSortColumns="True"
+          CanUserReorderColumns="True"
+          HeadersVisibility="Column"
+          GridLinesVisibility="None"
+          RowBackground="{DynamicResource RowBg}"
+          AlternatingRowBackground="{DynamicResource RowAltBg}"
+          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <DataGrid.Columns>
+        <DataGridTextColumn Header="Zaman" Width="80" Binding="{Binding LocalTime}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        <DataGridTemplateColumn Header="Sembol" Width="110">
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                        <Run Text="/USDT" Foreground="Gray"/>
+                    </TextBlock>
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn Header="Koşul" Width="160" Binding="{Binding TypeText}"/>
+        <DataGridTemplateColumn Header="Mesaj" Width="*">
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Message}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Message}"/>
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+    </DataGrid.Columns>
+</DataGrid>
+
                                 </Expander>
 
                                 <!-- CÜZDAN BİLGİLERİ -->
                                 <Expander Grid.Column="1" Header="Cüzdan" IsExpanded="True" Padding="6,4">
-                                        <ListView x:Name="WalletList" Margin="0,6,0,0">
-                                                <ListView.View>
-                                                        <GridView>
-                                                                <GridViewColumn Header="Varlık" Width="70">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <Border BorderBrush="{DynamicResource Divider}"
-                                                                                                BorderThickness="0,0,1,1" Padding="2">
-                                                                                                <TextBlock Text="{Binding Asset}"/>
-                                                                                        </Border>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="Bakiye" Width="90">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <Border BorderBrush="{DynamicResource Divider}"
-                                                                                                BorderThickness="0,0,1,1" Padding="2">
-                                                                                                <TextBlock Text="{Binding Balance, StringFormat={}{0:#,0.00}}"
-                                                                                                           HorizontalAlignment="Right"
-                                                                                                           TextAlignment="Right"/>
-                                                                                        </Border>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="Kullanılabilir" Width="90">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <Border BorderBrush="{DynamicResource Divider}"
-                                                                                                BorderThickness="0,0,0,1" Padding="2">
-                                                                                                <TextBlock Text="{Binding Available, StringFormat={}{0:#,0.00}}"
-                                                                                                           HorizontalAlignment="Right"
-                                                                                                           TextAlignment="Right"/>
-                                                                                        </Border>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                        </GridView>
-                                                </ListView.View>
-                                        </ListView>
+                                        <DataGrid x:Name="WalletList" Margin="0,6,0,0"
+          Style="{DynamicResource MaterialDesignDataGrid}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          HeadersVisibility="Column"
+          GridLinesVisibility="None"
+          RowBackground="{DynamicResource RowBg}"
+          AlternatingRowBackground="{DynamicResource RowAltBg}"
+          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <DataGrid.Columns>
+        <DataGridTextColumn Header="Varlık" Width="70" Binding="{Binding Asset}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Bakiye" Width="90" Binding="{Binding Balance, StringFormat={}{0:#,0.00}}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Right"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Kullanılabilir" Width="90" Binding="{Binding Available, StringFormat={}{0:#,0.00}}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Right"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+    </DataGrid.Columns>
+</DataGrid>
+
                                 </Expander>
                         </Grid>
                 </Grid>
