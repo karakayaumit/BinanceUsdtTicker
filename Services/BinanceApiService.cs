@@ -366,8 +366,18 @@ namespace BinanceUsdtTicker
             {
                 var price = sym.Filters.OfType<PriceFilter>().FirstOrDefault();
                 var lot = sym.Filters.OfType<LotSizeFilter>().FirstOrDefault();
+                var marketLot = sym.Filters.OfType<MarketLotSizeFilter>().FirstOrDefault();
                 if (price != null) tick = price.TickSize;
-                if (lot != null) step = lot.StepSize;
+
+                // Some symbols have different step sizes for market and limit orders.
+                // Use the more restrictive (larger) step size to avoid sending a quantity
+                // with higher precision than allowed by the exchange.
+                if (lot != null && marketLot != null)
+                    step = Math.Max(lot.StepSize, marketLot.StepSize);
+                else if (lot != null)
+                    step = lot.StepSize;
+                else if (marketLot != null)
+                    step = marketLot.StepSize;
             }
 
             var res = (tick, step);
