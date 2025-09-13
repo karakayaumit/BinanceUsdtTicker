@@ -509,7 +509,11 @@ namespace BinanceUsdtTicker
             if (prep.pStr != null) parameters["price"] = prep.pStr;
             if (prep.spStr != null) parameters["stopPrice"] = prep.spStr;
 
-            if (!string.IsNullOrEmpty(timeInForce)) parameters["timeInForce"] = timeInForce;
+            if (string.IsNullOrEmpty(timeInForce) && type.Contains("LIMIT", StringComparison.OrdinalIgnoreCase))
+                parameters["timeInForce"] = "GTC";
+            else if (!string.IsNullOrEmpty(timeInForce))
+                parameters["timeInForce"] = timeInForce;
+
             if (reduceOnly) parameters["reduceOnly"] = "true";
             if (!string.IsNullOrEmpty(positionSide)) parameters["positionSide"] = positionSide;
 
