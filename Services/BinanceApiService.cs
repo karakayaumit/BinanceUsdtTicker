@@ -247,6 +247,7 @@ namespace BinanceUsdtTicker
                 {
                     decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                     decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                    decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                     long time = el.GetProperty("time").GetInt64();
                     list.Add(new FuturesOrder
                     {
@@ -254,6 +255,7 @@ namespace BinanceUsdtTicker
                         Side = el.GetProperty("side").GetString() ?? string.Empty,
                         Quantity = qty,
                         Price = price,
+                        Filled = filled,
                         Status = el.GetProperty("status").GetString() ?? string.Empty,
                         Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
                     });
@@ -281,6 +283,7 @@ namespace BinanceUsdtTicker
                 {
                     decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                     decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                    decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                     long time = el.GetProperty("time").GetInt64();
                     list.Add(new FuturesOrder
                     {
@@ -288,6 +291,7 @@ namespace BinanceUsdtTicker
                         Side = el.GetProperty("side").GetString() ?? string.Empty,
                         Quantity = qty,
                         Price = price,
+                        Filled = filled,
                         Status = el.GetProperty("status").GetString() ?? string.Empty,
                         Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
                     });
@@ -318,6 +322,7 @@ namespace BinanceUsdtTicker
                 var el = doc.RootElement;
                 decimal.TryParse(el.GetProperty("origQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var qty);
                 decimal.TryParse(el.GetProperty("price").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+                decimal.TryParse(el.GetProperty("executedQty").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var filled);
                 long time = el.GetProperty("time").GetInt64();
                 return new FuturesOrder
                 {
@@ -325,6 +330,7 @@ namespace BinanceUsdtTicker
                     Side = el.GetProperty("side").GetString() ?? string.Empty,
                     Quantity = qty,
                     Price = price,
+                    Filled = filled,
                     Status = el.GetProperty("status").GetString() ?? string.Empty,
                     Time = DateTimeOffset.FromUnixTimeMilliseconds(time).LocalDateTime
                 };

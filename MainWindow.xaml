@@ -1094,10 +1094,24 @@
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
-                                                                                <GridViewColumn Header="Fiyat" Width="80">
+                                                                                <GridViewColumn Header="Giriş Fiyatı" Width="80">
                                                                                         <GridViewColumn.CellTemplate>
                                                                                                 <DataTemplate>
                                                                                                         <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Amount" Width="90">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Amount, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
+                                                                                                </DataTemplate>
+                                                                                        </GridViewColumn.CellTemplate>
+                                                                                </GridViewColumn>
+                                                                                <GridViewColumn Header="Filled" Width="80">
+                                                                                        <GridViewColumn.CellTemplate>
+                                                                                                <DataTemplate>
+                                                                                                        <TextBlock Text="{Binding Filled, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
                                                                                                 </DataTemplate>
                                                                                         </GridViewColumn.CellTemplate>
                                                                                 </GridViewColumn>
