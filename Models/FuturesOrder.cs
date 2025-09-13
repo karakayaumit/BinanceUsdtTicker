@@ -13,6 +13,7 @@ namespace BinanceUsdtTicker.Models
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }
         public decimal Filled { get; set; }
+        public decimal FilledAmount => Price * Filled;
         public decimal Amount => Price * Quantity;
         public string Status { get; set; } = string.Empty;
         public DateTime Time { get; set; }

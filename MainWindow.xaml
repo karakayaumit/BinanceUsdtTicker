@@ -1252,8 +1252,8 @@
 <DataGridTemplateColumn Header="Executed" Width="80">
         <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate>
-                        <TextBlock Text="{Binding Filled,
- StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                        <TextBlock Text="{Binding FilledAmount,
+ StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
                 </DataTemplate>
         </DataGridTemplateColumn.CellTemplate>
 </DataGridTemplateColumn>
@@ -1337,7 +1337,7 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                                         <DataGridTemplateColumn Header="Pozisyon Boyutu" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding Amount, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
