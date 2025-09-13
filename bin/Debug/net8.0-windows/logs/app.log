@@ -3164,3 +3164,17 @@
 2025-09-13 14:04:51 ConnectLoop error: The operation was canceled.
 2025-09-13 14:04:51 WS closed
 2025-09-13 14:04:51 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-13 14:08:23 StartAsync
+2025-09-13 14:08:23 StopAsync
+2025-09-13 14:08:23 WS state Connecting attempt 0
+2025-09-13 14:08:23 Monitor: state Closed gap -1
+2025-09-13 14:08:24 WS connected
+2025-09-13 14:09:11 StartAsync
+2025-09-13 14:09:11 StopAsync
+2025-09-13 14:09:11 WS state Connecting attempt 0
+2025-09-13 14:09:11 Monitor: state Closed gap -1
+2025-09-13 14:09:12 WS connected
+2025-09-13 14:10:05 StopAsync
+2025-09-13 14:10:05 CloseAsync error: The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived, CloseSent'
+2025-09-13 14:10:06 ConnectLoop error: The operation was canceled.
+2025-09-13 14:10:06 WS closed
