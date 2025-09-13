@@ -15,8 +15,6 @@ namespace BinanceUsdtTicker
         {
             if (value is decimal d)
                 return d.ToString("0.####################", CultureInfo.CurrentCulture);
-            if (value is decimal? dn && dn.HasValue)
-                return dn.Value.ToString("0.####################", CultureInfo.CurrentCulture);
             return string.Empty;
         }
 
