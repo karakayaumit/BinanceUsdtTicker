@@ -863,112 +863,132 @@
                                                       Margin="0,0,0,4" HorizontalAlignment="Center"/>
 
                                         <TextBlock Grid.Row="1" Text="Yükselenler" FontWeight="Bold" Margin="0,0,0,4"/>
-                                        <ListView Grid.Row="2" x:Name="TopGainersList"
-                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             VirtualizingStackPanel.IsVirtualizing="True"
-                             VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                               <ListView.ItemContainerStyle>
-                                                       <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                        <DataGrid Grid.Row="2" x:Name="TopGainersList"
+                             Style="{DynamicResource MaterialDesignDataGrid}"
+                             AutoGenerateColumns="False" IsReadOnly="True"
+                             HeadersVisibility="Column" GridLinesVisibility="None"
+                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
+                                               <DataGrid.RowStyle>
+                                                       <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
                                                                        <!-- 3%+ moves: dark green with white text -->
                                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Up3Bg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
-                                                                               <Setter Property="TextElement.Foreground" Value="{DynamicResource Up3Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- 1-3% moves: light green with black text -->
                                                                        <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Up1Bg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
-                                                                               <Setter Property="TextElement.Foreground" Value="{DynamicResource Up1Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- Hover: highlight row -->
                                                                        <Trigger Property="IsMouseOver" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-                                                                               <Setter Property="TextElement.Foreground" Value="{DynamicResource OnSurface}"/>
                                                                        </Trigger>
                                                                </Style.Triggers>
                                                        </Style>
-                                               </ListView.ItemContainerStyle>
-                                                <ListView.View>
-                                                        <GridView>
-                                                                <GridViewColumn Header="Sembol" Width="80">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock>
-                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                <Run Text="/USDT" Foreground="Gray"/>
-                                                                                        </TextBlock>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="%" Width="70">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
-                                               TextAlignment="Right" FontFamily="Consolas"/>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                        </GridView>
-                                                </ListView.View>
-                                        </ListView>
+                                               </DataGrid.RowStyle>
+                                               <DataGrid.CellStyle>
+                                                       <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                               <Style.Triggers>
+                                                                       <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
+                                                                       </DataTrigger>
+                                                                       <DataTrigger Binding="{Binding IsMove1Plus}" Value="True">
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Up1Fg}"/>
+                                                                       </DataTrigger>
+                                                                       <Trigger Property="IsMouseOver" Value="True">
+                                                                               <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+                                                                       </Trigger>
+                                                               </Style.Triggers>
+                                                       </Style>
+                                               </DataGrid.CellStyle>
+                                               <DataGrid.Columns>
+                                                       <DataGridTemplateColumn Header="Sembol" Width="80">
+                                                               <DataGridTemplateColumn.CellTemplate>
+                                                                       <DataTemplate>
+                                                                               <TextBlock>
+                                                                                       <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                       <Run Text="/USDT" Foreground="Gray"/>
+                                                                               </TextBlock>
+                                                                       </DataTemplate>
+                                                               </DataGridTemplateColumn.CellTemplate>
+                                                       </DataGridTemplateColumn>
+                                                       <DataGridTextColumn Header="%" Width="70" Binding="{Binding Metric, StringFormat={}{0:N2}%}">
+                                                               <DataGridTextColumn.ElementStyle>
+                                                                       <Style TargetType="TextBlock">
+                                                                               <Setter Property="TextAlignment" Value="Right"/>
+                                                                               <Setter Property="FontFamily" Value="Consolas"/>
+                                                                       </Style>
+                                                               </DataGridTextColumn.ElementStyle>
+                                                       </DataGridTextColumn>
+                                               </DataGrid.Columns>
+                                        </DataGrid>
 
                                         <TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,6,0,4"/>
-                                        <ListView Grid.Row="4" x:Name="TopLosersList"
-                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             VirtualizingStackPanel.IsVirtualizing="True"
-                             VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                               <ListView.ItemContainerStyle>
-                                                       <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                        <DataGrid Grid.Row="4" x:Name="TopLosersList"
+                             Style="{DynamicResource MaterialDesignDataGrid}"
+                             AutoGenerateColumns="False" IsReadOnly="True"
+                             HeadersVisibility="Column" GridLinesVisibility="None"
+                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
+                                               <DataGrid.RowStyle>
+                                                       <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
                                                                        <!-- -3% or worse: dark red with white text -->
                                                                        <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Down3Bg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource Down3Fg}"/>
-                                                                               <Setter Property="TextElement.Foreground" Value="{DynamicResource Down3Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- -1% to -3%: light red with black text -->
                                                                        <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource Down1Bg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
-                                                                               <Setter Property="TextElement.Foreground" Value="{DynamicResource Down1Fg}"/>
                                                                        </DataTrigger>
                                                                        <!-- Hover: highlight row -->
                                                                        <Trigger Property="IsMouseOver" Value="True">
                                                                                <Setter Property="Background" Value="{DynamicResource RowHoverBg}"/>
                                                                                <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
-                                                                               <Setter Property="TextElement.Foreground" Value="{DynamicResource OnSurface}"/>
                                                                        </Trigger>
                                                                </Style.Triggers>
                                                        </Style>
-                                               </ListView.ItemContainerStyle>
-                                                <ListView.View>
-                                                        <GridView>
-                                                                <GridViewColumn Header="Sembol" Width="80">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock>
-                                                                                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                <Run Text="/USDT" Foreground="Gray"/>
-                                                                                        </TextBlock>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                                <GridViewColumn Header="%" Width="70">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                                <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Metric, StringFormat={}{0:N2}%}"
-                                               TextAlignment="Right" FontFamily="Consolas"/>
-                                                                                </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                        </GridView>
-                                                </ListView.View>
-                                        </ListView>
+                                               </DataGrid.RowStyle>
+                                               <DataGrid.CellStyle>
+                                                       <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                               <Style.Triggers>
+                                                                       <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Down3Fg}"/>
+                                                                       </DataTrigger>
+                                                                       <DataTrigger Binding="{Binding IsMoveMinus1}" Value="True">
+                                                                               <Setter Property="Foreground" Value="{DynamicResource Down1Fg}"/>
+                                                                       </DataTrigger>
+                                                                       <Trigger Property="IsMouseOver" Value="True">
+                                                                               <Setter Property="Foreground" Value="{DynamicResource OnSurface}"/>
+                                                                       </Trigger>
+                                                               </Style.Triggers>
+                                                       </Style>
+                                               </DataGrid.CellStyle>
+                                               <DataGrid.Columns>
+                                                       <DataGridTemplateColumn Header="Sembol" Width="80">
+                                                               <DataGridTemplateColumn.CellTemplate>
+                                                                       <DataTemplate>
+                                                                               <TextBlock>
+                                                                                       <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                                                                       <Run Text="/USDT" Foreground="Gray"/>
+                                                                               </TextBlock>
+                                                                       </DataTemplate>
+                                                               </DataGridTemplateColumn.CellTemplate>
+                                                       </DataGridTemplateColumn>
+                                                       <DataGridTextColumn Header="%" Width="70" Binding="{Binding Metric, StringFormat={}{0:N2}%}">
+                                                               <DataGridTextColumn.ElementStyle>
+                                                                       <Style TargetType="TextBlock">
+                                                                               <Setter Property="TextAlignment" Value="Right"/>
+                                                                               <Setter Property="FontFamily" Value="Consolas"/>
+                                                                       </Style>
+                                                               </DataGridTextColumn.ElementStyle>
+                                                       </DataGridTextColumn>
+                                               </DataGrid.Columns>
+                                        </DataGrid>
                                 </Grid>
                         </GroupBox>
 
