@@ -867,7 +867,8 @@
                              Style="{DynamicResource MaterialDesignDataGrid}"
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
-                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
+                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                             RowHeight="35">
                                                <DataGrid.RowStyle>
                                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
@@ -898,21 +899,22 @@
                                                        </Style>
                                                </DataGrid.CellStyle>
                                                <DataGrid.Columns>
-                                                       <DataGridTemplateColumn Header="Sembol" Width="80">
+                                                       <DataGridTemplateColumn Header="Sembol" Width="120">
                                                                <DataGridTemplateColumn.CellTemplate>
                                                                        <DataTemplate>
-                                                                               <TextBlock>
+                                                                               <TextBlock FontWeight="Light">
                                                                                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
                                                                                        <Run Text="/USDT" Foreground="Gray"/>
                                                                                </TextBlock>
                                                                        </DataTemplate>
                                                                </DataGridTemplateColumn.CellTemplate>
                                                        </DataGridTemplateColumn>
-                                                       <DataGridTextColumn Header="%" Width="70" Binding="{Binding Metric, StringFormat={}{0:N2}%}">
+                                                       <DataGridTextColumn Header="%" Width="100" Binding="{Binding Metric, StringFormat={}{0:N2}%}">
                                                                <DataGridTextColumn.ElementStyle>
                                                                        <Style TargetType="TextBlock">
                                                                                <Setter Property="TextAlignment" Value="Right"/>
                                                                                <Setter Property="FontFamily" Value="Consolas"/>
+                                                                               <Setter Property="FontWeight" Value="Light"/>
                                                                        </Style>
                                                                </DataGridTextColumn.ElementStyle>
                                                        </DataGridTextColumn>
@@ -924,7 +926,8 @@
                              Style="{DynamicResource MaterialDesignDataGrid}"
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
-                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}">
+                             Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
+                             RowHeight="35">
                                                <DataGrid.RowStyle>
                                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                                                                <Style.Triggers>
@@ -955,21 +958,22 @@
                                                        </Style>
                                                </DataGrid.CellStyle>
                                                <DataGrid.Columns>
-                                                       <DataGridTemplateColumn Header="Sembol" Width="80">
+                                                       <DataGridTemplateColumn Header="Sembol" Width="120">
                                                                <DataGridTemplateColumn.CellTemplate>
                                                                        <DataTemplate>
-                                                                               <TextBlock>
+                                                                               <TextBlock FontWeight="Light">
                                                                                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
                                                                                        <Run Text="/USDT" Foreground="Gray"/>
                                                                                </TextBlock>
                                                                        </DataTemplate>
                                                                </DataGridTemplateColumn.CellTemplate>
                                                        </DataGridTemplateColumn>
-                                                       <DataGridTextColumn Header="%" Width="70" Binding="{Binding Metric, StringFormat={}{0:N2}%}">
+                                                       <DataGridTextColumn Header="%" Width="100" Binding="{Binding Metric, StringFormat={}{0:N2}%}">
                                                                <DataGridTextColumn.ElementStyle>
                                                                        <Style TargetType="TextBlock">
                                                                                <Setter Property="TextAlignment" Value="Right"/>
                                                                                <Setter Property="FontFamily" Value="Consolas"/>
+                                                                               <Setter Property="FontWeight" Value="Light"/>
                                                                        </Style>
                                                                </DataGridTextColumn.ElementStyle>
                                                        </DataGridTextColumn>
