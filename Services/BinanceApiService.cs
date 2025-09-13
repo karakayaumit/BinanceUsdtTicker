@@ -475,8 +475,7 @@ namespace BinanceUsdtTicker
         }
 
         private static string ToInvariantString(decimal v)
-            => v.ToString("0.####################", CultureInfo.InvariantCulture)
-                 .TrimEnd('0').TrimEnd('.');
+            => v.ToString("0.####################", CultureInfo.InvariantCulture);
 
         private async Task<(string qStr, string? pStr, string? spStr)> PrepareOrderNumbersAsync(
             string symbol, decimal quantity, decimal? price, decimal? stopPrice, bool reduceOnly, CancellationToken ct)

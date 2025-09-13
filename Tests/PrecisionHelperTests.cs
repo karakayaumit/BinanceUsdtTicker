@@ -27,6 +27,14 @@ public class PrecisionHelperTests
         });
     }
 
+    [Fact]
+    public void ToInvariantString_LeavesIntegerUnchanged()
+    {
+        var method = typeof(BinanceApiService).GetMethod("ToInvariantString", BindingFlags.NonPublic | BindingFlags.Static);
+        var result = (string)method!.Invoke(null, new object[] { 116500m })!;
+        Assert.Equal("116500", result);
+    }
+
     private static BinanceApiService CreateApi()
     {
         var api = new BinanceApiService(new HttpClient());
