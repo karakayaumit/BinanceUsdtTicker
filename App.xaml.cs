@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using System.Globalization;
+using System.Windows.Markup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +19,15 @@ namespace BinanceUsdtTicker;
 
 public partial class App : Application
 {
+    static App()
+    {
+        var culture = CultureInfo.CurrentCulture;
+        FrameworkElement.LanguageProperty.OverrideMetadata(
+            typeof(FrameworkElement),
+            new FrameworkPropertyMetadata(
+                XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+    }
+
     private FreeNewsHubService? _freeNewsHub;
     private NewsDbService? _newsHub;
     private readonly ISymbolExtractor _symbolExtractor = new RegexSymbolExtractor();
