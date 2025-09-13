@@ -411,8 +411,14 @@ namespace BinanceUsdtTicker
         private static string FormatForApi(decimal value, decimal step)
         {
             var precision = GetPrecision(step);
-            var formatted = value.ToString($"F{precision}", CultureInfo.InvariantCulture);
-            return formatted.TrimEnd('0').TrimEnd('.');
+            string formatted;
+            if (precision > 0)
+                formatted = value.ToString($"F{precision}", CultureInfo.InvariantCulture);
+            else
+                formatted = value.ToString(CultureInfo.InvariantCulture);
+
+            var trimmed = formatted.TrimEnd('0').TrimEnd('.');
+            return string.IsNullOrEmpty(trimmed) ? "0" : trimmed;
         }
 
         private static decimal AdjustToStep(decimal value, decimal step)
