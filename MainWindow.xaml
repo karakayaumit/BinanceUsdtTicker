@@ -1355,6 +1355,13 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
+                                                                        <DataGridTemplateColumn Header="Kar" Width="80">
+                                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                                        <DataTemplate>
+                                                                                                <TextBlock Text="{Binding RealizedPnl, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                        </DataTemplate>
+                                                                                </DataGridTemplateColumn.CellTemplate>
+                                                                        </DataGridTemplateColumn>
                                                                         <DataGridTemplateColumn Header="Net" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
