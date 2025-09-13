@@ -468,7 +468,7 @@ namespace BinanceUsdtTicker
                  .TrimEnd('0').TrimEnd('.');
 
         private async Task<(string qStr, string? pStr, string? spStr)> PrepareOrderNumbersAsync(
-            string symbol, decimal quantity, decimal? price, decimal? stopPrice, CancellationToken ct)
+            string symbol, decimal quantity, decimal? price, decimal? stopPrice, bool reduceOnly, CancellationToken ct)
         {
             var r = await GetSymbolRulesAsync(symbol, ct);
             var q = r.StepSize > 0 ? QuantizeDown(quantity, r.StepSize) : quantity;
@@ -491,7 +491,7 @@ namespace BinanceUsdtTicker
                 spStr = ToInvariantString(sp);
             }
 
-            if (r.MinNotional is decimal mn && price.HasValue)
+            if (!reduceOnly && r.MinNotional is decimal mn && price.HasValue)
             {
                 var notion = (decimal.Parse(qStr, CultureInfo.InvariantCulture)) *
                              (decimal.Parse(pStr!, CultureInfo.InvariantCulture));
@@ -510,7 +510,7 @@ namespace BinanceUsdtTicker
                 ["type"] = type
             };
 
-            var prep = await PrepareOrderNumbersAsync(symbol, quantity, price, stopPrice, CancellationToken.None);
+            var prep = await PrepareOrderNumbersAsync(symbol, quantity, price, stopPrice, reduceOnly, CancellationToken.None);
             parameters["quantity"] = prep.qStr;
             if (prep.pStr != null) parameters["price"] = prep.pStr;
             if (prep.spStr != null) parameters["stopPrice"] = prep.spStr;
