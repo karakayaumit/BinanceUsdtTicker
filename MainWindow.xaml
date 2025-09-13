@@ -992,6 +992,8 @@
                                                                   CanUserReorderColumns="True"
                                                                   HeadersVisibility="Column"
                                                                   GridLinesVisibility="None"
+                                                                  RowBackground="{DynamicResource RowBg}"
+                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
                                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                                 <DataGrid.ColumnHeaderStyle>
                                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
@@ -1092,6 +1094,8 @@
                                                                   CanUserReorderColumns="True"
                                                                   HeadersVisibility="Column"
                                                                   GridLinesVisibility="None"
+                                                                  RowBackground="{DynamicResource RowBg}"
+                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
                                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                                 <DataGrid.ColumnHeaderStyle>
                                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
@@ -1163,6 +1167,8 @@
                                                                   CanUserReorderColumns="True"
                                                                   HeadersVisibility="Column"
                                                                   GridLinesVisibility="None"
+                                                                  RowBackground="{DynamicResource RowBg}"
+                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
                                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                                 <DataGrid.ColumnHeaderStyle>
                                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
@@ -1227,6 +1233,8 @@
                                                                   CanUserReorderColumns="True"
                                                                   HeadersVisibility="Column"
                                                                   GridLinesVisibility="None"
+                                                                  RowBackground="{DynamicResource RowBg}"
+                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
                                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                                 <DataGrid.ColumnHeaderStyle>
                                                                         <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
