@@ -423,6 +423,9 @@ namespace BinanceUsdtTicker
                     minNotional = minNot.Notional;
             }
 
+            if (tick >= 1m)
+                throw new InvalidOperationException($"Suspicious tickSize {tick} for {symbol}. Check endpoint/baseUrl.");
+
             var res = new SymbolPrecision(tick, step, minNotional);
             _symbolFilters[symbol] = res;
             return res;
@@ -431,12 +434,14 @@ namespace BinanceUsdtTicker
         public async Task<(SymbolPrecision Filters, decimal? Price, decimal Quantity)> ApplyOrderPrecisionAsync(string symbol, decimal? price, decimal quantity)
         {
             var filters = await GetSymbolFiltersAsync(symbol);
-            var qtyAdj = filters.StepSize > 0 ? PrecisionHelper.AdjustToStep(quantity, filters.StepSize) : quantity;
+            var qtyAdj = filters.StepSize > 0 ? QuantizeDown(quantity, filters.StepSize) : quantity;
             if (qtyAdj <= 0m)
                 throw new ArgumentException("Quantity is too small for the step size.");
+
             decimal? priceAdj = null;
             if (price.HasValue)
-                priceAdj = filters.TickSize > 0 ? PrecisionHelper.AdjustToStep(price.Value, filters.TickSize) : price.Value;
+                priceAdj = filters.TickSize > 0 ? QuantizeToTick(price.Value, filters.TickSize) : price.Value;
+
             return (filters, priceAdj, qtyAdj);
         }
 
@@ -490,6 +495,9 @@ namespace BinanceUsdtTicker
                            $"minNotional={(minNotional.HasValue ? DecimalParser.ToInvString(minNotional.Value) : "null")} " +
                            $"; filters={filtersJson.GetRawText()}");
             }
+
+            if (tick >= 1m)
+                throw new InvalidOperationException($"Suspicious tickSize {tick} for {symbol}. Check endpoint/baseUrl.");
 
             var rules = new SymbolRules(tick, step, minQty, minNotional, minPrice, maxPrice, DateTime.UtcNow);
             _rulesCache[symbol] = rules;
