@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 using BinanceUsdtTicker.Helpers;
 
@@ -36,6 +37,20 @@ namespace BinanceUsdtTicker
             char last = s[s.Length - 1];
             if (last == '.' || last == ',')
                 return Binding.DoNothing;
+
+            // If the text contains a decimal separator but only zeros so far,
+            // defer parsing until the user enters a non-zero digit to avoid
+            // the binding resetting the text to "0".
+            int sepIndex = s.LastIndexOfAny(new[] { '.', ',' });
+            if (sepIndex >= 0)
+            {
+                var intPart  = s[..sepIndex].Replace(".", string.Empty).Replace(",", string.Empty);
+                var fracPart = s[(sepIndex + 1)..];
+                bool intZeros  = intPart.Length == 0 || intPart.All(ch => ch == '0');
+                bool fracZeros = fracPart.Length > 0 && fracPart.All(ch => ch == '0');
+                if (intZeros && fracZeros)
+                    return Binding.DoNothing;
+            }
 
             try
             {
