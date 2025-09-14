@@ -206,7 +206,7 @@ namespace BinanceUsdtTicker
                         High = high,
                         Low = low,
                         Volume = vol,
-                        ChangePercent = changePct,
+                        ChangePct = (double)changePct,
                         LastUpdate = now
                     };
                     _tickers[s] = row;
@@ -218,7 +218,7 @@ namespace BinanceUsdtTicker
                     row.High = high;
                     row.Low = low;
                     row.Volume = vol;
-                    row.ChangePercent = changePct;
+                    row.ChangePct = (double)changePct;
                     row.LastUpdate = now;
                 }
 

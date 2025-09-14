@@ -445,7 +445,7 @@
                                         <DataGridTextColumn Binding="{Binding BaselinePrice}" Header="Başlangıç Fiyatı" Width="100"/>
                                         <DataGridTextColumn Binding="{Binding Price}" Header="Fiyat" Width="100"/>
                                         <DataGridTextColumn Binding="{Binding ChangeSinceStartPercent}" Header="Anlık Değişim" Width="100"/>
-                                        <DataGridTextColumn Binding="{Binding ChangePercent}" Header="% 24s" Width="80"/>
+                                        <DataGridTextColumn Binding="{Binding ChangePct}" Header="% 24s" Width="80"/>
                                         <DataGridTextColumn Binding="{Binding Volume}" Header="Hacim" Width="120"/>
                                         <DataGridTextColumn Binding="{Binding LastUpdateLocal}" Header="Son" Width="80"/>
                                     </DataGrid.Columns>
