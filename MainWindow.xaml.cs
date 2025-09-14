@@ -1452,7 +1452,12 @@ namespace BinanceUsdtTicker
 
             var priceBox = Q<TextBox>("LimitPriceTextBox");
             if (priceBox != null)
-                priceBox.Text = _selectedTicker.Price.ToString("0.########", CultureInfo.CurrentCulture);
+            {
+                var bits  = decimal.GetBits(_selectedTicker.Price);
+                var scale = (bits[3] >> 16) & 0x7F;
+                var fmt   = scale == 0 ? "0" : "0." + new string('0', scale);
+                priceBox.Text = _selectedTicker.Price.ToString(fmt, CultureInfo.CurrentCulture);
+            }
         }
 
         private void LimitPriceTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -1464,9 +1469,16 @@ namespace BinanceUsdtTicker
             {
                 var price = Helpers.DecimalParser.ParseUser(tb.Text);
                 if (price > 0m)
-                    tb.Text = price.ToString("0.########", CultureInfo.InvariantCulture);
+                {
+                    var bits  = decimal.GetBits(price);
+                    var scale = (bits[3] >> 16) & 0x7F;
+                    var fmt   = scale == 0 ? "0" : "0." + new string('0', scale);
+                    tb.Text = price.ToString(fmt, CultureInfo.InvariantCulture);
+                }
                 else
+                {
                     tb.Text = string.Empty;
+                }
             }
             catch (FormatException)
             {

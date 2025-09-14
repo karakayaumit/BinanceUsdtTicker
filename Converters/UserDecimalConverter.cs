@@ -14,7 +14,12 @@ namespace BinanceUsdtTicker
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is decimal d)
-                return d.ToString("0.####################", CultureInfo.CurrentCulture);
+            {
+                var bits  = decimal.GetBits(d);
+                var scale = (bits[3] >> 16) & 0x7F;
+                var fmt   = scale == 0 ? "0" : "0." + new string('0', scale);
+                return d.ToString(fmt, CultureInfo.CurrentCulture);
+            }
             return string.Empty;
         }
 
