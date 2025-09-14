@@ -68,7 +68,7 @@
                 </Style>
 
                 <!-- DataGrid başlığı -->
-                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background"  Value="{DynamicResource HeaderBg}"/>
                         <Setter Property="Foreground"  Value="Black"/>
                         <Setter Property="BorderBrush" Value="{DynamicResource HeaderBorder}"/>
@@ -166,7 +166,7 @@
                 </Style>
 
 		<!-- DataGrid hücre -->
-                <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                <Style TargetType="DataGridCell">
                         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
                         <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
@@ -176,7 +176,7 @@
                         </Style.Triggers>
                 </Style>
 
-                <Style TargetType="DataGridRowHeader" BasedOn="{StaticResource MaterialDesignDataGridRowHeader}">
+                <Style TargetType="DataGridRowHeader">
                         <Setter Property="Background"  Value="{DynamicResource SurfaceAlt}"/>
                         <Setter Property="Foreground"  Value="{DynamicResource OnSurface}"/>
                         <Setter Property="BorderBrush" Value="{DynamicResource Divider}"/>
@@ -450,7 +450,7 @@
                                         <DataGridTextColumn Binding="{Binding LastUpdateLocal}" Header="Son" Width="80"/>
                                     </DataGrid.Columns>
                                     <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                                        <Style TargetType="DataGridRow">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsFavorite}" Value="True">
                                                     <Setter Property="Background" Value="{DynamicResource FavoriteRowBg}"/>
@@ -696,13 +696,12 @@
 
                                         <TextBlock Grid.Row="1" Text="Yükselenler" FontWeight="Bold" Margin="0,0,0,4"/>
                                         <DataGrid Grid.Row="2" x:Name="TopGainersList"
-                             Style="{DynamicResource MaterialDesignDataGrid}"
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                              RowHeight="30" FontSize="12">
                                                <DataGrid.RowStyle>
-                                                       <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                                                       <Style TargetType="DataGridRow">
                                                                <Style.Triggers>
                                                                        <!-- 3%+ moves: dark green with white text -->
                                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
@@ -719,7 +718,7 @@
                                                        </Style>
                                                </DataGrid.RowStyle>
                                                <DataGrid.CellStyle>
-                                                       <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                       <Style TargetType="DataGridCell">
                                                                <Style.Triggers>
                                                                        <DataTrigger Binding="{Binding IsMove3Plus}" Value="True">
                                                                                <Setter Property="Foreground" Value="{DynamicResource Up3Fg}"/>
@@ -755,13 +754,12 @@
 
                                         <TextBlock Grid.Row="3" Text="Düşenler" FontWeight="Bold" Margin="0,0,0,4"/>
                                         <DataGrid Grid.Row="4" x:Name="TopLosersList"
-                             Style="{DynamicResource MaterialDesignDataGrid}"
                              AutoGenerateColumns="False" IsReadOnly="True"
                              HeadersVisibility="Column" GridLinesVisibility="None"
                              Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                              RowHeight="30" FontSize="12">
                                                <DataGrid.RowStyle>
-                                                       <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                                                       <Style TargetType="DataGridRow">
                                                                <Style.Triggers>
                                                                        <!-- -3% or worse: dark red with white text -->
                                                                        <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
@@ -778,7 +776,7 @@
                                                        </Style>
                                                </DataGrid.RowStyle>
                                                <DataGrid.CellStyle>
-                                                       <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                       <Style TargetType="DataGridCell">
                                                                <Style.Triggers>
                                                                        <DataTrigger Binding="{Binding IsMoveMinus3}" Value="True">
                                                                                <Setter Property="Foreground" Value="{DynamicResource Down3Fg}"/>
