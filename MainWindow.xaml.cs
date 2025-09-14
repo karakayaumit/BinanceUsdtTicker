@@ -1093,14 +1093,14 @@ namespace BinanceUsdtTicker
         {
             if (Grid?.Columns == null) return;
 
-            GridColumn? star = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "★");
-            GridColumn? chart = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Grafik");
-            GridColumn? symbol = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Sembol");
+            DataGridColumn? star = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "★");
+            DataGridColumn? chart = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Grafik");
+            DataGridColumn? symbol = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Sembol");
 
             int idx = 0;
-            if (star != null) star.VisibleIndex = idx++;
-            if (chart != null) chart.VisibleIndex = idx++;
-            if (symbol != null) symbol.VisibleIndex = idx++;
+            if (star != null) star.DisplayIndex = idx++;
+            if (chart != null) chart.DisplayIndex = idx++;
+            if (symbol != null) symbol.DisplayIndex = idx++;
         }
 
         // ---------- UI settings / favorites ----------
@@ -1170,7 +1170,7 @@ namespace BinanceUsdtTicker
                     .Select(c => new ColumnState
                     {
                         Header = c.Header?.ToString() ?? "",
-                        DisplayIndex = c.VisibleIndex,
+                        DisplayIndex = c.DisplayIndex,
                         Width = c.ActualWidth
                     })
                     .ToList();
@@ -1250,7 +1250,7 @@ namespace BinanceUsdtTicker
                 if (map.TryGetValue(key, out var st))
                 {
                     if (st.DisplayIndex >= 0 && st.DisplayIndex < Grid.Columns.Count)
-                        col.VisibleIndex = st.DisplayIndex;
+                        col.DisplayIndex = st.DisplayIndex;
 
                     if (st.Width > 20)
                         col.Width = st.Width;
