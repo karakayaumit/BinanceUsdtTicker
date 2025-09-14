@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\ListingWatcherService",
-    "\\Services",
-    "\\Services\\Trading"
+    ""
   ],
-  "SelectedNode": "\\Enums.cs",
+  "SelectedNode": "\\Tests\\PrecisionHelperTests.cs",
   "PreviewInSolutionExplorer": true
 }

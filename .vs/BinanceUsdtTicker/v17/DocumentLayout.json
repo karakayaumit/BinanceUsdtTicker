@@ -11,6 +11,18 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MainWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Services\\BinanceApiService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\BinanceApiService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Tests\\PrecisionHelperTests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Tests\\PrecisionHelperTests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Converters\\UserDecimalConverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Converters\\UserDecimalConverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\ListingWatcherService\\ListingWatcherService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ListingWatcherService\\ListingWatcherService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -40,7 +52,7 @@
               "RelativeDocumentMoniker": "MainWindow.xaml",
               "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\MainWindow.xaml",
               "RelativeToolTip": "MainWindow.xaml",
-              "ViewState": "AgIAAGIDAAAAAAAAAAAiwG8DAAA4AAAAAAAAAA==",
+              "ViewState": "AgIAAC0EAAAAAAAAAAAAAFEEAACqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-09-07T22:36:44.051Z",
               "IsPinned": true,
@@ -54,7 +66,7 @@
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAADgGAAAAAAAAAAAswFoGAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAGsGAAAAAAAAAAAjwIsGAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-07T22:34:57.808Z",
               "IsPinned": true,
@@ -67,6 +79,44 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "UserDecimalConverter.cs",
+              "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Converters\\UserDecimalConverter.cs",
+              "RelativeDocumentMoniker": "Converters\\UserDecimalConverter.cs",
+              "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Converters\\UserDecimalConverter.cs",
+              "RelativeToolTip": "Converters\\UserDecimalConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T13:55:12.329Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BinanceApiService.cs",
+              "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Services\\BinanceApiService.cs",
+              "RelativeDocumentMoniker": "Services\\BinanceApiService.cs",
+              "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Services\\BinanceApiService.cs",
+              "RelativeToolTip": "Services\\BinanceApiService.cs",
+              "ViewState": "AgIAAL0BAAAAAAAAAAAowM0BAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T13:32:29.215Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PrecisionHelperTests.cs",
+              "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Tests\\PrecisionHelperTests.cs",
+              "RelativeDocumentMoniker": "Tests\\PrecisionHelperTests.cs",
+              "ToolTip": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Tests\\PrecisionHelperTests.cs",
+              "RelativeToolTip": "Tests\\PrecisionHelperTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T13:32:03.815Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "NewsDbService.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\Services\\NewsDbService.cs",
               "RelativeDocumentMoniker": "Services\\NewsDbService.cs",
@@ -78,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "App.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\App.xaml.cs",
               "RelativeDocumentMoniker": "App.xaml.cs",
@@ -90,7 +140,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "ListingWatcherService.cs",
               "DocumentMoniker": "C:\\Users\\Karak\\source\\repos\\BinanceUsdtTicker\\ListingWatcherService\\ListingWatcherService.cs",
               "RelativeDocumentMoniker": "ListingWatcherService\\ListingWatcherService.cs",
@@ -98,8 +148,7 @@
               "RelativeToolTip": "ListingWatcherService\\ListingWatcherService.cs",
               "ViewState": "AgIAABoAAAAAAAAAAADwvzUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-07T17:29:12.097Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-07T17:29:12.097Z"
             }
           ]
         }

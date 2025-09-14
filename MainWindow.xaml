@@ -1103,8 +1103,8 @@
                                                                                                 <StackPanel Orientation="Horizontal">
                                                                                                         <TextBox Width="80" Height="24" Margin="0,0,4,0"
                                                                                                                  Text="{Binding CloseLimitPrice, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource UserDecimalConverter}}"/>
-                                                                                                          <Button Content="Limit" Height="24" Margin="0,0,4,0" FontSize="10" Tag="{Binding}" Click="ClosePositionLimit_Click"/>
-                                                                                                          <Button Content="Market" Height="24" FontSize="10" Tag="{Binding}" Click="ClosePositionMarket_Click"/>
+                                                                                                          <Button Content="Limit" Height="24" Margin="0,0,4,0" FontSize="8" Tag="{Binding}" Click="ClosePositionLimit_Click"/>
+                                                                                                          <Button Content="Market" Height="24" FontSize="8" Tag="{Binding}" Click="ClosePositionMarket_Click"/>
                                                                                                 </StackPanel>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
