@@ -545,8 +545,8 @@ namespace BinanceUsdtTicker
             if (prep.pStr != null) parameters["price"] = prep.pStr;
             if (prep.spStr != null) parameters["stopPrice"] = prep.spStr;
 
-            var r = await GetSymbolRulesAsync(symbol);
-            Logger.Log($"DEBUG ORDER symbol={symbol} side={side} type={type} qtyStr={prep.qStr} priceStr={prep.pStr} stepSize={DecimalParser.ToInvString(r.StepSize)} tickSize={DecimalParser.ToInvString(r.TickSize)}");
+            var symbolRules = await GetSymbolRulesAsync(symbol);
+            Logger.Log($"DEBUG ORDER symbol={symbol} side={side} type={type} qtyStr={prep.qStr} priceStr={prep.pStr} stepSize={DecimalParser.ToInvString(symbolRules.StepSize)} tickSize={DecimalParser.ToInvString(symbolRules.TickSize)}");
 
             if (string.IsNullOrEmpty(timeInForce) && type.Contains("LIMIT", StringComparison.OrdinalIgnoreCase))
                 parameters["timeInForce"] = "GTC";
@@ -558,8 +558,7 @@ namespace BinanceUsdtTicker
 
             if (activationPrice.HasValue)
             {
-                var r = await GetSymbolRulesAsync(symbol);
-                var ap = r.TickSize > 0 ? QuantizeToTick(activationPrice.Value, r.TickSize) : activationPrice.Value;
+                var ap = symbolRules.TickSize > 0 ? QuantizeToTick(activationPrice.Value, symbolRules.TickSize) : activationPrice.Value;
                 parameters["activationPrice"] = DecimalParser.ToInvString(ap);
             }
 
