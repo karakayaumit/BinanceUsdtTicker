@@ -447,44 +447,48 @@ namespace BinanceUsdtTicker
                 return cached;
 
             var json = await SendAsync(HttpMethod.Get, $"/fapi/v1/exchangeInfo?symbol={symbol}", ct);
-            var info = JsonSerializer.Deserialize<ExchangeInfo>(json, JsonOptions) ?? new();
+
+            decimal ParseInv(string s) => decimal.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
 
             decimal tick = 0m, step = 0m;
             decimal? minQty = null, minNotional = null, minPrice = null, maxPrice = null;
 
-            var sym = info.Symbols.FirstOrDefault();
-            if (sym != null)
+            using var doc = JsonDocument.Parse(json);
+            var sym = doc.RootElement.GetProperty("symbols").EnumerateArray().FirstOrDefault();
+            if (sym.ValueKind != JsonValueKind.Undefined)
             {
-                var price = sym.Filters.OfType<PriceFilter>().FirstOrDefault();
-                var lot = sym.Filters.OfType<LotSizeFilter>().FirstOrDefault();
-                var marketLot = sym.Filters.OfType<MarketLotSizeFilter>().FirstOrDefault();
-                var minNot = sym.Filters.OfType<MinNotionalFilter>().FirstOrDefault();
-
-                if (price != null)
+                var filtersJson = sym.GetProperty("filters");
+                foreach (var f in filtersJson.EnumerateArray())
                 {
-                    tick = price.TickSize;
-                    minPrice = price.MinPrice;
-                    maxPrice = price.MaxPrice;
+                    var type = f.GetProperty("filterType").GetString();
+                    if (type == "PRICE_FILTER")
+                    {
+                        if (f.TryGetProperty("tickSize", out var ts))
+                            tick = ParseInv(ts.GetString()!);
+                        if (f.TryGetProperty("minPrice", out var mp))
+                            minPrice = ParseInv(mp.GetString()!);
+                        if (f.TryGetProperty("maxPrice", out var xp))
+                            maxPrice = ParseInv(xp.GetString()!);
+                    }
+                    else if (type == "LOT_SIZE")
+                    {
+                        if (f.TryGetProperty("stepSize", out var ss))
+                            step = ParseInv(ss.GetString()!);
+                        if (f.TryGetProperty("minQty", out var mq))
+                            minQty = ParseInv(mq.GetString()!);
+                    }
+                    else if (type == "MIN_NOTIONAL" && f.TryGetProperty("notional", out var nt))
+                    {
+                        minNotional = ParseInv(nt.GetString()!);
+                    }
                 }
 
-                if (lot != null && marketLot != null)
-                {
-                    step = Math.Max(lot.StepSize, marketLot.StepSize);
-                    minQty = Math.Max(lot.MinQty, marketLot.MinQty);
-                }
-                else if (lot != null)
-                {
-                    step = lot.StepSize;
-                    minQty = lot.MinQty;
-                }
-                else if (marketLot != null)
-                {
-                    step = marketLot.StepSize;
-                    minQty = marketLot.MinQty;
-                }
-
-                if (minNot != null)
-                    minNotional = minNot.Notional;
+                Logger.Log($"Rules {symbol}: tick={DecimalParser.ToInvString(tick)} step={DecimalParser.ToInvString(step)} " +
+                           $"minP={(minPrice.HasValue ? DecimalParser.ToInvString(minPrice.Value) : "null")} " +
+                           $"maxP={(maxPrice.HasValue ? DecimalParser.ToInvString(maxPrice.Value) : "null")} " +
+                           $"minQty={(minQty.HasValue ? DecimalParser.ToInvString(minQty.Value) : "null")} " +
+                           $"minNotional={(minNotional.HasValue ? DecimalParser.ToInvString(minNotional.Value) : "null")} " +
+                           $"; filters={filtersJson.GetRawText()}");
             }
 
             var rules = new SymbolRules(tick, step, minQty, minNotional, minPrice, maxPrice, DateTime.UtcNow);
