@@ -22,6 +22,7 @@ using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
 using BinanceUsdtTicker.Data;
 using BinanceUsdtTicker.Runtime;
+using DevExpress.Xpf.Core;
 
 namespace BinanceUsdtTicker
 {
@@ -320,6 +321,10 @@ namespace BinanceUsdtTicker
         private void ApplyTheme(ThemeKind kind)
         {
             _theme = kind;
+
+            ApplicationThemeHelper.ApplicationThemeName =
+                kind == ThemeKind.Dark ? Theme.Win11Dark.Name : Theme.Win11Light.Name;
+
             var name = (kind == ThemeKind.Dark) ? "Dark" : "Light";
             var uri = new Uri($"Themes/{name}.xaml", UriKind.Relative);
 
@@ -328,14 +333,12 @@ namespace BinanceUsdtTicker
                 for (int i = col.Count - 1; i >= 0; i--)
                 {
                     var src = col[i].Source?.OriginalString ?? string.Empty;
-                    // only remove theme files; DO NOT remove other dictionaries in Themes/
                     if (src.EndsWith("/Dark.xaml", StringComparison.OrdinalIgnoreCase) ||
                         src.EndsWith("/Light.xaml", StringComparison.OrdinalIgnoreCase))
                     {
                         col.RemoveAt(i);
                     }
                 }
-                // Insert after base styles so theme overrides colors
                 col.Add(new ResourceDictionary { Source = newUri });
             }
 
