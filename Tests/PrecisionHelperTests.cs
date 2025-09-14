@@ -28,10 +28,9 @@ public class PrecisionHelperTests
     }
 
     [Fact]
-    public void ToInvariantString_LeavesIntegerUnchanged()
+    public void ToInvString_LeavesIntegerUnchanged()
     {
-        var method = typeof(BinanceApiService).GetMethod("ToInvariantString", BindingFlags.NonPublic | BindingFlags.Static);
-        var result = (string)method!.Invoke(null, new object[] { 116500m })!;
+        var result = DecimalParser.ToInvString(116500m);
         Assert.Equal("116500", result);
     }
 

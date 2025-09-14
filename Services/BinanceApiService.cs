@@ -458,18 +458,18 @@ namespace BinanceUsdtTicker
                 var type = f.GetProperty("filterType").GetString();
                 if (type == "PRICE_FILTER")
                 {
-                    tick = decimal.Parse(f.GetProperty("tickSize").GetString()!, CultureInfo.InvariantCulture);
-                    try { minPrice = decimal.Parse(f.GetProperty("minPrice").GetString()!, CultureInfo.InvariantCulture); } catch { }
-                    try { maxPrice = decimal.Parse(f.GetProperty("maxPrice").GetString()!, CultureInfo.InvariantCulture); } catch { }
+                    tick = ParseInv(f.GetProperty("tickSize").GetString()!);
+                    try { minPrice = ParseInv(f.GetProperty("minPrice").GetString()!); } catch { }
+                    try { maxPrice = ParseInv(f.GetProperty("maxPrice").GetString()!); } catch { }
                 }
                 else if (type == "LOT_SIZE")
-                    step = decimal.Parse(f.GetProperty("stepSize").GetString()!, CultureInfo.InvariantCulture);
+                    step = ParseInv(f.GetProperty("stepSize").GetString()!);
                 else if (type == "MARKET_LOT_SIZE" && step == 0)
-                    step = decimal.Parse(f.GetProperty("stepSize").GetString()!, CultureInfo.InvariantCulture);
+                    step = ParseInv(f.GetProperty("stepSize").GetString()!);
                 else if (type == "MIN_NOTIONAL")
-                    minNotional = decimal.Parse(f.GetProperty("notional").GetString()!, CultureInfo.InvariantCulture);
+                    minNotional = ParseInv(f.GetProperty("notional").GetString()!);
             }
-            try { minQty = decimal.Parse(sym.GetProperty("filters").EnumerateArray().First(f => f.GetProperty("filterType").GetString()=="LOT_SIZE").GetProperty("minQty").GetString()!, CultureInfo.InvariantCulture); } catch {}
+            try { minQty = ParseInv(sym.GetProperty("filters").EnumerateArray().First(f => f.GetProperty("filterType").GetString()=="LOT_SIZE").GetProperty("minQty").GetString()!); } catch {}
 
             var rules = new SymbolRules(tick, step, minQty, minNotional, minPrice, maxPrice, DateTime.UtcNow);
             _rulesCache[symbol] = rules;
@@ -490,8 +490,8 @@ namespace BinanceUsdtTicker
             return steps * tick;
         }
 
-        private static string ToInvariantString(decimal v)
-            => v.ToString("0.####################", CultureInfo.InvariantCulture);
+        private static decimal ParseInv(string s)
+            => decimal.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
 
         private async Task<(string qStr, string? pStr, string? spStr)> PrepareOrderNumbersAsync(
             string symbol, decimal quantity, decimal? price, decimal? stopPrice, bool reduceOnly, CancellationToken ct)
@@ -501,7 +501,7 @@ namespace BinanceUsdtTicker
             if (q <= 0 || (r.MinQty is decimal mq && q < mq))
                 throw new InvalidOperationException($"Quantity {quantity} not valid for {symbol} (step {r.StepSize}, min {r.MinQty}).");
 
-            string qStr = ToInvariantString(q);
+            string qStr = DecimalParser.ToInvString(q);
 
             string? pStr = null;
             if (price.HasValue)
@@ -511,20 +511,20 @@ namespace BinanceUsdtTicker
                     throw new InvalidOperationException($"Price {p} < minPrice {minP} for {symbol}.");
                 if (r.MaxPrice is decimal maxP && p > maxP)
                     throw new InvalidOperationException($"Price {p} > maxPrice {maxP} for {symbol}.");
-                pStr = ToInvariantString(p);
+                pStr = DecimalParser.ToInvString(p);
             }
 
             string? spStr = null;
             if (stopPrice.HasValue)
             {
                 var sp = r.TickSize > 0 ? QuantizeToTick(stopPrice.Value, r.TickSize) : stopPrice.Value;
-                spStr = ToInvariantString(sp);
+                spStr = DecimalParser.ToInvString(sp);
             }
 
             if (!reduceOnly && r.MinNotional is decimal mn && price.HasValue)
             {
-                var notion = (decimal.Parse(qStr, CultureInfo.InvariantCulture)) *
-                             (decimal.Parse(pStr!, CultureInfo.InvariantCulture));
+                var notion = (decimal.Parse(qStr, NumberStyles.Float, CultureInfo.InvariantCulture)) *
+                             (decimal.Parse(pStr!, NumberStyles.Float, CultureInfo.InvariantCulture));
                 if (notion < mn) throw new InvalidOperationException($"Notional {notion} < minNotional {mn} for {symbol}.");
             }
 
@@ -545,6 +545,9 @@ namespace BinanceUsdtTicker
             if (prep.pStr != null) parameters["price"] = prep.pStr;
             if (prep.spStr != null) parameters["stopPrice"] = prep.spStr;
 
+            var r = await GetSymbolRulesAsync(symbol);
+            Logger.Log($"DEBUG ORDER symbol={symbol} side={side} type={type} qtyStr={prep.qStr} priceStr={prep.pStr} stepSize={DecimalParser.ToInvString(r.StepSize)} tickSize={DecimalParser.ToInvString(r.TickSize)}");
+
             if (string.IsNullOrEmpty(timeInForce) && type.Contains("LIMIT", StringComparison.OrdinalIgnoreCase))
                 parameters["timeInForce"] = "GTC";
             else if (!string.IsNullOrEmpty(timeInForce))
@@ -557,7 +560,7 @@ namespace BinanceUsdtTicker
             {
                 var r = await GetSymbolRulesAsync(symbol);
                 var ap = r.TickSize > 0 ? QuantizeToTick(activationPrice.Value, r.TickSize) : activationPrice.Value;
-                parameters["activationPrice"] = ToInvariantString(ap);
+                parameters["activationPrice"] = DecimalParser.ToInvString(ap);
             }
 
             var testParams = new Dictionary<string, string>(parameters);

@@ -32,10 +32,14 @@ namespace BinanceUsdtTicker
             if (last == '.' || last == ',')
                 return Binding.DoNothing;
 
-            if (InputParser.TryParseUserDecimal(s, out var v))
-                return v;
-
-            return Binding.DoNothing;
+            try
+            {
+                return DecimalParser.ParseUser(s);
+            }
+            catch (FormatException)
+            {
+                return Binding.DoNothing;
+            }
         }
     }
 }
