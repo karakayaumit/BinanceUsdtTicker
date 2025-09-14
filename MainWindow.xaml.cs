@@ -22,7 +22,6 @@ using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
 using BinanceUsdtTicker.Data;
 using BinanceUsdtTicker.Runtime;
-using DevExpress.Xpf.Core;
 
 namespace BinanceUsdtTicker
 {
