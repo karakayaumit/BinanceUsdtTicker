@@ -35,7 +35,7 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
     private readonly ISymbolExtractor _symbolExtractor;
     private readonly ISecretCache _secretCache;
-    private readonly string? _translatorKey;
+    private string? _translatorKey;
     private readonly string? _translatorRegion;
 
     public ListingWatcherService(
@@ -63,17 +63,6 @@ public sealed class ListingWatcherService : BackgroundService
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
         var translatorRegion = configuration["AZURE_TRANSLATOR_REGION"] ??
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
-
-        if (string.IsNullOrEmpty(translatorKey))
-        {
-            try
-            {
-                translatorKey = _secretCache.Get(SecretNames.AzureKey);
-            }
-            catch (KeyNotFoundException)
-            {
-            }
-        }
 
         if (string.IsNullOrEmpty(translatorKey) || string.IsNullOrEmpty(translatorRegion))
         {
@@ -417,8 +406,22 @@ END";
 
     private async Task<string> TranslateTitleAsync(string title)
     {
-        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrEmpty(_translatorKey))
+        if (string.IsNullOrWhiteSpace(title))
             return title;
+
+        // Attempt to load the translator key lazily so that secrets loaded after
+        // construction become available for translation.
+        if (string.IsNullOrEmpty(_translatorKey))
+        {
+            try
+            {
+                _translatorKey = _secretCache.Get(SecretNames.AzureKey);
+            }
+            catch (KeyNotFoundException)
+            {
+                return title;
+            }
+        }
 
         try
         {
