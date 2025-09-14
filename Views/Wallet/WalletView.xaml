@@ -7,9 +7,9 @@
               IsReadOnly="True">
         <DataGrid.Columns>
             <DataGridTextColumn Binding="{Binding Asset}" Header="Varlık" Width="120"/>
-            <DataGridTextColumn Binding="{Binding Balance, StringFormat=#,0.########}" Header="Bakiye" Width="140"/>
-            <DataGridTextColumn Binding="{Binding Available, StringFormat=#,0.########}" Header="Kullanılabilir" Width="160"/>
-            <DataGridTextColumn Binding="{Binding Used, StringFormat=#,0.########}" Header="Kullanılan Bakiye" Width="170"/>
+            <DataGridTextColumn Binding="{Binding Path=Balance, StringFormat={}{0:#,0.########}}" Header="Bakiye" Width="140"/>
+            <DataGridTextColumn Binding="{Binding Path=Available, StringFormat={}{0:#,0.########}}" Header="Kullanılabilir" Width="160"/>
+            <DataGridTextColumn Binding="{Binding Path=Used, StringFormat={}{0:#,0.########}}" Header="Kullanılan Bakiye" Width="170"/>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>
