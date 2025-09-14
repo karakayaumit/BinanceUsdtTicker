@@ -1,0 +1,58 @@
+<UserControl x:Class="BinanceUsdtTicker.Views.Coins.CoinsGridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors">
+  <dxg:GridControl x:Name="CoinsGrid" ItemsSource="{Binding Items}" AutoGenerateColumns="None">
+    <dxg:GridControl.View>
+      <dxg:TableView
+          AllowPerPixelScrolling="True"
+          AllowRowFixing="Top"
+          ShowFixRowButton="Always"
+          NavigationStyle="Row"/>
+    </dxg:GridControl.View>
+
+    <dxg:GridControl.Columns>
+      <!-- Favori -->
+      <dxg:GridColumn FieldName="IsFavorite" Header="★" Width="44" Fixed="Left" AllowSorting="False">
+        <dxg:GridColumn.EditSettings>
+          <dxe:CheckEditSettings IsThreeState="False"/>
+        </dxg:GridColumn.EditSettings>
+      </dxg:GridColumn>
+
+      <!-- Sembol -->
+      <dxg:GridColumn FieldName="Symbol" Header="Sembol" Width="120" Fixed="Left"/>
+
+      <!-- Fiyat -->
+      <dxg:GridColumn FieldName="Price" Header="Fiyat" Width="120">
+        <dxg:GridColumn.EditSettings>
+          <dxe:TextEditSettings DisplayFormatString="#\,0.########" MaskUseAsDisplayFormat="True"/>
+        </dxg:GridColumn.EditSettings>
+      </dxg:GridColumn>
+
+      <!-- %24s -->
+      <dxg:GridColumn FieldName="ChangePct" Header="%24s" Width="90">
+        <dxg:GridColumn.EditSettings>
+          <dxe:TextEditSettings DisplayFormatString="+0.##%;-0.##%;0%"/>
+        </dxg:GridColumn.EditSettings>
+      </dxg:GridColumn>
+
+      <!-- Hacim (opsiyonel) -->
+      <dxg:GridColumn FieldName="Volume" Header="Hacim" Width="130">
+        <dxg:GridColumn.EditSettings>
+          <dxe:TextEditSettings DisplayFormatString="#\,0.########" MaskUseAsDisplayFormat="True"/>
+        </dxg:GridColumn.EditSettings>
+      </dxg:GridColumn>
+    </dxg:GridControl.Columns>
+
+    <!-- Anlık değişim renklendirme (Price & ChangePct) -->
+    <dxg:GridControl.ConditionalFormatting>
+      <dxg:ConditionalFormattingCollection>
+        <dxg:DataUpdateFormatCondition FieldName="Price" DataUpdateRule="Increased" Duration="0:0:02"/>
+        <dxg:DataUpdateFormatCondition FieldName="Price" DataUpdateRule="Decreased" Duration="0:0:02"/>
+        <dxg:DataUpdateFormatCondition FieldName="ChangePct" DataUpdateRule="Increased" Duration="0:0:02"/>
+        <dxg:DataUpdateFormatCondition FieldName="ChangePct" DataUpdateRule="Decreased" Duration="0:0:02"/>
+      </dxg:ConditionalFormattingCollection>
+    </dxg:GridControl.ConditionalFormatting>
+  </dxg:GridControl>
+</UserControl>

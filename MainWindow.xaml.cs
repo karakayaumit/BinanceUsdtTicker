@@ -629,7 +629,7 @@ namespace BinanceUsdtTicker
                     row.High = kv.Value.High;
                     row.Low = kv.Value.Low;
                     row.Volume = kv.Value.Volume;
-                    row.ChangePercent = kv.Value.ChangePercent;
+                    row.ChangePct = kv.Value.ChangePct;
                     row.LastUpdate = kv.Value.LastUpdate;
                 }
                 else
@@ -1043,22 +1043,22 @@ namespace BinanceUsdtTicker
 
             IEnumerable<TickerRow> positives = rows.Where(r =>
             {
-                var m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
+                var m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
                 return m > 0m;
             });
 
             IEnumerable<TickerRow> negatives = rows.Where(r =>
             {
-                var m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
+                var m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
                 return m < 0m;
             });
 
             var topGainers = positives
-                .OrderByDescending(r => use24h ? r.ChangePercent : r.ChangeSinceStartPercent)
+                .OrderByDescending(r => use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent)
                 .Take(20)
                 .Select(r =>
                 {
-                    decimal m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
+                    decimal m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
                     return new TopMoverItem
                     {
                         BaseSymbol = r.BaseSymbol,
@@ -1070,11 +1070,11 @@ namespace BinanceUsdtTicker
                 .ToList();
 
             var topLosers = negatives
-                .OrderBy(r => use24h ? r.ChangePercent : r.ChangeSinceStartPercent)
+                .OrderBy(r => use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent)
                 .Take(20)
                 .Select(r =>
                 {
-                    decimal m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
+                    decimal m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
                     return new TopMoverItem
                     {
                         BaseSymbol = r.BaseSymbol,
