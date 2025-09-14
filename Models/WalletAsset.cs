@@ -23,5 +23,12 @@ namespace BinanceUsdtTicker.Models
             set { if (_available != value) { _available = value; OnPropertyChanged(); } }
         }
 
+        private decimal _used;
+        public decimal Used
+        {
+            get => _used;
+            set { if (_used != value) { _used = value; OnPropertyChanged(); } }
+        }
+
     }
 }

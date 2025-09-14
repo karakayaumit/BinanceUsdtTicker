@@ -1470,6 +1470,13 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                 </Style>
             </DataGridTextColumn.ElementStyle>
         </DataGridTextColumn>
+        <DataGridTextColumn Header="Kullanılan Bakiye" Width="110" Binding="{Binding Used, StringFormat={}{0:#,0.00}}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Right"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
     </DataGrid.Columns>
 </DataGrid>
 
