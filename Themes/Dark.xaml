@@ -36,7 +36,7 @@
     <SolidColorBrush x:Key="BtnPressed" Color="#FF2B3139"/>
 
     <!-- Hover color for list rows -->
-    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF20252C"/>
+    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF2B2F36"/>
 
     <!-- Top Movers tokens (dark) -->
     <SolidColorBrush x:Key="Up1Bg"          Color="#FF0E9C6A"/>
