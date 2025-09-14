@@ -459,7 +459,12 @@ namespace BinanceUsdtTicker
             decimal? minQty = null, minNotional = null, minPrice = null, maxPrice = null;
 
             using var doc = JsonDocument.Parse(json);
-            var sym = doc.RootElement.GetProperty("symbols").EnumerateArray().FirstOrDefault();
+            var sym = doc.RootElement.GetProperty("symbols")
+                                     .EnumerateArray()
+                                     .FirstOrDefault(s =>
+                                         string.Equals(s.GetProperty("symbol").GetString(),
+                                                       symbol,
+                                                       StringComparison.OrdinalIgnoreCase));
             if (sym.ValueKind != JsonValueKind.Undefined)
             {
                 var filtersJson = sym.GetProperty("filters");
