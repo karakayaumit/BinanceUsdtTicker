@@ -1101,10 +1101,10 @@
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
                                                                                                 <StackPanel Orientation="Horizontal">
-                                                                                                        <TextBox Width="60" Margin="0,0,4,0"
+                                                                                                        <TextBox Width="80" Height="24" Margin="0,0,4,0"
                                                                                                                  Text="{Binding CloseLimitPrice, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource UserDecimalConverter}}"/>
-                                                                                                        <Button Content="Limit" Margin="0,0,4,0" Tag="{Binding}" Click="ClosePositionLimit_Click"/>
-                                                                                                        <Button Content="Market" Tag="{Binding}" Click="ClosePositionMarket_Click"/>
+                                                                                                        <Button Content="Limit" Height="24" Margin="0,0,4,0" Tag="{Binding}" Click="ClosePositionLimit_Click"/>
+                                                                                                        <Button Content="Market" Height="24" Tag="{Binding}" Click="ClosePositionMarket_Click"/>
                                                                                                 </StackPanel>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
