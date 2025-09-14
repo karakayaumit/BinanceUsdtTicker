@@ -321,10 +321,9 @@ namespace BinanceUsdtTicker
         {
             _theme = kind;
 
-            ApplicationThemeHelper.ApplicationThemeName =
-                kind == ThemeKind.Dark ? Theme.Win11Dark.Name : Theme.Win11Light.Name;
-
-            var name = (kind == ThemeKind.Dark) ? "Dark" : "Light";
+            // Removed dependency on DevExpress ApplicationThemeHelper/Theme.
+            // Theme switching now relies solely on resource dictionaries.
+            var name = kind == ThemeKind.Dark ? "Dark" : "Light";
             var uri = new Uri($"Themes/{name}.xaml", UriKind.Relative);
 
             void SwapThemes(Collection<ResourceDictionary> col, Uri newUri)
