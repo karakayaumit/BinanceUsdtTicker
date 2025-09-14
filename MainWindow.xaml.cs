@@ -466,6 +466,7 @@ namespace BinanceUsdtTicker
                 LoadWalletAsync(),
                 LoadOpenPositionsAsync(),
                 LoadOpenOrdersAsync());
+            UpdateUsedBalance();
         }
 
         private async void RefreshTimer_Tick(object? sender, EventArgs e)
@@ -1777,6 +1778,15 @@ namespace BinanceUsdtTicker
                 LoadOpenOrdersAsync(),
                 LoadOrderHistoryAsync(),
                 LoadTradeHistoryAsync());
+            UpdateUsedBalance();
+        }
+
+        private void UpdateUsedBalance()
+        {
+            var total = _positions.Sum(p => p.EntryAmount);
+            var usdt = _walletAssets.FirstOrDefault(a => a.Asset.Equals("USDT", StringComparison.OrdinalIgnoreCase));
+            if (usdt != null)
+                usdt.Used = total;
         }
 
     }
