@@ -13,7 +13,7 @@ using BinanceUsdtTicker;
 using BinanceUsdtTicker.Runtime;
 using BinanceUsdtTicker.Security;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
