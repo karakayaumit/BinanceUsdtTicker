@@ -1,19 +1,15 @@
 <UserControl x:Class="BinanceUsdtTicker.Views.Wallet.WalletView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
-    <dxg:GridControl x:Name="WalletGrid"
-                     ItemsSource="{Binding Items}"
-                     AutoGenerateColumns="None"
-                     IsReadOnly="True">
-        <dxg:GridControl.Columns>
-            <dxg:GridColumn FieldName="Asset" Header="Varlık" Width="120"/>
-            <dxg:GridColumn FieldName="Balance" Header="Bakiye" Width="140" DisplayFormat="{}{0:#,0.########}"/>
-            <dxg:GridColumn FieldName="Available" Header="Kullanılabilir" Width="160" DisplayFormat="{}{0:#,0.########}"/>
-            <dxg:GridColumn FieldName="Used" Header="Kullanılan Bakiye" Width="170" DisplayFormat="{}{0:#,0.########}"/>
-        </dxg:GridControl.Columns>
-        <dxg:GridControl.View>
-            <dxg:TableView AutoWidth="True"/>
-        </dxg:GridControl.View>
-    </dxg:GridControl>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataGrid x:Name="WalletGrid"
+              ItemsSource="{Binding Items}"
+              AutoGenerateColumns="False"
+              IsReadOnly="True">
+        <DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding Asset}" Header="Varlık" Width="120"/>
+            <DataGridTextColumn Binding="{Binding Balance, StringFormat={}{0:#,0.########}}" Header="Bakiye" Width="140"/>
+            <DataGridTextColumn Binding="{Binding Available, StringFormat={}{0:#,0.########}}" Header="Kullanılabilir" Width="160"/>
+            <DataGridTextColumn Binding="{Binding Used, StringFormat={}{0:#,0.########}}" Header="Kullanılan Bakiye" Width="170"/>
+        </DataGrid.Columns>
+    </DataGrid>
 </UserControl>
