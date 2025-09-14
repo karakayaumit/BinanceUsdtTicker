@@ -16,6 +16,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Services\SymbolExtractor.cs" Link="SymbolExtractor.cs" />
+    <Compile Include="..\Data\SecretRepository.cs" Link="SecretRepository.cs" />
+    <Compile Include="..\Runtime\SecretCache.cs" Link="SecretCache.cs" />
+    <Compile Include="..\Runtime\SecretBootstrapper.cs" Link="SecretBootstrapper.cs" />
+    <Compile Include="..\Security\DpapiProtector.cs" Link="DpapiProtector.cs" />
+    <Compile Include="..\Security\SecretNames.cs" Link="SecretNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

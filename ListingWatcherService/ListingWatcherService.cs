@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using BinanceUsdtTicker;
+using BinanceUsdtTicker.Runtime;
+using BinanceUsdtTicker.Security;
 using System.Data;
 using System.Data.SqlClient;
 using System.Net.Http.Headers;
@@ -32,17 +34,19 @@ public sealed class ListingWatcherService : BackgroundService
     private readonly Channel<ListingItem> _queue = Channel.CreateUnbounded<ListingItem>();
     private readonly HashSet<string> _binanceSymbols = new(StringComparer.OrdinalIgnoreCase);
     private readonly ISymbolExtractor _symbolExtractor;
+    private readonly ISecretCache _secretCache;
     private readonly string? _translatorKey;
     private readonly string? _translatorRegion;
 
     public ListingWatcherService(
         ILogger<ListingWatcherService> logger,
         ISymbolExtractor symbolExtractor,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ISecretCache secretCache)
     {
         _logger = logger;
         _symbolExtractor = symbolExtractor;
-
+        _secretCache = secretCache;
         _http = new HttpClient(new HttpClientHandler
         {
             AutomaticDecompression = System.Net.DecompressionMethods.All
@@ -59,6 +63,17 @@ public sealed class ListingWatcherService : BackgroundService
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_KEY");
         var translatorRegion = configuration["AZURE_TRANSLATOR_REGION"] ??
             Environment.GetEnvironmentVariable("AZURE_TRANSLATOR_REGION");
+
+        if (string.IsNullOrEmpty(translatorKey))
+        {
+            try
+            {
+                translatorKey = _secretCache.Get(SecretNames.AzureKey);
+            }
+            catch (KeyNotFoundException)
+            {
+            }
+        }
 
         if (string.IsNullOrEmpty(translatorKey) || string.IsNullOrEmpty(translatorRegion))
         {
