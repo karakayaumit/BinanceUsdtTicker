@@ -22,7 +22,6 @@ using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
 using BinanceUsdtTicker.Data;
 using BinanceUsdtTicker.Runtime;
-using DevExpress.Xpf.Grid;
 
 namespace BinanceUsdtTicker
 {
@@ -1301,9 +1300,9 @@ namespace BinanceUsdtTicker
         }
 
         // Grid satır seçildiğinde futures bilgilerini yükle
-        private async void Grid_SelectedItemChanged(object sender, SelectedItemChangedEventArgs e)
+        private async void Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.NewItem is TickerRow row)
+            if (Grid.SelectedItem is TickerRow row)
             {
                 if (_selectedTicker != null)
                     _selectedTicker.PropertyChanged -= SelectedTicker_PropertyChanged;

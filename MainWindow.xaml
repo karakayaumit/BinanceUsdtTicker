@@ -5,7 +5,6 @@
         xmlns:local="clr-namespace:BinanceUsdtTicker"
         xmlns:wallet="clr-namespace:BinanceUsdtTicker.Views.Wallet"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
         Background="{DynamicResource Surface}"
@@ -416,20 +415,17 @@
                         <GroupBox Grid.Row="0" Grid.Column="1" Header="Coin" Margin="0,0,8,0"
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch">
-                                <dxg:GridControl x:Name="Grid" AutoGenerateColumns="None">
-    <dxg:GridControl.Columns>
-        <dxg:GridColumn FieldName="BaseSymbol" Header="Sembol" Width="100"/>
-        <dxg:GridColumn FieldName="BaselinePrice" Header="Başlangıç Fiyatı" Width="100"/>
-        <dxg:GridColumn FieldName="Price" Header="Fiyat" Width="100"/>
-        <dxg:GridColumn FieldName="ChangeSinceStartPercent" Header="Anlık Değişim" Width="100"/>
-        <dxg:GridColumn FieldName="ChangePercent" Header="% 24s" Width="80"/>
-        <dxg:GridColumn FieldName="Volume" Header="Hacim" Width="120"/>
-        <dxg:GridColumn FieldName="LastUpdateLocal" Header="Son" Width="80"/>
-    </dxg:GridControl.Columns>
-    <dxg:GridControl.View>
-        <dxg:TableView AllowPerPixelScrolling="True" SelectedItemChanged="Grid_SelectedItemChanged"/>
-    </dxg:GridControl.View>
-</dxg:GridControl>
+                                <DataGrid x:Name="Grid" AutoGenerateColumns="False" SelectionChanged="Grid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding BaseSymbol}" Header="Sembol" Width="100"/>
+                                        <DataGridTextColumn Binding="{Binding BaselinePrice}" Header="Başlangıç Fiyatı" Width="100"/>
+                                        <DataGridTextColumn Binding="{Binding Price}" Header="Fiyat" Width="100"/>
+                                        <DataGridTextColumn Binding="{Binding ChangeSinceStartPercent}" Header="Anlık Değişim" Width="100"/>
+                                        <DataGridTextColumn Binding="{Binding ChangePercent}" Header="% 24s" Width="80"/>
+                                        <DataGridTextColumn Binding="{Binding Volume}" Header="Hacim" Width="120"/>
+                                        <DataGridTextColumn Binding="{Binding LastUpdateLocal}" Header="Son" Width="80"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                         </GroupBox>
 
                         <!-- FUTURES INFO -->
