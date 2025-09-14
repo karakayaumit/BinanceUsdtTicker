@@ -1054,7 +1054,7 @@
                                                                         <DataGridTemplateColumn Header="Giriş" Width="100">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Center"/>
+                                                                                                <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.########}}" TextAlignment="Center"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
@@ -1163,7 +1163,7 @@
                                                                         <DataGridTemplateColumn Header="Giriş Fiyatı" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.########}}" TextAlignment="Right"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
@@ -1244,7 +1244,7 @@
         <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate>
                         <TextBlock Text="{Binding Price,
- StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+ StringFormat={}{0:#,0.########}}" TextAlignment="Right"/>
                 </DataTemplate>
         </DataGridTemplateColumn.CellTemplate>
 </DataGridTemplateColumn>
@@ -1343,7 +1343,7 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                                         <DataGridTemplateColumn Header="Fiyat" Width="80">
                                                                         <DataGridTemplateColumn.CellTemplate>
                                                                                 <DataTemplate>
-                                                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.########}}" TextAlignment="Right"/>
                                                                                 </DataTemplate>
                                                                         </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
