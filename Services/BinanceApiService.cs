@@ -153,6 +153,33 @@ namespace BinanceUsdtTicker
             return list;
         }
 
+        public async Task<(decimal walletBalance, decimal availableBalance)> GetUsdtWalletBalanceAsync(CancellationToken ct = default)
+        {
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/balance", null, ct);
+            using var doc = JsonDocument.Parse(json);
+            foreach (var el in doc.RootElement.EnumerateArray())
+            {
+                var asset = el.GetProperty("asset").GetString();
+                if (string.Equals(asset, "USDT", StringComparison.OrdinalIgnoreCase))
+                {
+                    var balStr = el.TryGetProperty("walletBalance", out var wb) ? wb.GetString() : el.GetProperty("balance").GetString();
+                    decimal.TryParse(balStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var bal);
+                    decimal.TryParse(el.GetProperty("availableBalance").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var avail);
+                    return (bal, avail);
+                }
+            }
+            return (0m, 0m);
+        }
+
+        public async Task<decimal> GetUsedMarginAsync(CancellationToken ct = default)
+        {
+            var json = await SendSignedAsync(HttpMethod.Get, "/fapi/v2/account", null, ct);
+            using var doc = JsonDocument.Parse(json);
+            decimal.TryParse(doc.RootElement.GetProperty("totalPositionInitialMargin").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var pos);
+            decimal.TryParse(doc.RootElement.GetProperty("totalOpenOrderInitialMargin").GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ord);
+            return pos + ord;
+        }
+
         /// <summary>
         /// Belirtilen sembol için mevcut pozisyon bilgilerini döner.
         /// </summary>
