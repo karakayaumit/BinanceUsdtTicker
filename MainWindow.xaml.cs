@@ -401,9 +401,24 @@ namespace BinanceUsdtTicker
             try
             {
                 var balances = await _api.GetAccountBalancesAsync();
-                _walletAssets.Clear();
-                foreach (var b in balances)
-                    _walletAssets.Add(b);
+                var map = balances.ToDictionary(b => b.Asset);
+                for (int i = _walletAssets.Count - 1; i >= 0; i--)
+                {
+                    var existing = _walletAssets[i];
+                    if (map.TryGetValue(existing.Asset, out var b))
+                    {
+                        existing.Balance = b.Balance;
+                        existing.Available = b.Available;
+                        map.Remove(existing.Asset);
+                    }
+                    else
+                    {
+                        _walletAssets.RemoveAt(i);
+                    }
+                }
+
+                foreach (var remaining in map.Values)
+                    _walletAssets.Add(remaining);
                 UpdateCostAndMax();
             }
             catch (Exception ex)
