@@ -1474,11 +1474,15 @@ namespace BinanceUsdtTicker
             if (sender is not TextBox tb)
                 return;
 
-            if (Helpers.InputParser.TryParseUserDecimal(tb.Text, out var price) && price > 0m)
+            try
             {
-                tb.Text = price.ToString("0.########", CultureInfo.InvariantCulture);
+                var price = Helpers.DecimalParser.ParseUser(tb.Text);
+                if (price > 0m)
+                    tb.Text = price.ToString("0.########", CultureInfo.InvariantCulture);
+                else
+                    tb.Text = string.Empty;
             }
-            else
+            catch (FormatException)
             {
                 tb.Text = string.Empty;
             }
@@ -1739,7 +1743,18 @@ namespace BinanceUsdtTicker
         }
 
         private static bool TryParseDecimal(string text, out decimal value)
-            => Helpers.InputParser.TryParseUserDecimal(text, out value);
+        {
+            try
+            {
+                value = Helpers.DecimalParser.ParseUser(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                value = 0m;
+                return false;
+            }
+        }
 
         private static int GetPrecision(decimal step)
         {

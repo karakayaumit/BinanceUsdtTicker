@@ -124,13 +124,13 @@ internal static class JsonExt
     public static decimal GetDecimalString(this JsonElement el)
     {
         var s = el.GetString();
-        return decimal.Parse(s!, CultureInfo.InvariantCulture);
+        return decimal.Parse(s!, NumberStyles.Float, CultureInfo.InvariantCulture);
     }
 
     public static decimal TryGetDecimal(this JsonElement el, string prop)
     {
         if (!el.TryGetProperty(prop, out var p)) return 0m;
         var s = p.GetString();
-        return string.IsNullOrWhiteSpace(s) ? 0m : decimal.Parse(s, CultureInfo.InvariantCulture);
+        return string.IsNullOrWhiteSpace(s) ? 0m : decimal.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
     }
 }
