@@ -417,6 +417,30 @@
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch">
                                 <DataGrid x:Name="Grid" AutoGenerateColumns="False" SelectionChanged="Grid_SelectionChanged">
                                     <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="★" Width="35">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ToggleButton Style="{StaticResource StarToggleStyle}"
+                                                                 IsChecked="{Binding IsFavorite}"
+                                                                 Click="FavoriteToggle_Click">
+                                                        <materialDesign:PackIcon Width="16" Height="16">
+                                                            <materialDesign:PackIcon.Style>
+                                                                <Style TargetType="materialDesign:PackIcon">
+                                                                    <Setter Property="Kind" Value="StarOutline"/>
+                                                                    <Setter Property="Foreground" Value="Gray"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                                                                            <Setter Property="Kind" Value="Star"/>
+                                                                            <Setter Property="Foreground" Value="Gold"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </materialDesign:PackIcon.Style>
+                                                        </materialDesign:PackIcon>
+                                                    </ToggleButton>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                         <DataGridTextColumn Binding="{Binding BaseSymbol}" Header="Sembol" Width="100"/>
                                         <DataGridTextColumn Binding="{Binding BaselinePrice}" Header="Başlangıç Fiyatı" Width="100"/>
                                         <DataGridTextColumn Binding="{Binding Price}" Header="Fiyat" Width="100"/>
