@@ -5,6 +5,8 @@
         xmlns:local="clr-namespace:BinanceUsdtTicker"
         xmlns:wallet="clr-namespace:BinanceUsdtTicker.Views.Wallet"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
         Background="{DynamicResource Surface}"
@@ -996,393 +998,37 @@
                                   </Grid.ColumnDefinitions>
 
                                 <!-- EMIR VE POZISYONLAR -->
-                                <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
-                                        <TabControl x:Name="AccountTab" Margin="0,6,0,0" SelectionChanged="AccountTab_SelectionChanged">
-                                                <TabItem Header="Açık Pozisyonlar">
-                                                        <DataGrid x:Name="PositionsList"
-                                                                  Style="{DynamicResource MaterialDesignDataGrid}"
-                                                                  AutoGenerateColumns="False"
-                                                                  IsReadOnly="True"
-                                                                  CanUserSortColumns="True"
-                                                                  CanUserReorderColumns="True"
-                                                                  HeadersVisibility="Column"
-                                                                  GridLinesVisibility="None"
-                                                                  RowBackground="{DynamicResource RowBg}"
-                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
-                                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                                                <DataGrid.ColumnHeaderStyle>
-                                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                                                                                <Setter Property="ContentTemplate">
-                                                                                        <Setter.Value>
-                                                                                                <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"/>
-                                                                                                </DataTemplate>
-                                                                                        </Setter.Value>
-                                                                                </Setter>
-                                                                        </Style>
-                                                                </DataGrid.ColumnHeaderStyle>
-                                                                <DataGrid.RowStyle>
-                                                                        <Style TargetType="DataGridRow">
-                                                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                                                        </Style>
-                                                                </DataGrid.RowStyle>
-                                                                <DataGrid.CellStyle>
-                                                                        <Style TargetType="DataGridCell">
-                                                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                                                        </Style>
-                                                                </DataGrid.CellStyle>
-                                                                <DataGrid.Columns>
-                                                                        <DataGridTemplateColumn Header="Sembol" Width="110">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Foreground="{Binding SideBrush}" TextAlignment="Center">
-                                                                                                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                        <Run Text="/USDT" Foreground="Gray"/>
-                                                                                                </TextBlock>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTextColumn Header="x" Width="60" Binding="{Binding Leverage}"/>
-                                                                        <DataGridTemplateColumn Header="Adet" Width="100">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding PositionAmt, StringFormat={}{0:#,0.####}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Giriş" Width="100">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding EntryPrice, StringFormat={}{0:#,0.########}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Mark" Width="100">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding MarkPrice, StringFormat={}{0:#,0.####}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Liq" Width="100">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding LiquidationPrice, StringFormat={}{0:#,0.####}}" FontWeight="Bold" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Pozisyon boyutu" Width="140">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding PositionSize, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Giriş tutarı" Width="120">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding EntryAmount, StringFormat={}{0:#,0.##} USDT}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTextColumn Header="Tip" Width="80" Binding="{Binding MarginType}"/>
-                                                                        <DataGridTemplateColumn Header="PNL" Width="160">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                                        <TextBlock Text="{Binding UnrealizedPnl, StringFormat={}{0:#,0.##}}" Foreground="{Binding PnlBrush}"/>
-                                                                                                        <TextBlock Text="{Binding RoiPercent, StringFormat={}{0:#,0.##}%}" Foreground="{Binding PnlBrush}" Margin="4,0,0,0"/>
-                                                                                                </StackPanel>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Kapat" Width="220">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <StackPanel Orientation="Horizontal">
-                                                                                                        <TextBox Width="80" Height="24" Margin="0,0,4,0"
-                                                                                                                 Text="{Binding CloseLimitPrice, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource UserDecimalConverter}}"/>
-                                                                                                        <Button Width="60" Height="24" Margin="0,0,4,0" Padding="4" Tag="{Binding}" Click="ClosePositionLimit_Click"
-                                                                                                                Foreground="{DynamicResource OnSurface}" FontSize="12" FontWeight="SemiBold" Content="Limit"/>
-                                                                                                         <Button Width="60" Height="24" Padding="4" Tag="{Binding}" Click="ClosePositionMarket_Click"
-                                                                                                                Foreground="{DynamicResource OnSurface}" FontSize="12" FontWeight="SemiBold" Content="Market"/>
-                                                                                                </StackPanel>
-                                                                                       </DataTemplate>
-                                                                               </DataGridTemplateColumn.CellTemplate>
-                                                                       </DataGridTemplateColumn>
-                                                               </DataGrid.Columns>
-                                                        </DataGrid>
-                                                </TabItem>
-                                                <TabItem Header="Açık Emirler">
-                                                        <DataGrid x:Name="OrdersList"
-                                                                  Style="{DynamicResource MaterialDesignDataGrid}"
-                                                                  AutoGenerateColumns="False"
-                                                                  IsReadOnly="True"
-                                                                  CanUserSortColumns="True"
-                                                                  CanUserReorderColumns="True"
-                                                                  HeadersVisibility="Column"
-                                                                  GridLinesVisibility="None"
-                                                                  RowBackground="{DynamicResource RowBg}"
-                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
-                                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                                                <DataGrid.ColumnHeaderStyle>
-                                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                                                                                <Setter Property="ContentTemplate">
-                                                                                        <Setter.Value>
-                                                                                                <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"/>
-                                                                                                </DataTemplate>
-                                                                                        </Setter.Value>
-                                                                                </Setter>
-                                                                        </Style>
-                                                                </DataGrid.ColumnHeaderStyle>
-                                                                <DataGrid.Columns>
-                                                                        <DataGridTemplateColumn Header="Sembol" Width="90">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock>
-                                                                                                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                        <Run Text="/USDT" Foreground="Gray"/>
-                                                                                                </TextBlock>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Yön" Width="60">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Side}" Foreground="{Binding Side, Converter={StaticResource SideToBrush}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Adet" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Giriş Fiyatı" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.########}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Amount" Width="90">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Amount, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Filled" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Filled, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTextColumn Header="Durum" Width="80" Binding="{Binding Status}"/>
-                                                                        <DataGridTemplateColumn Header="İptal" Width="60">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <Button Content="İptal" Tag="{Binding}" Click="CancelOrder_Click"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                </DataGrid.Columns>
-                                                        </DataGrid>
-                                                </TabItem>
-                                                <TabItem Header="Emir Geçmişi">
-                                                        <DataGrid x:Name="OrderHistoryList"
-                                                                  Style="{DynamicResource MaterialDesignDataGrid}"
-                                                                  AutoGenerateColumns="False"
-                                                                  IsReadOnly="True"
-                                                                  CanUserSortColumns="True"
-                                                                  CanUserReorderColumns="True"
-                                                                  HeadersVisibility="Column"
-                                                                  GridLinesVisibility="None"
-                                                                  RowBackground="{DynamicResource RowBg}"
-                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
-                                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                                                <DataGrid.ColumnHeaderStyle>
-                                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                                                                                <Setter Property="ContentTemplate">
-                                                                                        <Setter.Value>
-                                                                                                <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"/>
-                                                                                                </DataTemplate>
-                                                                                        </Setter.Value>
-                                                                                </Setter>
-                                                                        </Style>
-                                                                </DataGrid.ColumnHeaderStyle>
-                                                                <DataGrid.Columns>
-                                                                        <DataGridTemplateColumn Header="Sembol" Width="90">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock>
-                                                                                                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                        <Run Text="/USDT" Foreground="Gray"/>
-                                                                                                </TextBlock>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Yön" Width="60">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Side}" Foreground="{Binding Side, Converter={StaticResource SideToBrush}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Adet" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Fiyat" Width="80">
-        <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                        <TextBlock Text="{Binding Price,
- StringFormat={}{0:#,0.########}}" TextAlignment="Right"/>
-                </DataTemplate>
-        </DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-<DataGridTemplateColumn Header="Executed" Width="80">
-        <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                        <TextBlock Text="{Binding FilledAmount,
- StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
-                </DataTemplate>
-        </DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-<DataGridTemplateColumn Header="Amount" Width="90">
-        <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                        <TextBlock Text="{Binding Amount,
- StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
-                </DataTemplate>
-        </DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-<DataGridTemplateColumn Header="Durum" Width="80">
-        <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                        <TextBlock Text="{Binding Status}">
-                                <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Status}" Value="FILLED">
-                                                                <Setter Property="Foreground" Value="Green"/>
-                                                        </DataTrigger>
-                                                </Style.Triggers>
-                                        </Style>
-                                </TextBlock.Style>
-                        </TextBlock>
-                </DataTemplate>
-        </DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-<DataGridTemplateColumn Header="Zaman" Width="150">
-        <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                        <TextBlock Text="{Binding Time,
-StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
-                </DataTemplate>
-        </DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-                                                                </DataGrid.Columns>
-                                                        </DataGrid>
-                                                </TabItem>
-                                                <TabItem Header="Trade Geçmişi">
-                                                        <DataGrid x:Name="TradeHistoryList"
-                                                                  Style="{DynamicResource MaterialDesignDataGrid}"
-                                                                  AutoGenerateColumns="False"
-                                                                  IsReadOnly="True"
-                                                                  CanUserSortColumns="True"
-                                                                  CanUserReorderColumns="True"
-                                                                  HeadersVisibility="Column"
-                                                                  GridLinesVisibility="None"
-                                                                  RowBackground="{DynamicResource RowBg}"
-                                                                  AlternatingRowBackground="{DynamicResource RowAltBg}"
-                                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                                                <DataGrid.ColumnHeaderStyle>
-                                                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                                                                                <Setter Property="ContentTemplate">
-                                                                                        <Setter.Value>
-                                                                                                <DataTemplate>
-                                                                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"/>
-                                                                                                </DataTemplate>
-                                                                                        </Setter.Value>
-                                                                                </Setter>
-                                                                        </Style>
-                                                                </DataGrid.ColumnHeaderStyle>
-                                                                <DataGrid.Columns>
-                                                                        <DataGridTemplateColumn Header="Sembol" Width="90">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock>
-                                                                                                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                                                                                                        <Run Text="/USDT" Foreground="Gray"/>
-                                                                                                </TextBlock>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Yön" Width="60">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Side}" Foreground="{Binding Side, Converter={StaticResource SideToBrush}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Pozisyon Boyutu" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Amount, StringFormat={}{0:#,0.##}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Fiyat" Width="80">
-                                                                        <DataGridTemplateColumn.CellTemplate>
-                                                                                <DataTemplate>
-                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0.########}}" TextAlignment="Right"/>
-                                                                                </DataTemplate>
-                                                                        </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Vergi" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Fee, Converter={StaticResource NegativeValueConverter}, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Kar" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding RealizedPnl, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Net" Width="80">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding NetProfit, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                        <DataGridTemplateColumn Header="Zaman" Width="150">
-                                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                                        <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
-                                                                                        </DataTemplate>
-                                                                                </DataGridTemplateColumn.CellTemplate>
-                                                                        </DataGridTemplateColumn>
-                                                                </DataGrid.Columns>
-                                                        </DataGrid>
-                                                </TabItem>
-                                        </TabControl>
+                                  <Expander Grid.Column="0" Header="Emirler" IsExpanded="True" Padding="6,4">
+                                        <dx:DXTabControl x:Name="AccountTab" Margin="0,6,0,0" SelectionChanged="AccountTab_SelectionChanged">
+                                                <dx:DXTabItem Header="Açık Pozisyonlar">
+                                                        <dxg:GridControl x:Name="PositionsList" AutoGenerateColumns="AddNew">
+                                                                <dxg:GridControl.View>
+                                                                        <dxg:TableView AutoWidth="True"/>
+                                                                </dxg:GridControl.View>
+                                                        </dxg:GridControl>
+                                                </dx:DXTabItem>
+                                                <dx:DXTabItem Header="Açık Emirler">
+                                                        <dxg:GridControl x:Name="OrdersList" AutoGenerateColumns="AddNew">
+                                                                <dxg:GridControl.View>
+                                                                        <dxg:TableView AutoWidth="True"/>
+                                                                </dxg:GridControl.View>
+                                                        </dxg:GridControl>
+                                                </dx:DXTabItem>
+                                                <dx:DXTabItem Header="Emir Geçmişi">
+                                                        <dxg:GridControl x:Name="OrderHistoryList" AutoGenerateColumns="AddNew">
+                                                                <dxg:GridControl.View>
+                                                                        <dxg:TableView AutoWidth="True"/>
+                                                                </dxg:GridControl.View>
+                                                        </dxg:GridControl>
+                                                </dx:DXTabItem>
+                                                <dx:DXTabItem Header="Trade Geçmişi">
+                                                        <dxg:GridControl x:Name="TradeHistoryList" AutoGenerateColumns="AddNew">
+                                                                <dxg:GridControl.View>
+                                                                        <dxg:TableView AutoWidth="True"/>
+                                                                </dxg:GridControl.View>
+                                                        </dxg:GridControl>
+                                                </dx:DXTabItem>
+                                        </dx:DXTabControl>
                                 </Expander>
 
                                 <!-- ALARM GEÇMİŞİ -->
@@ -1399,45 +1045,26 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                 </DockPanel>
                                         </Expander.Header>
 
-                                        <DataGrid x:Name="AlertList" Margin="0,6,0,0"
-          Style="{DynamicResource MaterialDesignDataGrid}"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          CanUserSortColumns="True"
-          CanUserReorderColumns="True"
-          HeadersVisibility="Column"
-          GridLinesVisibility="None"
-          RowBackground="{DynamicResource RowBg}"
-          AlternatingRowBackground="{DynamicResource RowAltBg}"
-          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-    <DataGrid.Columns>
-        <DataGridTextColumn Header="Zaman" Width="80" Binding="{Binding LocalTime}">
-            <DataGridTextColumn.ElementStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                </Style>
-            </DataGridTextColumn.ElementStyle>
-        </DataGridTextColumn>
-        <DataGridTemplateColumn Header="Sembol" Width="110">
-            <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                    <TextBlock>
-                        <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
-                        <Run Text="/USDT" Foreground="Gray"/>
-                    </TextBlock>
-                </DataTemplate>
-            </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTextColumn Header="Koşul" Width="160" Binding="{Binding TypeText}"/>
-        <DataGridTemplateColumn Header="Mesaj" Width="*" MinWidth="200">
-            <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
-                </DataTemplate>
-            </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-    </DataGrid.Columns>
-</DataGrid>
+                                        <dxg:GridControl x:Name="AlertList" Margin="0,6,0,0" AutoGenerateColumns="None" IsReadOnly="True">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="LocalTime" Header="Zaman" Width="80"/>
+                <dxg:GridColumn FieldName="BaseSymbol" Header="Sembol" Width="110">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding BaseSymbol, Mode=OneWay}"/>
+                                <Run Text="/USDT" Foreground="Gray"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="TypeText" Header="Koşul" Width="160"/>
+                <dxg:GridColumn FieldName="Message" Header="Mesaj" Width="200"/>
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True"/>
+            </dxg:GridControl.View>
+        </dxg:GridControl>
 
                                 </Expander>
 
