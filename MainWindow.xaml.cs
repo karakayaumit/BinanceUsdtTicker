@@ -17,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives; // ToggleButton burada
 using System.Windows.Threading; // en üstte varsa gerekmez
-using DevExpress.Xpf.Grid;
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
@@ -94,7 +93,7 @@ namespace BinanceUsdtTicker
             var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
 
             // alarm geçmişi bağla
-            var alertList = FindName("AlertList") as GridControl;
+            var alertList = FindName("AlertList") as DataGrid;
             if (alertList != null)
             {
                 alertList.ItemsSource = _alertLog;
@@ -108,19 +107,7 @@ namespace BinanceUsdtTicker
             void SetupList(string name, IEnumerable? source = null, bool useScreenHeight = true)
             {
                 var ctrl = FindName(name);
-                if (ctrl is GridControl gc)
-                {
-                    if (source != null)
-                        gc.ItemsSource = source;
-
-                    if (useScreenHeight)
-                    {
-                        gc.Height = screenHeight;
-                        gc.MinHeight = screenHeight;
-                        gc.MaxHeight = screenHeight;
-                    }
-                }
-                else if (ctrl is ItemsControl ic)
+                if (ctrl is ItemsControl ic)
                 {
                     if (source != null)
                         ic.ItemsSource = source;

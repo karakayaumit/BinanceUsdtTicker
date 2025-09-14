@@ -21,8 +21,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="DevExpress.Xpf.Core" Version="23.2.5" />
-    <PackageReference Include="DevExpress.Xpf.Grid" Version="23.2.5" />
   </ItemGroup>
 
   <!-- Prevent the worker service project from being compiled into the WPF application -->
