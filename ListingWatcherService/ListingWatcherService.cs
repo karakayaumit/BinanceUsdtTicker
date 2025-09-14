@@ -409,18 +409,19 @@ END";
         if (string.IsNullOrWhiteSpace(title))
             return title;
 
-        // Attempt to load the translator key lazily so that secrets loaded after
-        // construction become available for translation.
-        if (string.IsNullOrEmpty(_translatorKey))
+        // Always attempt to fetch the latest translator key from the secret cache.
+        // This ensures that updated keys written to the database are picked up
+        // after service restarts or runtime updates.
+        try
         {
-            try
-            {
-                _translatorKey = _secretCache.Get(SecretNames.AzureKey);
-            }
-            catch (KeyNotFoundException)
-            {
+            _translatorKey = _secretCache.Get(SecretNames.AzureKey);
+        }
+        catch (KeyNotFoundException)
+        {
+            // If the key is not yet available in the cache and no previous key
+            // exists, skip translation.
+            if (string.IsNullOrEmpty(_translatorKey))
                 return title;
-            }
         }
 
         try
