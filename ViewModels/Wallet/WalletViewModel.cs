@@ -14,12 +14,21 @@ namespace BinanceUsdtTicker.ViewModels.Wallet
         private readonly DispatcherTimer _timer = new();
         private readonly BinanceApiService _api = new();
 
-        public WalletViewModel()
+        public WalletViewModel(UiSettings? settings = null)
         {
-            var apiKey = Environment.GetEnvironmentVariable("BINANCE_API_KEY") ?? string.Empty;
-            var secret = Environment.GetEnvironmentVariable("BINANCE_API_SECRET") ?? string.Empty;
-            if (!string.IsNullOrEmpty(apiKey) && !string.IsNullOrEmpty(secret))
-                _api.SetApiCredentials(apiKey, secret);
+            if (settings != null &&
+                !string.IsNullOrEmpty(settings.BinanceApiKey) &&
+                !string.IsNullOrEmpty(settings.BinanceApiSecret))
+            {
+                _api.SetApiCredentials(settings.BinanceApiKey, settings.BinanceApiSecret);
+            }
+            else
+            {
+                var apiKey = Environment.GetEnvironmentVariable("BINANCE_API_KEY") ?? string.Empty;
+                var secret = Environment.GetEnvironmentVariable("BINANCE_API_SECRET") ?? string.Empty;
+                if (!string.IsNullOrEmpty(apiKey) && !string.IsNullOrEmpty(secret))
+                    _api.SetApiCredentials(apiKey, secret);
+            }
 
             _timer.Interval = TimeSpan.FromMilliseconds(1000);
             _timer.Tick += async (s, e) => await UpdateFromFuturesAsync();
