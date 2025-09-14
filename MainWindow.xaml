@@ -15,6 +15,7 @@
                 <local:SideToBrushConverter x:Key="SideToBrush"/>
                 <local:SourceToLogoConverter x:Key="SourceToLogo"/>
                 <local:UserDecimalConverter x:Key="UserDecimalConverter"/>
+                <local:NegativeValueConverter x:Key="NegativeValueConverter"/>
                 <!-- Şeffaf yıldız -->
                 <Style x:Key="StarToggleStyle" TargetType="ToggleButton">
 			<Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -1352,7 +1353,7 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
                                                                         <DataGridTemplateColumn Header="Vergi" Width="80">
                                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                                         <DataTemplate>
-                                                                                                <TextBlock Text="{Binding Fee, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
+                                                                                                <TextBlock Text="{Binding Fee, Converter={StaticResource NegativeValueConverter}, StringFormat={}{0:#,0.####}}" TextAlignment="Right"/>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
