@@ -449,6 +449,15 @@
                                         <DataGridTextColumn Binding="{Binding Volume}" Header="Hacim" Width="120"/>
                                         <DataGridTextColumn Binding="{Binding LastUpdateLocal}" Header="Son" Width="80"/>
                                     </DataGrid.Columns>
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource FavoriteRowBg}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.RowStyle>
                                 </DataGrid>
                         </GroupBox>
 

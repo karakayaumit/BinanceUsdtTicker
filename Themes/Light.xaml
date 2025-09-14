@@ -14,6 +14,7 @@
 
     <SolidColorBrush x:Key="RowBg"          Color="#FFFFFFFF"/>
     <SolidColorBrush x:Key="RowAltBg"       Color="#FFFAFAFA"/>
+    <SolidColorBrush x:Key="FavoriteRowBg"  Color="#40FFD700"/>
 
     <SolidColorBrush x:Key="SelectionBg"    Color="#FF2563EB"/>
     <SolidColorBrush x:Key="SelectionFg"    Color="#FFFFFFFF"/>
