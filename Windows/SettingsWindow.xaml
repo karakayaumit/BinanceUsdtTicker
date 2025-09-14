@@ -107,7 +107,8 @@
                     </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                                 <TextBlock Text="Translate Key:" Width="120" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding TranslateKey}" Width="300"/>
+                                                <TextBox Width="180" IsReadOnly="True" Text="********"/>
+                                                <Button Content="Değiştir" Width="75" Margin="10,0,0,0" Click="ChangeTranslateKey_Click"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                                 <TextBlock Text="Translate Region:" Width="120" VerticalAlignment="Center"/>
@@ -127,7 +128,8 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <TextBlock Text="DB Password:" Width="120" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding DbPassword}" Width="300"/>
+                        <TextBox Width="180" IsReadOnly="True" Text="********"/>
+                        <Button Content="Değiştir" Width="75" Margin="10,0,0,0" Click="ChangeDbPassword_Click"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
@@ -148,11 +150,13 @@
                 <StackPanel Margin="10">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <TextBlock Text="Binance API Key:" Width="120" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding BinanceApiKey}" Width="300" MaxLength="64"/>
+                        <TextBox Width="180" IsReadOnly="True" Text="********" MaxLength="64"/>
+                        <Button Content="Değiştir" Width="75" Margin="10,0,0,0" Click="ChangeBinanceApiKey_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <TextBlock Text="Binance Secret Key:" Width="120" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding BinanceApiSecret}" Width="300" MaxLength="64"/>
+                        <TextBox Width="180" IsReadOnly="True" Text="********" MaxLength="64"/>
+                        <Button Content="Değiştir" Width="75" Margin="10,0,0,0" Click="ChangeBinanceSecret_Click"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>

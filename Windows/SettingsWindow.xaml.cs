@@ -1,7 +1,12 @@
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
+using BinanceUsdtTicker.Data;
+using BinanceUsdtTicker.Runtime;
+using BinanceUsdtTicker.Security;
+using System.Threading.Tasks;
 
 namespace BinanceUsdtTicker
 {
@@ -9,10 +14,15 @@ namespace BinanceUsdtTicker
     {
         private readonly UiSettings _settings;
         private readonly UiSettings _work;
-        public SettingsWindow(UiSettings settings)
+        private readonly SecretRepository _secretRepo;
+        private readonly ISecretCache _cache;
+
+        public SettingsWindow(UiSettings settings, SecretRepository secretRepo, ISecretCache cache)
         {
             InitializeComponent();
             _settings = settings;
+            _secretRepo = secretRepo;
+            _cache = cache;
             _work = new UiSettings
             {
                 Theme = settings.Theme,
@@ -29,14 +39,10 @@ namespace BinanceUsdtTicker
                 MarginMode = settings.MarginMode,
                 WindowsNotification = settings.WindowsNotification,
                 BaseUrl = settings.BaseUrl,
-                BinanceApiKey = settings.BinanceApiKey,
-                BinanceApiSecret = settings.BinanceApiSecret,
-                TranslateKey = settings.TranslateKey,
                 TranslateRegion = settings.TranslateRegion,
                 DbServer = settings.DbServer,
                 DbName = settings.DbName,
-                DbUser = settings.DbUser,
-                DbPassword = settings.DbPassword
+                DbUser = settings.DbUser
             };
             DataContext = _work;
         }
@@ -145,15 +151,34 @@ namespace BinanceUsdtTicker
             _settings.MarginMode = _work.MarginMode;
             _settings.WindowsNotification = _work.WindowsNotification;
             _settings.BaseUrl = _work.BaseUrl;
-            _settings.BinanceApiKey = _work.BinanceApiKey;
-            _settings.BinanceApiSecret = _work.BinanceApiSecret;
-            _settings.TranslateKey = _work.TranslateKey;
             _settings.TranslateRegion = _work.TranslateRegion;
             _settings.DbServer = _work.DbServer;
             _settings.DbName = _work.DbName;
             _settings.DbUser = _work.DbUser;
-            _settings.DbPassword = _work.DbPassword;
             DialogResult = true;
+        }
+
+        private async void ChangeBinanceApiKey_Click(object sender, RoutedEventArgs e) =>
+            await ChangeSecret(SecretNames.BinanceApiKey);
+
+        private async void ChangeBinanceSecret_Click(object sender, RoutedEventArgs e) =>
+            await ChangeSecret(SecretNames.BinanceSecret);
+
+        private async void ChangeTranslateKey_Click(object sender, RoutedEventArgs e) =>
+            await ChangeSecret(SecretNames.AzureKey);
+
+        private async void ChangeDbPassword_Click(object sender, RoutedEventArgs e) =>
+            await ChangeSecret(SecretNames.DbPassword);
+
+        private async Task ChangeSecret(string name)
+        {
+            var dlg = new ChangeSecretWindow(name) { Owner = this };
+            if (dlg.ShowDialog() == true && dlg.SecretValue != null)
+            {
+                var enc = DpapiProtector.Protect(Encoding.UTF8.GetBytes(dlg.SecretValue));
+                await _secretRepo.UpsertAsync(name, enc);
+                _cache.Set(name, dlg.SecretValue);
+            }
         }
     }
 }
