@@ -50,5 +50,30 @@ public class BinanceApiServiceTests
 
         Assert.Equal(0.0001m, minPrice);
     }
+
+    [Fact]
+    public async Task GetSymbolRulesAsync_ReturnsRequestedSymbol()
+    {
+        const string json = @"{\"symbols\":[
+            {\"symbol\":\"BTCUSDT\",\"filters\":[{\"filterType\":\"PRICE_FILTER\",\"tickSize\":\"0.10\"}]},
+            {\"symbol\":\"DOGEUSDT\",\"filters\":[{\"filterType\":\"PRICE_FILTER\",\"tickSize\":\"0.001\"}]}
+        ]}";
+
+        var client = new HttpClient(new StubHttpMessageHandler(json))
+        {
+            BaseAddress = new Uri("https://example.com")
+        };
+
+        var svc = new BinanceApiService(client);
+
+        var method = typeof(BinanceApiService).GetMethod("GetSymbolRulesAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+        var task = (Task)method!.Invoke(svc, new object[] { "DOGEUSDT", CancellationToken.None })!;
+        await task.ConfigureAwait(false);
+        var rules = task.GetType().GetProperty("Result")!.GetValue(task)!;
+        var tickSizeProp = rules.GetType().GetProperty("TickSize")!;
+        var tickSize = (decimal)tickSizeProp.GetValue(rules)!;
+
+        Assert.Equal(0.001m, tickSize);
+    }
 }
 
