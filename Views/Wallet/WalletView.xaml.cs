@@ -1,5 +1,7 @@
 using System.Windows.Controls;
 using BinanceUsdtTicker.ViewModels.Wallet;
+using BinanceUsdtTicker.Models;
+using BinanceUsdtTicker;
 
 namespace BinanceUsdtTicker.Views.Wallet
 {
@@ -8,7 +10,8 @@ namespace BinanceUsdtTicker.Views.Wallet
         public WalletView()
         {
             InitializeComponent();
-            DataContext = new WalletViewModel();
+            UiSettings settings = MainWindow.LoadDefaultUiSettings();
+            DataContext = new WalletViewModel(settings);
         }
     }
 }
