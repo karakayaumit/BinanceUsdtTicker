@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:BinanceUsdtTicker"
+        xmlns:wallet="clr-namespace:BinanceUsdtTicker.Views.Wallet"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
@@ -1442,47 +1443,7 @@ StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" TextAlignment="Center"/>
 
                                 <!-- CÜZDAN BİLGİLERİ -->
                                 <Expander Grid.Column="1" Header="Cüzdan" IsExpanded="True" Padding="6,4">
-                                        <DataGrid x:Name="WalletList" Margin="0,6,0,0"
-          Style="{DynamicResource MaterialDesignDataGrid}"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          HeadersVisibility="Column"
-          GridLinesVisibility="None"
-          RowBackground="{DynamicResource RowBg}"
-          AlternatingRowBackground="{DynamicResource RowAltBg}"
-          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-    <DataGrid.Columns>
-        <DataGridTextColumn Header="Varlık" Width="70" Binding="{Binding Asset}">
-            <DataGridTextColumn.ElementStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                </Style>
-            </DataGridTextColumn.ElementStyle>
-        </DataGridTextColumn>
-        <DataGridTextColumn Header="Bakiye" Width="90" Binding="{Binding Balance, StringFormat={}{0:#,0.00}}">
-            <DataGridTextColumn.ElementStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="TextAlignment" Value="Right"/>
-                </Style>
-            </DataGridTextColumn.ElementStyle>
-        </DataGridTextColumn>
-        <DataGridTextColumn Header="Kullanılabilir" Width="90" Binding="{Binding Available, StringFormat={}{0:#,0.00}}">
-            <DataGridTextColumn.ElementStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="TextAlignment" Value="Right"/>
-                </Style>
-            </DataGridTextColumn.ElementStyle>
-        </DataGridTextColumn>
-        <DataGridTextColumn Header="Kullanılan Bakiye" Width="110" Binding="{Binding Used, StringFormat={}{0:#,0.00}}">
-            <DataGridTextColumn.ElementStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="TextAlignment" Value="Right"/>
-                </Style>
-            </DataGridTextColumn.ElementStyle>
-        </DataGridTextColumn>
-    </DataGrid.Columns>
-</DataGrid>
-
+                                        <wallet:WalletView Margin="0,6,0,0"/>
                                 </Expander>
                         </Grid>
                 </Grid>
