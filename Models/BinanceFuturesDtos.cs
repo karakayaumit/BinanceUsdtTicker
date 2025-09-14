@@ -35,7 +35,9 @@ public sealed class SymbolInfo
                 case "PRICE_FILTER":
                     Filters.Add(new PriceFilter
                     {
-                        TickSize = f.TryGetDecimal("tickSize")
+                        TickSize = f.TryGetDecimal("tickSize"),
+                        MinPrice = f.TryGetDecimalOrNull("minPrice"),
+                        MaxPrice = f.TryGetDecimalOrNull("maxPrice")
                     });
                     break;
                 case "LOT_SIZE":
@@ -67,6 +69,8 @@ public interface IFilter { }
 public sealed class PriceFilter : IFilter
 {
     public decimal TickSize { get; set; }
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
 }
 public sealed class LotSizeFilter : IFilter
 {
@@ -132,5 +136,12 @@ internal static class JsonExt
         if (!el.TryGetProperty(prop, out var p)) return 0m;
         var s = p.GetString();
         return string.IsNullOrWhiteSpace(s) ? 0m : decimal.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
+    }
+
+    public static decimal? TryGetDecimalOrNull(this JsonElement el, string prop)
+    {
+        if (!el.TryGetProperty(prop, out var p)) return null;
+        var s = p.GetString();
+        return string.IsNullOrWhiteSpace(s) ? null : decimal.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
     }
 }

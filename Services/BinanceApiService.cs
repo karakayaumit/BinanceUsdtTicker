@@ -446,30 +446,46 @@ namespace BinanceUsdtTicker
                 (DateTime.UtcNow - cached.FetchedAt) < RulesTtl)
                 return cached;
 
-            var url = $"https://fapi.binance.com/fapi/v1/exchangeInfo?symbol={symbol}";
-            using var resp = await _http.GetAsync(url, ct);
-            resp.EnsureSuccessStatusCode();
-            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStreamAsync(ct));
-            var sym = doc.RootElement.GetProperty("symbols")[0];
-            decimal tick = 0, step = 0;
+            var json = await SendAsync(HttpMethod.Get, $"/fapi/v1/exchangeInfo?symbol={symbol}", ct);
+            var info = JsonSerializer.Deserialize<ExchangeInfo>(json, JsonOptions) ?? new();
+
+            decimal tick = 0m, step = 0m;
             decimal? minQty = null, minNotional = null, minPrice = null, maxPrice = null;
-            foreach (var f in sym.GetProperty("filters").EnumerateArray())
+
+            var sym = info.Symbols.FirstOrDefault();
+            if (sym != null)
             {
-                var type = f.GetProperty("filterType").GetString();
-                if (type == "PRICE_FILTER")
+                var price = sym.Filters.OfType<PriceFilter>().FirstOrDefault();
+                var lot = sym.Filters.OfType<LotSizeFilter>().FirstOrDefault();
+                var marketLot = sym.Filters.OfType<MarketLotSizeFilter>().FirstOrDefault();
+                var minNot = sym.Filters.OfType<MinNotionalFilter>().FirstOrDefault();
+
+                if (price != null)
                 {
-                    tick = ParseInv(f.GetProperty("tickSize").GetString()!);
-                    try { minPrice = ParseInv(f.GetProperty("minPrice").GetString()!); } catch { }
-                    try { maxPrice = ParseInv(f.GetProperty("maxPrice").GetString()!); } catch { }
+                    tick = price.TickSize;
+                    minPrice = price.MinPrice;
+                    maxPrice = price.MaxPrice;
                 }
-                else if (type == "LOT_SIZE")
-                    step = ParseInv(f.GetProperty("stepSize").GetString()!);
-                else if (type == "MARKET_LOT_SIZE" && step == 0)
-                    step = ParseInv(f.GetProperty("stepSize").GetString()!);
-                else if (type == "MIN_NOTIONAL")
-                    minNotional = ParseInv(f.GetProperty("notional").GetString()!);
+
+                if (lot != null && marketLot != null)
+                {
+                    step = Math.Max(lot.StepSize, marketLot.StepSize);
+                    minQty = Math.Max(lot.MinQty, marketLot.MinQty);
+                }
+                else if (lot != null)
+                {
+                    step = lot.StepSize;
+                    minQty = lot.MinQty;
+                }
+                else if (marketLot != null)
+                {
+                    step = marketLot.StepSize;
+                    minQty = marketLot.MinQty;
+                }
+
+                if (minNot != null)
+                    minNotional = minNot.Notional;
             }
-            try { minQty = ParseInv(sym.GetProperty("filters").EnumerateArray().First(f => f.GetProperty("filterType").GetString()=="LOT_SIZE").GetProperty("minQty").GetString()!); } catch {}
 
             var rules = new SymbolRules(tick, step, minQty, minNotional, minPrice, maxPrice, DateTime.UtcNow);
             _rulesCache[symbol] = rules;
@@ -489,9 +505,6 @@ namespace BinanceUsdtTicker
             var steps = Math.Round(value / tick, MidpointRounding.AwayFromZero);
             return steps * tick;
         }
-
-        private static decimal ParseInv(string s)
-            => decimal.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
 
         private async Task<(string qStr, string? pStr, string? spStr)> PrepareOrderNumbersAsync(
             string symbol, decimal quantity, decimal? price, decimal? stopPrice, bool reduceOnly, CancellationToken ct)
