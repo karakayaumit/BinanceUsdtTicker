@@ -20,6 +20,8 @@ using System.Windows.Threading; // en üstte varsa gerekmez
 using WinForms = System.Windows.Forms;
 using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
+using BinanceUsdtTicker.Data;
+using BinanceUsdtTicker.Runtime;
 
 namespace BinanceUsdtTicker
 {
@@ -58,6 +60,8 @@ namespace BinanceUsdtTicker
 
         private UiSettings _ui = new();
         private ThemeKind _theme = ThemeKind.Light;
+
+        private readonly ISecretCache _secretCache = new SecretCache();
 
         private WinForms.NotifyIcon? _notifyIcon;
 
@@ -354,11 +358,11 @@ namespace BinanceUsdtTicker
 
         private async void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var win = new SettingsWindow(_ui) { Owner = this };
+            var repo = new SecretRepository(_ui.GetConnectionString());
+            var win = new SettingsWindow(_ui, repo, _secretCache) { Owner = this };
             if (win.ShowDialog() == true)
             {
                 ApplyCustomColors();
-                _api.SetApiCredentials(_ui.BinanceApiKey, _ui.BinanceApiSecret);
                 SaveUiSettingsFromUi();
                 if (Application.Current is App app)
                 {
