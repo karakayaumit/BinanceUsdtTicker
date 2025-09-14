@@ -1455,20 +1455,6 @@ namespace BinanceUsdtTicker
                 priceBox.Text = _selectedTicker.Price.ToString("0.########", CultureInfo.CurrentCulture);
         }
 
-        private void LimitPrice_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (e.Text == ",")
-            {
-                if (sender is TextBox tb)
-                {
-                    int caret = tb.CaretIndex;
-                    tb.Text = tb.Text.Insert(caret, ".");
-                    tb.CaretIndex = caret + 1;
-                }
-                e.Handled = true;
-            }
-        }
-
         private void LimitPriceTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (sender is not TextBox tb)
