@@ -1103,8 +1103,12 @@
                                                                                                 <StackPanel Orientation="Horizontal">
                                                                                                         <TextBox Width="80" Height="24" Margin="0,0,4,0"
                                                                                                                  Text="{Binding CloseLimitPrice, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource UserDecimalConverter}}"/>
-                                                                                                          <Button Content="Limit" Height="24" Margin="0,0,4,0" FontSize="8" Tag="{Binding}" Click="ClosePositionLimit_Click"/>
-                                                                                                          <Button Content="Market" Height="24" FontSize="8" Tag="{Binding}" Click="ClosePositionMarket_Click"/>
+                                                                                                         <Button Width="60" Height="24" Margin="0,0,4,0" Tag="{Binding}" Click="ClosePositionLimit_Click">
+                                                                                                                 <TextBlock Text="Limit" FontSize="10" TextWrapping="Wrap" TextAlignment="Center"/>
+                                                                                                         </Button>
+                                                                                                         <Button Width="60" Height="24" Tag="{Binding}" Click="ClosePositionMarket_Click">
+                                                                                                                 <TextBlock Text="Market" FontSize="10" TextWrapping="Wrap" TextAlignment="Center"/>
+                                                                                                         </Button>
                                                                                                 </StackPanel>
                                                                                         </DataTemplate>
                                                                                 </DataGridTemplateColumn.CellTemplate>
