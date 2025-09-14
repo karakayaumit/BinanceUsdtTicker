@@ -8,7 +8,7 @@ namespace BinanceUsdtTicker.Views.Wallet
         public WalletView()
         {
             InitializeComponent();
-            DataContext = new WalletViewModel(WalletGrid);
+            DataContext = new WalletViewModel();
         }
     }
 }
