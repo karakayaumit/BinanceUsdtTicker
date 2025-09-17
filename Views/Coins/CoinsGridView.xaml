@@ -97,7 +97,7 @@
                                      ElementStyle="{StaticResource CenterCellStyle}"/>
 
                 <DataGridTextColumn Header="Fiyat"
-                                     Binding="{Binding Price, StringFormat=#,0.########}"
+                                     Binding="{Binding Price, StringFormat='#,0.########'}"
                                      Width="120"
                                      IsReadOnly="True"
                                      ElementStyle="{StaticResource RightCellStyle}"/>
@@ -109,7 +109,7 @@
                                      ElementStyle="{StaticResource RightCellStyle}"/>
 
                 <DataGridTextColumn Header="Hacim"
-                                     Binding="{Binding Volume, StringFormat=#,0.########}"
+                                     Binding="{Binding Volume, StringFormat='#,0.########'}"
                                      Width="130"
                                      IsReadOnly="True"
                                      ElementStyle="{StaticResource RightCellStyle}"/>
