@@ -1,11 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using BinanceUsdtTicker.ViewModels.Coins;
 using BinanceUsdtTicker;
-using DevExpress.Xpf.Grid;
 
 namespace BinanceUsdtTicker.Views.Coins
 {
@@ -15,31 +14,16 @@ namespace BinanceUsdtTicker.Views.Coins
         {
             InitializeComponent();
 
-            ViewModel = new CoinsGridViewModel(CoinsGrid);
+            ViewModel = new CoinsGridViewModel();
             DataContext = ViewModel;
 
-            var view = (TableView)CoinsGrid.View;
-            view.CellValueChanged += (_, e) =>
-            {
-                if (e.Column.FieldName == nameof(TickerRow.IsFavorite))
-                {
-                    var item = CoinsGrid.GetRow(e.RowHandle);
-                    var fix = (bool?)e.Value == true ? FixedRowPosition.Top : FixedRowPosition.None;
-                    view.FixItem(item, fix);
-                }
-            };
-            view.FocusedRowChanged += (_, __) => SelectedItemChanged?.Invoke(this, SelectedItem);
-
-            Loaded += (_, __) =>
-            {
-                Debug.WriteLine($"[DEVEXPRESS] CoinsGrid loaded. Columns={CoinsGrid.Columns.Count}");
-                SelectedItemChanged?.Invoke(this, SelectedItem);
-            };
+            CoinsGrid.SelectionChanged += (_, __) => SelectedItemChanged?.Invoke(this, SelectedItem);
+            Loaded += (_, __) => SelectedItemChanged?.Invoke(this, SelectedItem);
         }
 
         public CoinsGridViewModel ViewModel { get; }
 
-        public GridControl GridControl => CoinsGrid;
+        public DataGrid GridControl => CoinsGrid;
 
         public event EventHandler<TickerRow?>? SelectedItemChanged;
 
@@ -48,6 +32,19 @@ namespace BinanceUsdtTicker.Views.Coins
         public void BindItems(ObservableCollection<TickerRow> items)
         {
             ViewModel.SetItems(items);
+            RefreshSort();
+        }
+
+        private void FavoriteCheckChanged(object sender, RoutedEventArgs e)
+        {
+            RefreshSort();
+        }
+
+        private void RefreshSort()
+        {
+            var source = CoinsGrid.ItemsSource ?? ViewModel.Items;
+            var view = CollectionViewSource.GetDefaultView(source);
+            view?.Refresh();
         }
     }
 }

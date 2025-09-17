@@ -13,10 +13,6 @@
                                 <ResourceDictionary Source="Themes/Styles.Toolbar.xaml"/>
                                 <ResourceDictionary Source="Themes/Styles.Base.xaml"/>
                                 <ResourceDictionary Source="Themes/Light.xaml"/>
-                                <!-- DevExpress theme resources -->
-                                <ResourceDictionary Source="pack://application:,,,/DevExpress.Xpf.Core.v25.1;component/Themes/Office2019Colorful.xaml"/>
-                                <ResourceDictionary Source="pack://application:,,,/DevExpress.Xpf.Grid.v25.1;component/Themes/Office2019Colorful.xaml"/>
-                                <ResourceDictionary Source="pack://application:,,,/DevExpress.Xpf.Editors.v25.1;component/Themes/Office2019Colorful.xaml"/>
                         </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
         </Application.Resources>
