@@ -3,36 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Threading;
-using System.Windows.Threading;
-using DevExpress.Xpf.Grid;
 using BinanceUsdtTicker;
 
 namespace BinanceUsdtTicker.ViewModels.Coins
 {
     public class CoinsGridViewModel : INotifyPropertyChanged
     {
-        private readonly GridControl _grid;
-        private readonly DispatcherTimer _timer;
         private readonly Dictionary<string, TickerRow> _bySymbol = new(StringComparer.OrdinalIgnoreCase);
         private ObservableCollection<TickerRow> _items = new();
-        private int _pending;
 
-        public CoinsGridViewModel(GridControl grid)
+        public CoinsGridViewModel()
         {
-            _grid = grid;
-
             Items = new ObservableCollection<TickerRow>();
-
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
-            _timer.Tick += (_, __) =>
-            {
-                if (Interlocked.Exchange(ref _pending, 0) > 0)
-                {
-                    _grid.RefreshData();
-                }
-            };
-            _timer.Start();
 
 #if DEBUG
             EnsureDebugItems();
@@ -70,35 +52,25 @@ namespace BinanceUsdtTicker.ViewModels.Coins
             if (string.IsNullOrWhiteSpace(update.Symbol))
                 return;
 
-            _grid.BeginDataUpdate();
-            try
+            if (!_bySymbol.TryGetValue(update.Symbol, out var row))
             {
-                if (!_bySymbol.TryGetValue(update.Symbol, out var row))
-                {
-                    row = Add(update.Symbol);
-                }
-
-                row.Price = update.Price;
-                row.ChangePct = update.ChangePct;
-                row.Volume = update.Volume;
-
-                if (update.Open.HasValue)
-                    row.Open = update.Open.Value;
-                if (update.High.HasValue)
-                    row.High = update.High.Value;
-                if (update.Low.HasValue)
-                    row.Low = update.Low.Value;
-                if (update.LastUpdate.HasValue)
-                    row.LastUpdate = update.LastUpdate.Value;
-                if (update.BaselinePrice.HasValue && !row.BaselinePrice.HasValue)
-                    row.BaselinePrice = update.BaselinePrice.Value;
-            }
-            finally
-            {
-                _grid.EndDataUpdate();
+                row = Add(update.Symbol);
             }
 
-            Interlocked.Exchange(ref _pending, 1);
+            row.Price = update.Price;
+            row.ChangePct = update.ChangePct;
+            row.Volume = update.Volume;
+
+            if (update.Open.HasValue)
+                row.Open = update.Open.Value;
+            if (update.High.HasValue)
+                row.High = update.High.Value;
+            if (update.Low.HasValue)
+                row.Low = update.Low.Value;
+            if (update.LastUpdate.HasValue)
+                row.LastUpdate = update.LastUpdate.Value;
+            if (update.BaselinePrice.HasValue && !row.BaselinePrice.HasValue)
+                row.BaselinePrice = update.BaselinePrice.Value;
         }
 
         private TickerRow Add(string symbol)

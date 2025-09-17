@@ -24,7 +24,6 @@ using Microsoft.Data.SqlClient;
 using BinanceUsdtTicker.Data;
 using BinanceUsdtTicker.Runtime;
 using BinanceUsdtTicker.Views.Coins;
-using DevExpress.Xpf.Grid;
 
 namespace BinanceUsdtTicker
 {
@@ -89,7 +88,7 @@ namespace BinanceUsdtTicker
                 searchBox.LostFocus += SearchBox_LostFocus;
             }
 
-            // DevExpress coin grid bağla
+            // Coin grid bağla
             if (CoinsGridHost != null)
             {
                 CoinsGridHost.BindItems(_rows);
@@ -852,8 +851,6 @@ namespace BinanceUsdtTicker
 
                     if (!row.BaselinePrice.HasValue)
                         row.BaselinePrice = row.Price;
-
-                    UpdateRowFixing(row);
                 }
             }
 
@@ -889,7 +886,6 @@ namespace BinanceUsdtTicker
                 SaveFavoritesSafe();
                 ApplySortForMode(_filterMode);
                 CollectionViewSource.GetDefaultView(_rows).Refresh();
-                UpdateRowFixing(row);
             }
         }
 
@@ -898,34 +894,6 @@ namespace BinanceUsdtTicker
             foreach (var row in _rows)
             {
                 row.IsFavorite = _favoriteSymbols.Contains(row.Symbol);
-                UpdateRowFixing(row);
-            }
-        }
-
-        private void UpdateRowFixing(TickerRow row)
-        {
-            if (row == null)
-                return;
-
-            if (CoinsGridHost == null)
-                return;
-
-            void ApplyFix()
-            {
-                if (CoinsGridHost.GridControl.View is TableView view)
-                {
-                    var position = row.IsFavorite ? FixedRowPosition.Top : FixedRowPosition.None;
-                    view.FixItem(row, position);
-                }
-            }
-
-            if (CoinsGridHost.IsLoaded)
-            {
-                ApplyFix();
-            }
-            else
-            {
-                CoinsGridHost.Dispatcher.BeginInvoke((Action)ApplyFix, DispatcherPriority.Loaded);
             }
         }
 
@@ -1177,12 +1145,12 @@ namespace BinanceUsdtTicker
             var grid = CoinsGridHost?.GridControl;
             if (grid?.Columns == null) return;
 
-            GridColumn? star = grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "★");
-            GridColumn? symbol = grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Sembol");
+            var star = grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? string.Empty) == "★");
+            var symbol = grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? string.Empty) == "Sembol");
 
             int idx = 0;
-            if (star != null) star.VisibleIndex = idx++;
-            if (symbol != null) symbol.VisibleIndex = idx++;
+            if (star != null) star.DisplayIndex = idx++;
+            if (symbol != null) symbol.DisplayIndex = idx++;
         }
 
         // ---------- UI settings / favorites ----------
@@ -1255,7 +1223,7 @@ namespace BinanceUsdtTicker
                         .Select(c => new ColumnState
                         {
                             Header = c.Header?.ToString() ?? "",
-                            DisplayIndex = c.VisibleIndex,
+                            DisplayIndex = c.DisplayIndex,
                             Width = c.ActualWidth
                         })
                         .ToList();
@@ -1339,10 +1307,10 @@ namespace BinanceUsdtTicker
                 if (map.TryGetValue(key, out var st))
                 {
                     if (st.DisplayIndex >= 0 && st.DisplayIndex < grid.Columns.Count)
-                        col.VisibleIndex = st.DisplayIndex;
+                        col.DisplayIndex = st.DisplayIndex;
 
                     if (st.Width > 20)
-                        col.Width = st.Width;
+                        col.Width = new DataGridLength(st.Width);
                 }
             }
         }
