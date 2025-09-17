@@ -5,6 +5,7 @@
         xmlns:local="clr-namespace:BinanceUsdtTicker"
         xmlns:wallet="clr-namespace:BinanceUsdtTicker.Views.Wallet"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:coins="clr-namespace:BinanceUsdtTicker.Views.Coins"
         Title="Binance USDT Canlı Fiyatlar"
         Height="680" Width="1100" MinHeight="500" MinWidth="900"
         Background="{DynamicResource Surface}"
@@ -415,50 +416,9 @@
                         <GroupBox Grid.Row="0" Grid.Column="1" Header="Coin" Margin="0,0,8,0"
                                   Background="{DynamicResource SurfaceAlt}" Foreground="{DynamicResource OnSurface}"
                                   BorderBrush="{DynamicResource Divider}" VerticalAlignment="Stretch">
-                                <DataGrid x:Name="Grid" AutoGenerateColumns="False" SelectionChanged="Grid_SelectionChanged">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Header="★" Width="35">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <ToggleButton Style="{StaticResource StarToggleStyle}"
-                                                                 IsChecked="{Binding IsFavorite}"
-                                                                 Click="FavoriteToggle_Click">
-                                                        <materialDesign:PackIcon Width="16" Height="16">
-                                                            <materialDesign:PackIcon.Style>
-                                                                <Style TargetType="materialDesign:PackIcon">
-                                                                    <Setter Property="Kind" Value="StarOutline"/>
-                                                                    <Setter Property="Foreground" Value="Gray"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
-                                                                            <Setter Property="Kind" Value="Star"/>
-                                                                            <Setter Property="Foreground" Value="Gold"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </materialDesign:PackIcon.Style>
-                                                        </materialDesign:PackIcon>
-                                                    </ToggleButton>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Binding="{Binding BaseSymbol}" Header="Sembol" Width="100"/>
-                                        <DataGridTextColumn Binding="{Binding BaselinePrice}" Header="Başlangıç Fiyatı" Width="100"/>
-                                        <DataGridTextColumn Binding="{Binding Price}" Header="Fiyat" Width="100"/>
-                                        <DataGridTextColumn Binding="{Binding ChangeSinceStartPercent}" Header="Anlık Değişim" Width="100"/>
-                                        <DataGridTextColumn Binding="{Binding ChangePct}" Header="% 24s" Width="80"/>
-                                        <DataGridTextColumn Binding="{Binding Volume}" Header="Hacim" Width="120"/>
-                                        <DataGridTextColumn Binding="{Binding LastUpdateLocal}" Header="Son" Width="80"/>
-                                    </DataGrid.Columns>
-                                    <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsFavorite}" Value="True">
-                                                    <Setter Property="Background" Value="{DynamicResource FavoriteRowBg}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </DataGrid.RowStyle>
-                                </DataGrid>
+                                <!-- Coin listesi host -->
+                                <coins:CoinsGridView x:Name="CoinsGridHost"
+                                                     Visibility="Visible"/>
                         </GroupBox>
 
                         <!-- FUTURES INFO -->

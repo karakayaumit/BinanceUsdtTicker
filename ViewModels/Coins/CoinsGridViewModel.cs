@@ -1,43 +1,167 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Threading;
 using System.Windows.Threading;
+using DevExpress.Xpf.Grid;
+using BinanceUsdtTicker;
 
 namespace BinanceUsdtTicker.ViewModels.Coins
 {
-    public class CoinsGridViewModel
+    public class CoinsGridViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<TickerRow> Items { get; } = new();
-        private readonly BinanceFuturesService _service = new();
-        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+        private readonly GridControl _grid;
+        private readonly DispatcherTimer _timer;
+        private readonly Dictionary<string, TickerRow> _bySymbol = new(StringComparer.OrdinalIgnoreCase);
+        private ObservableCollection<TickerRow> _items = new();
+        private int _pending;
 
-        public CoinsGridViewModel()
+        public CoinsGridViewModel(GridControl grid)
         {
-            _service.OnTickersUpdated += OnServiceTickersUpdated;
-            _ = _service.StartAsync();
+            _grid = grid;
+
+            Items = new ObservableCollection<TickerRow>();
+
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+            _timer.Tick += (_, __) =>
+            {
+                if (Interlocked.Exchange(ref _pending, 0) > 0)
+                {
+                    _grid.RefreshData();
+                }
+            };
+            _timer.Start();
+
+#if DEBUG
+            EnsureDebugItems();
+#endif
         }
 
-        private void OnServiceTickersUpdated(System.Collections.Generic.List<TickerRow> list)
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public ObservableCollection<TickerRow> Items
         {
-            if (_dispatcher.HasShutdownStarted || _dispatcher.HasShutdownFinished)
+            get => _items;
+            private set
+            {
+                if (ReferenceEquals(_items, value))
+                    return;
+
+                if (_items != null)
+                    _items.CollectionChanged -= Items_CollectionChanged;
+
+                _items = value;
+                _items.CollectionChanged += Items_CollectionChanged;
+
+                RebuildMap();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Items)));
+            }
+        }
+
+        public void SetItems(ObservableCollection<TickerRow> items)
+        {
+            Items = items ?? throw new ArgumentNullException(nameof(items));
+        }
+
+        public void ApplyTick(TickerUpdate update)
+        {
+            if (string.IsNullOrWhiteSpace(update.Symbol))
                 return;
 
-            _ = _dispatcher.InvokeAsync(() =>
+            _grid.BeginDataUpdate();
+            try
             {
-                foreach (var u in list)
+                if (!_bySymbol.TryGetValue(update.Symbol, out var row))
                 {
-                    var existing = Items.FirstOrDefault(x => x.Symbol == u.Symbol);
-                    if (existing == null)
-                    {
-                        Items.Add(u);
-                    }
-                    else
-                    {
-                        existing.Price = u.Price;
-                        existing.ChangePct = u.ChangePct;
-                        existing.Volume = u.Volume;
-                    }
+                    row = Add(update.Symbol);
                 }
-            }, DispatcherPriority.Background);
+
+                row.Price = update.Price;
+                row.ChangePct = update.ChangePct;
+                row.Volume = update.Volume;
+
+                if (update.Open.HasValue)
+                    row.Open = update.Open.Value;
+                if (update.High.HasValue)
+                    row.High = update.High.Value;
+                if (update.Low.HasValue)
+                    row.Low = update.Low.Value;
+                if (update.LastUpdate.HasValue)
+                    row.LastUpdate = update.LastUpdate.Value;
+                if (update.BaselinePrice.HasValue && !row.BaselinePrice.HasValue)
+                    row.BaselinePrice = update.BaselinePrice.Value;
+            }
+            finally
+            {
+                _grid.EndDataUpdate();
+            }
+
+            Interlocked.Exchange(ref _pending, 1);
         }
+
+        private TickerRow Add(string symbol)
+        {
+            var row = new TickerRow { Symbol = symbol };
+            _items.Add(row);
+            return row;
+        }
+
+        private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                RebuildMap();
+                return;
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (TickerRow row in e.NewItems)
+                {
+                    _bySymbol[row.Symbol] = row;
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (TickerRow row in e.OldItems)
+                {
+                    if (_bySymbol.TryGetValue(row.Symbol, out var existing) && ReferenceEquals(existing, row))
+                        _bySymbol.Remove(row.Symbol);
+                }
+            }
+        }
+
+        private void RebuildMap()
+        {
+            _bySymbol.Clear();
+            foreach (var row in _items)
+                _bySymbol[row.Symbol] = row;
+        }
+
+#if DEBUG
+        private void EnsureDebugItems()
+        {
+            if (_items.Count > 0)
+                return;
+
+            var samples = new[]
+            {
+                new TickerRow { Symbol = "BTCUSDT", Price = 65000m, ChangePct = 0.012, Volume = 1234m },
+                new TickerRow { Symbol = "ETHUSDT", Price = 3200m, ChangePct = -0.008, Volume = 845m },
+                new TickerRow { Symbol = "BNBUSDT", Price = 580m, ChangePct = 0.015, Volume = 210m },
+                new TickerRow { Symbol = "ADAUSDT", Price = 0.45m, ChangePct = -0.022, Volume = 53400m },
+                new TickerRow { Symbol = "SOLUSDT", Price = 155m, ChangePct = 0.034, Volume = 1890m }
+            };
+
+            foreach (var row in samples)
+            {
+                row.BaselinePrice = row.Price;
+                _items.Add(row);
+            }
+        }
+#endif
     }
 }
