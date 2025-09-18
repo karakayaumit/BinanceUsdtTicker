@@ -76,6 +76,10 @@ namespace BinanceUsdtTicker
 
         private decimal _maintMarginRate = 0m;
 
+        private readonly object _tickerUpdateLock = new();
+        private List<TickerRow>? _pendingTickerUpdate;
+        private bool _isTickerUpdateScheduled;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -596,11 +600,39 @@ namespace BinanceUsdtTicker
         {
             if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
 
-            _ = Dispatcher.InvokeAsync(() =>
-            {
-                ApplyUpdate(latest);
+            bool shouldSchedule = false;
 
-                if (EvaluateAlerts(latest))
+            lock (_tickerUpdateLock)
+            {
+                _pendingTickerUpdate = latest;
+                if (!_isTickerUpdateScheduled)
+                {
+                    _isTickerUpdateScheduled = true;
+                    shouldSchedule = true;
+                }
+            }
+
+            if (shouldSchedule)
+            {
+                _ = Dispatcher.InvokeAsync(ProcessPendingTickerUpdates, DispatcherPriority.Background);
+            }
+        }
+
+        private void ProcessPendingTickerUpdates()
+        {
+            List<TickerRow>? snapshot;
+
+            lock (_tickerUpdateLock)
+            {
+                snapshot = _pendingTickerUpdate;
+                _pendingTickerUpdate = null;
+            }
+
+            if (snapshot != null)
+            {
+                ApplyUpdate(snapshot);
+
+                if (EvaluateAlerts(snapshot))
                     SaveAlertsSafe();
 
                 var last = Q<TextBlock>("LastUpdateText");
@@ -612,7 +644,27 @@ namespace BinanceUsdtTicker
 
                 // seçili moda göre bir kez hesapla
                 UpdateTopMovers(_topMoversUse24h);
-            });
+            }
+
+            bool scheduleNext;
+
+            lock (_tickerUpdateLock)
+            {
+                if (_pendingTickerUpdate != null)
+                {
+                    scheduleNext = true;
+                }
+                else
+                {
+                    _isTickerUpdateScheduled = false;
+                    scheduleNext = false;
+                }
+            }
+
+            if (scheduleNext)
+            {
+                _ = Dispatcher.InvokeAsync(ProcessPendingTickerUpdates, DispatcherPriority.Background);
+            }
         }
 
         private void Service_PropertyChanged(object? sender, PropertyChangedEventArgs e)
