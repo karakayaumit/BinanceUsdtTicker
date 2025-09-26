@@ -187,17 +187,21 @@ public partial class App : Application
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(SymbolsFile)!);
-            var api = new BinanceApiService();
-            var info = await api.GetExchangeInfoAsync();
-            var symbols = info.Symbols
-                .Select(s => s.Symbol)
-                .Where(s => s.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(s => s)
-                .ToList();
+
+            var symbols = await Task.Run(async () =>
+            {
+                var api = new BinanceApiService();
+                var info = await api.GetExchangeInfoAsync().ConfigureAwait(false);
+                return info.Symbols
+                    .Select(s => s.Symbol)
+                    .Where(s => s.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(s => s)
+                    .ToList();
+            });
 
             await File.WriteAllLinesAsync(SymbolsFile, symbols);
             _usdtSymbols.Clear();
-            foreach (var s in File.ReadLines(SymbolsFile))
+            foreach (var s in symbols)
                 _usdtSymbols.Add(s);
         }
         catch (Exception ex)

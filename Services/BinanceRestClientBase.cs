@@ -57,7 +57,7 @@ namespace BinanceUsdtTicker
 
             for (var attempt = 0; attempt < 2; attempt++)
             {
-                await EnsureTimeSyncedAsync(ct);
+                await EnsureTimeSyncedAsync(ct).ConfigureAwait(false);
                 parameters["timestamp"] = (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + Interlocked.Read(ref _timeOffsetMs))
                     .ToString(CultureInfo.InvariantCulture);
 
@@ -67,8 +67,8 @@ namespace BinanceUsdtTicker
 
                 using var request = new HttpRequestMessage(method, url);
                 request.Headers.Add("X-MBX-APIKEY", _apiKey);
-                using var response = await _http.SendAsync(request, ct);
-                var content = await response.Content.ReadAsStringAsync(ct);
+                using var response = await _http.SendAsync(request, ct).ConfigureAwait(false);
+                var content = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
 
                 if (response.StatusCode == HttpStatusCode.Forbidden)
                 {
@@ -107,12 +107,12 @@ namespace BinanceUsdtTicker
         /// </summary>
         protected async Task<string> SendAsync(HttpMethod method, string endpoint, CancellationToken ct = default)
         {
-            using var response = await _http.SendAsync(new HttpRequestMessage(method, endpoint), ct);
+            using var response = await _http.SendAsync(new HttpRequestMessage(method, endpoint), ct).ConfigureAwait(false);
             if (response.StatusCode == HttpStatusCode.Forbidden)
-                return await response.Content.ReadAsStringAsync(ct);
+                return await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync(ct);
+            return await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
         }
 
         private string Sign(string queryString)
@@ -127,20 +127,20 @@ namespace BinanceUsdtTicker
             if (DateTime.UtcNow - _lastServerTimeSyncUtc < TimeSyncInterval)
                 return;
 
-            await SyncServerTimeAsync(ct);
+            await SyncServerTimeAsync(ct).ConfigureAwait(false);
         }
 
         private async Task SyncServerTimeAsync(CancellationToken ct)
         {
-            await _timeSyncLock.WaitAsync(ct);
+            await _timeSyncLock.WaitAsync(ct).ConfigureAwait(false);
             try
             {
                 if (DateTime.UtcNow - _lastServerTimeSyncUtc < TimeSyncInterval)
                     return;
 
-                using var response = await _http.GetAsync("/fapi/v1/time", ct);
+                using var response = await _http.GetAsync("/fapi/v1/time", ct).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
-                var content = await response.Content.ReadAsStringAsync(ct);
+                var content = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
                 using var doc = JsonDocument.Parse(content);
                 var serverTime = doc.RootElement.GetProperty("serverTime").GetInt64();
                 var localTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
