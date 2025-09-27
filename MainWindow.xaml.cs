@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -23,8 +22,6 @@ using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
 using BinanceUsdtTicker.Data;
 using BinanceUsdtTicker.Runtime;
-using BinanceUsdtTicker.Helpers;
-using BinanceUsdtTicker.Views.Coins;
 
 namespace BinanceUsdtTicker
 {
@@ -77,10 +74,6 @@ namespace BinanceUsdtTicker
 
         private decimal _maintMarginRate = 0m;
 
-        private readonly object _tickerUpdateLock = new();
-        private List<TickerRow>? _pendingTickerUpdate;
-        private bool _isTickerUpdateScheduled;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -93,15 +86,9 @@ namespace BinanceUsdtTicker
                 searchBox.LostFocus += SearchBox_LostFocus;
             }
 
-            // Coin grid bağla
-            if (CoinsGridHost != null)
-            {
-                CoinsGridHost.BindItems(_rows);
-                CoinsGridHost.SelectedItemChanged += CoinsGridHost_SelectedItemChanged;
-            }
-
+            // ana grid bağla
+            Grid.ItemsSource = _rows;
             CollectionViewSource.GetDefaultView(_rows).Filter = RowFilter;
-            _rows.CollectionChanged += Rows_CollectionChanged;
 
             var screenHeight = SystemParameters.PrimaryScreenHeight / 8;
 
@@ -116,11 +103,21 @@ namespace BinanceUsdtTicker
                 alertList.MaxHeight = screenHeight;
             }
 
+            // cüzdan listesi bağla
+            var walletList = FindName("WalletList") as DataGrid;
+            if (walletList != null)
+            {
+                walletList.ItemsSource = _walletAssets;
+
+                walletList.Height = screenHeight;
+                walletList.MinHeight = screenHeight;
+                walletList.MaxHeight = screenHeight;
+            }
+
             // emir listeleri bağla
             void SetupList(string name, IEnumerable? source = null, bool useScreenHeight = true)
             {
-                var ctrl = FindName(name);
-                if (ctrl is ItemsControl ic)
+                if (FindName(name) is ItemsControl ic)
                 {
                     if (source != null)
                         ic.ItemsSource = source;
@@ -189,11 +186,6 @@ namespace BinanceUsdtTicker
                 await _service.StopAsync();
                 SaveFavoritesSafe();
                 SaveUiSettingsFromUi();
-                if (CoinsGridHost != null)
-                    CoinsGridHost.SelectedItemChanged -= CoinsGridHost_SelectedItemChanged;
-                _rows.CollectionChanged -= Rows_CollectionChanged;
-                foreach (var row in _rowBySymbol.Values)
-                    row.PropertyChanged -= TickerRow_PropertyChanged;
                 _notifyIcon?.Dispose();
                 _refreshTimer.Stop();
                 _costTimer.Stop();
@@ -235,9 +227,9 @@ namespace BinanceUsdtTicker
                     var titleTranslate = reader.IsDBNull(3) ? null : reader.GetString(3);
                     var url = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
                     var symbolsStr = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
-                    var created = reader.GetFieldValue<DateTimeOffset>(6);
+                    var created = reader.GetDateTime(6);
                     var symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    var createdUtc = created.UtcDateTime;
+                    var createdUtc = DateTime.SpecifyKind(created, DateTimeKind.Utc);
                     items.Add(new NewsItem(id, source, createdUtc, title, titleTranslate, null, url, NewsType.Listing, symbols));
                 }
 
@@ -338,9 +330,28 @@ namespace BinanceUsdtTicker
         private void ApplyTheme(ThemeKind kind)
         {
             _theme = kind;
+            var name = (kind == ThemeKind.Dark) ? "Dark" : "Light";
+            var uri = new Uri($"Themes/{name}.xaml", UriKind.Relative);
 
-            ThemeResourceManager.ApplyTheme(Resources, kind);
-            ThemeResourceManager.ApplyApplicationTheme(kind, this);
+            void SwapThemes(Collection<ResourceDictionary> col, Uri newUri)
+            {
+                for (int i = col.Count - 1; i >= 0; i--)
+                {
+                    var src = col[i].Source?.OriginalString ?? string.Empty;
+                    // only remove theme files; DO NOT remove other dictionaries in Themes/
+                    if (src.EndsWith("/Dark.xaml", StringComparison.OrdinalIgnoreCase) ||
+                        src.EndsWith("/Light.xaml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        col.RemoveAt(i);
+                    }
+                }
+                // Insert after base styles so theme overrides colors
+                col.Add(new ResourceDictionary { Source = newUri });
+            }
+
+            SwapThemes(this.Resources.MergedDictionaries, uri);
+            if (Application.Current != null)
+                SwapThemes(Application.Current.Resources.MergedDictionaries, uri);
 
             ApplyCustomColors();
         }
@@ -368,7 +379,6 @@ namespace BinanceUsdtTicker
             {
                 LoadAlertsSafe();
                 LoadFavoritesSafe();
-                ApplyFavoritesToRows();
 
                 await _service.StartAsync();
 
@@ -581,39 +591,11 @@ namespace BinanceUsdtTicker
         {
             if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished) return;
 
-            bool shouldSchedule = false;
-
-            lock (_tickerUpdateLock)
+            _ = Dispatcher.InvokeAsync(() =>
             {
-                _pendingTickerUpdate = latest;
-                if (!_isTickerUpdateScheduled)
-                {
-                    _isTickerUpdateScheduled = true;
-                    shouldSchedule = true;
-                }
-            }
+                ApplyUpdate(latest);
 
-            if (shouldSchedule)
-            {
-                _ = Dispatcher.InvokeAsync(ProcessPendingTickerUpdates, DispatcherPriority.Background);
-            }
-        }
-
-        private void ProcessPendingTickerUpdates()
-        {
-            List<TickerRow>? snapshot;
-
-            lock (_tickerUpdateLock)
-            {
-                snapshot = _pendingTickerUpdate;
-                _pendingTickerUpdate = null;
-            }
-
-            if (snapshot != null)
-            {
-                ApplyUpdate(snapshot);
-
-                if (EvaluateAlerts(snapshot))
+                if (EvaluateAlerts(latest))
                     SaveAlertsSafe();
 
                 var last = Q<TextBlock>("LastUpdateText");
@@ -625,27 +607,7 @@ namespace BinanceUsdtTicker
 
                 // seçili moda göre bir kez hesapla
                 UpdateTopMovers(_topMoversUse24h);
-            }
-
-            bool scheduleNext;
-
-            lock (_tickerUpdateLock)
-            {
-                if (_pendingTickerUpdate != null)
-                {
-                    scheduleNext = true;
-                }
-                else
-                {
-                    _isTickerUpdateScheduled = false;
-                    scheduleNext = false;
-                }
-            }
-
-            if (scheduleNext)
-            {
-                _ = Dispatcher.InvokeAsync(ProcessPendingTickerUpdates, DispatcherPriority.Background);
-            }
+            });
         }
 
         private void Service_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -665,23 +627,27 @@ namespace BinanceUsdtTicker
 
         private void ApplyUpdate(List<TickerRow> latest)
         {
-            if (CoinsGridHost == null)
-                return;
+            var dict = latest.ToDictionary(x => x.Symbol, StringComparer.OrdinalIgnoreCase);
 
-            foreach (var item in latest)
+            foreach (var kv in dict)
             {
-                var update = new TickerUpdate(
-                    item.Symbol,
-                    item.Price,
-                    item.ChangePct,
-                    item.Volume,
-                    item.Open,
-                    item.High,
-                    item.Low,
-                    item.LastUpdate,
-                    item.BaselinePrice);
-
-                CoinsGridHost.ViewModel.ApplyTick(update);
+                if (_rowBySymbol.TryGetValue(kv.Key, out var row))
+                {
+                    row.Price = kv.Value.Price;
+                    row.Open = kv.Value.Open;
+                    row.High = kv.Value.High;
+                    row.Low = kv.Value.Low;
+                    row.Volume = kv.Value.Volume;
+                    row.ChangePercent = kv.Value.ChangePercent;
+                    row.LastUpdate = kv.Value.LastUpdate;
+                }
+                else
+                {
+                    kv.Value.BaselinePrice ??= kv.Value.Price;
+                    kv.Value.IsFavorite = _favoriteSymbols.Contains(kv.Key);
+                    _rowBySymbol[kv.Key] = kv.Value;
+                    _rows.Add(kv.Value);
+                }
             }
         }
 
@@ -783,13 +749,22 @@ namespace BinanceUsdtTicker
 
         private void ApplySortForMode(FilterMode mode)
         {
-            if (!IsLoaded)
+            // Grid henüz hazır değilse, pencere yüklendikten sonra tekrar dene
+            if (!IsLoaded || (Grid == null && _rows == null))
             {
                 Dispatcher.BeginInvoke(new Action(() => ApplySortForMode(mode)), DispatcherPriority.Loaded);
                 return;
             }
 
-            var view = CollectionViewSource.GetDefaultView(_rows);
+            // Hangi koleksiyona bakacağız?
+            var itemsSource = Grid?.ItemsSource ?? _rows;
+            if (itemsSource == null)
+            {
+                Dispatcher.BeginInvoke(new Action(() => ApplySortForMode(mode)), DispatcherPriority.Background);
+                return;
+            }
+
+            var view = CollectionViewSource.GetDefaultView(itemsSource);
             if (view == null)
             {
                 Dispatcher.BeginInvoke(new Action(() => ApplySortForMode(mode)), DispatcherPriority.Background);
@@ -854,6 +829,23 @@ namespace BinanceUsdtTicker
             if (sb != null) sb.Text = $"Snapshot alındı: {DateTime.Now:HH:mm:ss}";
         }
 
+        // ---------- favori ----------
+        private void FavoriteToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe && fe.DataContext is TickerRow row)
+            {
+                if (row.IsFavorite)
+                    _favoriteSymbols.Add(row.Symbol);
+                else
+                    _favoriteSymbols.Remove(row.Symbol);
+
+                SaveFavoritesSafe();
+            }
+
+            ApplySortForMode(_filterMode);
+            CollectionViewSource.GetDefaultView(_rows).Refresh();
+        }
+
         private void ChartButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement fe && fe.DataContext is TickerRow row)
@@ -864,76 +856,10 @@ namespace BinanceUsdtTicker
             }
         }
 
-        private void Rows_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                foreach (var kv in _rowBySymbol.Values)
-                    kv.PropertyChanged -= TickerRow_PropertyChanged;
-                _rowBySymbol.Clear();
-            }
-
-            if (e.NewItems != null)
-            {
-                foreach (TickerRow row in e.NewItems)
-                {
-                    HookRow(row);
-
-                    if (_favoriteSymbols.Contains(row.Symbol))
-                        row.IsFavorite = true;
-
-                    if (!row.BaselinePrice.HasValue)
-                        row.BaselinePrice = row.Price;
-                }
-            }
-
-            if (e.OldItems != null)
-            {
-                foreach (TickerRow row in e.OldItems)
-                {
-                    row.PropertyChanged -= TickerRow_PropertyChanged;
-                    _rowBySymbol.Remove(row.Symbol);
-                }
-            }
-        }
-
-        private void HookRow(TickerRow row)
-        {
-            _rowBySymbol[row.Symbol] = row;
-            row.PropertyChanged -= TickerRow_PropertyChanged;
-            row.PropertyChanged += TickerRow_PropertyChanged;
-        }
-
-        private void TickerRow_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (sender is not TickerRow row)
-                return;
-
-            if (e.PropertyName == nameof(TickerRow.IsFavorite))
-            {
-                if (row.IsFavorite)
-                    _favoriteSymbols.Add(row.Symbol);
-                else
-                    _favoriteSymbols.Remove(row.Symbol);
-
-                SaveFavoritesSafe();
-                ApplySortForMode(_filterMode);
-                CollectionViewSource.GetDefaultView(_rows).Refresh();
-            }
-        }
-
-        private void ApplyFavoritesToRows()
-        {
-            foreach (var row in _rows)
-            {
-                row.IsFavorite = _favoriteSymbols.Contains(row.Symbol);
-            }
-        }
-
         // ---------- alarmlar (UI tarafı sizde mevcut) ----------
         private void AddAlert_Click(object sender, RoutedEventArgs e)
         {
-            string? prefill = CoinsGridHost?.SelectedItem?.BaseSymbol;
+            string? prefill = (Grid.SelectedItem as TickerRow)?.BaseSymbol;
 
             var dlg = new AddAlertWindow(prefill) { Owner = this };
             if (dlg.ShowDialog() == true && dlg.Result is not null)
@@ -1126,22 +1052,22 @@ namespace BinanceUsdtTicker
 
             IEnumerable<TickerRow> positives = rows.Where(r =>
             {
-                var m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
+                var m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
                 return m > 0m;
             });
 
             IEnumerable<TickerRow> negatives = rows.Where(r =>
             {
-                var m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
+                var m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
                 return m < 0m;
             });
 
             var topGainers = positives
-                .OrderByDescending(r => use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent)
+                .OrderByDescending(r => use24h ? r.ChangePercent : r.ChangeSinceStartPercent)
                 .Take(20)
                 .Select(r =>
                 {
-                    decimal m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
+                    decimal m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
                     return new TopMoverItem
                     {
                         BaseSymbol = r.BaseSymbol,
@@ -1153,11 +1079,11 @@ namespace BinanceUsdtTicker
                 .ToList();
 
             var topLosers = negatives
-                .OrderBy(r => use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent)
+                .OrderBy(r => use24h ? r.ChangePercent : r.ChangeSinceStartPercent)
                 .Take(20)
                 .Select(r =>
                 {
-                    decimal m = use24h ? (decimal)r.ChangePct : r.ChangeSinceStartPercent;
+                    decimal m = use24h ? r.ChangePercent : r.ChangeSinceStartPercent;
                     return new TopMoverItem
                     {
                         BaseSymbol = r.BaseSymbol,
@@ -1175,14 +1101,15 @@ namespace BinanceUsdtTicker
         // ---------- kolon düzeni ----------
         private void EnsureSpecialColumnsOrder()
         {
-            var grid = CoinsGridHost?.GridControl;
-            if (grid?.Columns == null) return;
+            if (Grid?.Columns == null) return;
 
-            var star = grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? string.Empty) == "★");
-            var symbol = grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? string.Empty) == "Sembol");
+            DataGridColumn? star = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "★");
+            DataGridColumn? chart = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Grafik");
+            DataGridColumn? symbol = Grid.Columns.FirstOrDefault(c => (c.Header?.ToString() ?? "") == "Sembol");
 
             int idx = 0;
             if (star != null) star.DisplayIndex = idx++;
+            if (chart != null) chart.DisplayIndex = idx++;
             if (symbol != null) symbol.DisplayIndex = idx++;
         }
 
@@ -1249,18 +1176,14 @@ namespace BinanceUsdtTicker
                 _ui.Theme = _theme == ThemeKind.Dark ? "Dark" : "Light";
                 _ui.FilterMode = _filterMode.ToString();
 
-                var grid = CoinsGridHost?.GridControl;
-                if (grid != null)
-                {
-                    _ui.Columns = grid.Columns
-                        .Select(c => new ColumnState
-                        {
-                            Header = c.Header?.ToString() ?? "",
-                            DisplayIndex = c.DisplayIndex,
-                            Width = c.ActualWidth
-                        })
-                        .ToList();
-                }
+                _ui.Columns = Grid.Columns
+                    .Select(c => new ColumnState
+                    {
+                        Header = c.Header?.ToString() ?? "",
+                        DisplayIndex = c.DisplayIndex,
+                        Width = c.ActualWidth
+                    })
+                    .ToList();
 
                 var json = JsonSerializer.Serialize(_ui, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(UiSettingsFile, json);
@@ -1331,19 +1254,16 @@ namespace BinanceUsdtTicker
 
             var map = _ui.Columns.ToDictionary(x => x.Header ?? "", x => x, StringComparer.OrdinalIgnoreCase);
 
-            var grid = CoinsGridHost?.GridControl;
-            if (grid?.Columns == null) return;
-
-            foreach (var col in grid.Columns)
+            foreach (var col in Grid.Columns)
             {
                 var key = col.Header?.ToString() ?? "";
                 if (map.TryGetValue(key, out var st))
                 {
-                    if (st.DisplayIndex >= 0 && st.DisplayIndex < grid.Columns.Count)
+                    if (st.DisplayIndex >= 0 && st.DisplayIndex < Grid.Columns.Count)
                         col.DisplayIndex = st.DisplayIndex;
 
                     if (st.Width > 20)
-                        col.Width = new DataGridLength(st.Width);
+                        col.Width = new DataGridLength(st.Width, DataGridLengthUnitType.Pixel);
                 }
             }
         }
@@ -1390,21 +1310,21 @@ namespace BinanceUsdtTicker
         }
 
         // Grid satır seçildiğinde futures bilgilerini yükle
-        private async void CoinsGridHost_SelectedItemChanged(object? sender, TickerRow? row)
+        private async void Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (row == null)
-                return;
+            if (Grid?.SelectedItem is TickerRow row)
+            {
+                if (_selectedTicker != null)
+                    _selectedTicker.PropertyChanged -= SelectedTicker_PropertyChanged;
 
-            if (_selectedTicker != null)
-                _selectedTicker.PropertyChanged -= SelectedTicker_PropertyChanged;
+                _selectedTicker = row;
+                _selectedTicker.PropertyChanged += SelectedTicker_PropertyChanged;
 
-            _selectedTicker = row;
-            _selectedTicker.PropertyChanged += SelectedTicker_PropertyChanged;
-
-            UpdateLimitPrice();
-            UpdatePriceAndSize();
-            await LoadFuturesUiAsync(row.Symbol);
-            UpdateCostAndMax();
+                UpdateLimitPrice();
+                UpdatePriceAndSize();
+                await LoadFuturesUiAsync(row.Symbol);
+                UpdateCostAndMax();
+            }
         }
 
         private void SelectedTicker_PropertyChanged(object? sender, PropertyChangedEventArgs e)

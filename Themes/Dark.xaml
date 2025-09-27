@@ -14,7 +14,6 @@
 
     <SolidColorBrush x:Key="RowBg"          Color="#FF181A20"/>
     <SolidColorBrush x:Key="RowAltBg"       Color="#FF0F1114"/>
-    <SolidColorBrush x:Key="FavoriteRowBg"  Color="#40FFD700"/>
 
     <SolidColorBrush x:Key="SelectionBg"    Color="#FF1D4FCB"/>
     <SolidColorBrush x:Key="SelectionFg"    Color="#FFFFFFFF"/>
@@ -37,7 +36,7 @@
     <SolidColorBrush x:Key="BtnPressed" Color="#FF2B3139"/>
 
     <!-- Hover color for list rows -->
-    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF2B2F36"/>
+    <SolidColorBrush x:Key="RowHoverBg"      Color="#FF20252C"/>
 
     <!-- Top Movers tokens (dark) -->
     <SolidColorBrush x:Key="Up1Bg"          Color="#FF0E9C6A"/>

@@ -49,11 +49,11 @@ namespace BinanceUsdtTicker
         }
 
         // 24s değişim %
-        private double _changePct;
-        public double ChangePct
+        private decimal _changePercent;
+        public decimal ChangePercent
         {
-            get => _changePct;
-            set { if (_changePct == value) return; _changePct = value; OnPropertyChanged(nameof(ChangePct)); }
+            get => _changePercent;
+            set { if (_changePercent == value) return; _changePercent = value; OnPropertyChanged(nameof(ChangePercent)); }
         }
 
         private DateTime _lastUpdate;
