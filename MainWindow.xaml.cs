@@ -23,6 +23,7 @@ using BinanceUsdtTicker.Models;
 using Microsoft.Data.SqlClient;
 using BinanceUsdtTicker.Data;
 using BinanceUsdtTicker.Runtime;
+using BinanceUsdtTicker.Helpers;
 using BinanceUsdtTicker.Views.Coins;
 
 namespace BinanceUsdtTicker
@@ -338,28 +339,8 @@ namespace BinanceUsdtTicker
         {
             _theme = kind;
 
-            // Removed dependency on DevExpress ApplicationThemeHelper/Theme.
-            // Theme switching now relies solely on resource dictionaries.
-            var name = kind == ThemeKind.Dark ? "Dark" : "Light";
-            var uri = new Uri($"Themes/{name}.xaml", UriKind.Relative);
-
-            void SwapThemes(Collection<ResourceDictionary> col, Uri newUri)
-            {
-                for (int i = col.Count - 1; i >= 0; i--)
-                {
-                    var src = col[i].Source?.OriginalString ?? string.Empty;
-                    if (src.EndsWith("/Dark.xaml", StringComparison.OrdinalIgnoreCase) ||
-                        src.EndsWith("/Light.xaml", StringComparison.OrdinalIgnoreCase))
-                    {
-                        col.RemoveAt(i);
-                    }
-                }
-                col.Add(new ResourceDictionary { Source = newUri });
-            }
-
-            SwapThemes(this.Resources.MergedDictionaries, uri);
-            if (Application.Current != null)
-                SwapThemes(Application.Current.Resources.MergedDictionaries, uri);
+            ThemeResourceManager.ApplyTheme(Resources, kind);
+            ThemeResourceManager.ApplyApplicationTheme(kind, this);
 
             ApplyCustomColors();
         }
