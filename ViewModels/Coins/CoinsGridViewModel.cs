@@ -71,6 +71,8 @@ namespace BinanceUsdtTicker.ViewModels.Coins
                 row.LastUpdate = update.LastUpdate.Value;
             if (update.BaselinePrice.HasValue && !row.BaselinePrice.HasValue)
                 row.BaselinePrice = update.BaselinePrice.Value;
+            if (!row.BaselinePrice.HasValue && update.Price > 0m)
+                row.BaselinePrice = update.Price;
         }
 
         private TickerRow Add(string symbol)
