@@ -234,9 +234,9 @@ namespace BinanceUsdtTicker
                     var titleTranslate = reader.IsDBNull(3) ? null : reader.GetString(3);
                     var url = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
                     var symbolsStr = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
-                    var created = reader.GetDateTime(6);
+                    var created = reader.GetFieldValue<DateTimeOffset>(6);
                     var symbols = symbolsStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    var createdUtc = DateTime.SpecifyKind(created, DateTimeKind.Utc);
+                    var createdUtc = created.UtcDateTime;
                     items.Add(new NewsItem(id, source, createdUtc, title, titleTranslate, null, url, NewsType.Listing, symbols));
                 }
 
