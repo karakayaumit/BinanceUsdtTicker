@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
 using System.Net.Http.Json;
 using System.Text.Json;
 using BinanceUsdtTicker.Models;
@@ -35,8 +33,6 @@ public partial class App : Application
     private readonly ISymbolExtractor _symbolExtractor = new RegexSymbolExtractor();
     private readonly HashSet<string> _usdtSymbols = new(StringComparer.OrdinalIgnoreCase);
     private WebApplication? _listingApp;
-    private CancellationTokenSource? _listingCts;
-    private Task? _listingLifetimeTask;
     private static readonly string SymbolsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "BinanceUsdtTicker", "usdt_symbols.txt");
@@ -58,73 +54,47 @@ public partial class App : Application
 
     private async Task StartListingListenerAsync()
     {
-        await StopListingListenerAsync();
+        var builder = WebApplication.CreateBuilder(Array.Empty<string>());
+        builder.Logging.ClearProviders();
 
-        try
+        var listenUrl = Environment.GetEnvironmentVariable("NEWS_LISTEN_URL")
+            ?? "http://localhost:5005";
+        builder.WebHost.UseUrls(listenUrl);
+        var app = builder.Build();
+
+        app.MapPost("/news", async (HttpContext ctx) =>
         {
-            var builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            builder.Logging.ClearProviders();
-
-            var listenUrl = Environment.GetEnvironmentVariable("NEWS_LISTEN_URL")
-                ?? "http://localhost:5005";
-            builder.WebHost.UseUrls(listenUrl);
-            var app = builder.Build();
-
-            app.MapPost("/news", async (HttpContext ctx) =>
+            ListingNotification? payload;
+            try
             {
-                ListingNotification? payload;
-                try
-                {
-                    payload = await ctx.Request.ReadFromJsonAsync<ListingNotification>();
-                }
-                catch (JsonException ex)
-                {
-                    return Results.BadRequest(new { error = ex.Message });
-                }
-
-                if (payload != null)
-                {
-                    var item = new NewsItem(
-                        id: payload.Id,
-                        source: payload.Source,
-                        timestamp: DateTime.UtcNow,
-                        title: payload.Title,
-                        titleTranslate: null,
-                        body: null,
-                        link: payload.Url ?? string.Empty,
-                        type: NewsType.Listing,
-                        symbols: payload.Symbols ?? Array.Empty<string>());
-
-                    if (Current.MainWindow is MainWindow mw)
-                        mw.AddNewsItem(item);
-                }
-                return Results.Ok();
-            });
-
-            _listingApp = app;
-            await app.StartAsync().ConfigureAwait(false);
-
-            _listingCts = new CancellationTokenSource();
-            _listingLifetimeTask = Task.Run(async () =>
+                payload = await ctx.Request.ReadFromJsonAsync<ListingNotification>();
+            }
+            catch (JsonException ex)
             {
-                try
-                {
-                    await app.WaitForShutdownAsync(_listingCts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    // ignore shutdown cancellation
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine($"Listing listener stopped unexpectedly: {ex}");
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Failed to start listing listener: {ex}");
-        }
+                return Results.BadRequest(new { error = ex.Message });
+            }
+
+            if (payload != null)
+            {
+                var item = new NewsItem(
+                    id: payload.Id,
+                    source: payload.Source,
+                    timestamp: DateTime.UtcNow,
+                    title: payload.Title,
+                    titleTranslate: null,
+                    body: null,
+                    link: payload.Url ?? string.Empty,
+                    type: NewsType.Listing,
+                    symbols: payload.Symbols ?? Array.Empty<string>());
+
+                if (Current.MainWindow is MainWindow mw)
+                    mw.AddNewsItem(item);
+            }
+            return Results.Ok();
+        });
+
+        _listingApp = app;
+        await app.StartAsync();
     }
 
     internal async Task UpdateNewsBaseUrl(string? baseUrl)
@@ -187,21 +157,17 @@ public partial class App : Application
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(SymbolsFile)!);
-
-            var symbols = await Task.Run(async () =>
-            {
-                var api = new BinanceApiService();
-                var info = await api.GetExchangeInfoAsync().ConfigureAwait(false);
-                return info.Symbols
-                    .Select(s => s.Symbol)
-                    .Where(s => s.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
-                    .OrderBy(s => s)
-                    .ToList();
-            });
+            var api = new BinanceApiService();
+            var info = await api.GetExchangeInfoAsync();
+            var symbols = info.Symbols
+                .Select(s => s.Symbol)
+                .Where(s => s.EndsWith("USDT", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(s => s)
+                .ToList();
 
             await File.WriteAllLinesAsync(SymbolsFile, symbols);
             _usdtSymbols.Clear();
-            foreach (var s in symbols)
+            foreach (var s in File.ReadLines(SymbolsFile))
                 _usdtSymbols.Add(s);
         }
         catch (Exception ex)
@@ -244,66 +210,14 @@ public partial class App : Application
         }
     }
 
-    private async Task StopListingListenerAsync()
+    protected override async void OnExit(ExitEventArgs e)
     {
-        try
-        {
-            _listingCts?.Cancel();
-            if (_listingLifetimeTask != null)
-            {
-                try { await _listingLifetimeTask.ConfigureAwait(false); }
-                catch (OperationCanceledException) { }
-            }
-
-            if (_listingApp != null)
-            {
-                await _listingApp.StopAsync().ConfigureAwait(false);
-                await _listingApp.DisposeAsync().ConfigureAwait(false);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Failed to stop listing listener: {ex}");
-        }
-        finally
-        {
-            _listingLifetimeTask = null;
-            if (_listingCts != null)
-            {
-                _listingCts.Dispose();
-                _listingCts = null;
-            }
-            _listingApp = null;
-        }
-    }
-
-    protected override void OnExit(ExitEventArgs e)
-    {
-        StopListingListenerAsync().GetAwaiter().GetResult();
         if (_freeNewsHub != null)
-        {
-            try
-            {
-                _freeNewsHub.DisposeAsync().AsTask().GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Failed to dispose news hub: {ex}");
-            }
-            _freeNewsHub = null;
-        }
+            await _freeNewsHub.DisposeAsync();
         if (_newsHub != null)
-        {
-            try
-            {
-                _newsHub.DisposeAsync().AsTask().GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Failed to dispose DB hub: {ex}");
-            }
-            _newsHub = null;
-        }
+            await _newsHub.DisposeAsync();
+        if (_listingApp != null)
+            await _listingApp.StopAsync();
         base.OnExit(e);
     }
 
